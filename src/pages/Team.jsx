@@ -1,5 +1,4 @@
 import MemberCard from "../components/MemberCard";
-import Navbar from "../components/Navbar";
 
 // Next Step:
 // 1. Add all the actual member of the organization
@@ -89,7 +88,6 @@ export default function Team() {
 
   return (
     <>
-      <Navbar />
       <div className="min-h-screen bg-white pt-16 py-12">
         <div className="px-4 sm:px-6 lg:px-8">
           {/* Page Header */}

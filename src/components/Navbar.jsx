@@ -1,4 +1,5 @@
 import { FaInstagram, FaDiscord, FaLinkedin } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -8,39 +9,39 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex-shrink-0 flex items-center">
-              <a href="/" className="flex items-center">
+              <Link to="/" className="flex items-center">
                 <h1 className="text-white text-xl sm:text-2xl font-bold">
                   Logo
                 </h1>
-              </a>
+              </Link>
             </div>
 
             {/* Desktop Navigation Links */}
             <div className="hidden md:flex items-center space-x-8">
-              <a
-                href="/"
+              <Link
+                to="/"
                 className="text-white hover:text-[#772583] hover:underline underline-offset-4 decoration-2 transition-all duration-300 font-medium"
               >
                 Home
-              </a>
-              <a
-                href="/about"
+              </Link>
+              <Link
+                to="/about"
                 className="text-white hover:text-[#772583] hover:underline underline-offset-4 decoration-2 transition-all duration-300 font-medium"
               >
                 About
-              </a>
-              <a
-                href="/events"
+              </Link>
+              <Link
+                to="/events"
                 className="text-white hover:text-[#772583] hover:underline underline-offset-4 decoration-2 transition-all duration-300 font-medium"
               >
                 Events
-              </a>
-              <a
-                href="/team"
+              </Link>
+              <Link
+                to="/team"
                 className="text-white hover:text-[#772583] hover:underline underline-offset-4 decoration-2 transition-all duration-300 font-medium"
               >
                 Team
-              </a>
+              </Link>
             </div>
 
             {/* Social Media Icons */}

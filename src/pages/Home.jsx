@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-
 // Notes:
 // 1. Need to upgrade spline account to remove the watermark thingy
 // 2. Just basic design, can be changed later
@@ -7,9 +5,6 @@ import Navbar from "../components/Navbar";
 export default function Home() {
   return (
     <>
-      {/* Navbar */}
-      <Navbar />
-
       {/* Hero Section */}
       <div className="min-h-screen bg-white pt-16 relative">
         <div className="max-w-7xl mx-auto">
