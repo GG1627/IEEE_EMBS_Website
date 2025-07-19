@@ -8,7 +8,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="min-h-screen bg-white pt-16 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 h-[calc(100vh-4rem)]">
+          <div className="grid lg:grid-cols-2 lg:h-[calc(100vh-4rem)]">
             {/* Left Column - Text Content */}
             <div className="relative z-10 flex flex-col justify-center px-4 sm:px-6 lg:px-8 py-8">
               <div className="text-center lg:text-left">
@@ -36,7 +36,7 @@ export default function Home() {
             </div>
 
             {/* Right Column - 3D Component Full Height */}
-            <div className="relative h-full">
+            <div className="relative hidden lg:block lg:h-full overflow-hidden">
               <iframe
                 src="https://my.spline.design/dnaparticles-rAmMRwjux8zJpb5ObHwDVji6/"
                 frameBorder="0"
