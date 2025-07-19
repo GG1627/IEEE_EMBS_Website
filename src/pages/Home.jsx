@@ -18,6 +18,9 @@ export default function Home() {
                 <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-semibold text-gray-600 mt-4">
                   University of Florida Chapter
                 </h2>
+                <p className="text-md sm:text-lg lg:text-xl text-gray-500 mt-2">
+                  "Insert Mission Statement/Quote"
+                </p>
                 <p className="text-lg sm:text-xl lg:text-2xl text-gray-500 mt-6 leading-relaxed">
                   Join us in advancing healthcare through innovative biomedical
                   engineering solutions
@@ -32,6 +35,30 @@ export default function Home() {
                 <button className="border-2 border-gray-400 text-gray-700 hover:bg-gray-100 hover:border-gray-500 px-8 py-3 rounded-lg font-semibold transition-all duration-300">
                   Learn More
                 </button>
+              </div>
+              {/* Upcoming Events Section */}
+              <div className="bg-[#f9f9f9] py-12 px-4 sm:px-6 lg:px-8 mt-12">
+                <div className="max-w-4xl mx-auto text-center">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#00629b] mb-6">
+                    📣 Upcoming Events
+                  </h2>
+
+                  {/* Event Card */}
+                  <div className="bg-white rounded-2xl shadow-md p-6 border-l-8 border-[#772583] inline-block text-left">
+                    <span className="text-sm font-semibold uppercase tracking-wide text-[#772583]">
+                      First GBM 🎉
+                    </span>
+                    <p className="mt-2 text-lg text-gray-800">
+                      <strong>📍 Location:</strong> TBD
+                    </p>
+                    <p className="text-lg text-gray-800">
+                      <strong>🕒 Date & Time:</strong> TBD
+                    </p>
+                    <p className="mt-3 text-sm text-gray-500 italic">
+                      Come meet the board, learn about our mission, and hear what we have planned!
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
