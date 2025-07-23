@@ -51,7 +51,7 @@ export default function Team() {
     {
       name: "Matthew",
       position: "BME Tech Lead",
-      linkedin: "",
+      linkedin: "https://www.linkedin.com/in/matthew-valenti-a46960297/",
       imgURL: Matthew,
     },
     {
@@ -87,7 +87,7 @@ export default function Team() {
     {
       name: "Katherine",
       position: "Fundraising Lead",
-      linkedin: "",
+      linkedin: "https://www.linkedin.com/in/katherine-phy-66a0a4297/",
       imgURL: Katherine,
     },
     {
