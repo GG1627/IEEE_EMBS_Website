@@ -17,8 +17,7 @@ import Katherine from "../assets/members/Katherine.jpg";
 import Footer from "../components/Footer";
 
 // Next Step:
-// 1. Add all the actual member of the organization
-// 2. Add a hover effect where if you hover over the member card, it will show a popup with more information about the member
+// 1. Add a hover effect where if you hover over the member card, it will show a popup with more information about the member
 
 export default function Team() {
   // Sample team data - you can replace with real data later
