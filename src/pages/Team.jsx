@@ -9,7 +9,7 @@ import Clea from "../assets/members/Clea.jpg";
 import Michael from "../assets/members/Michael.jpg";
 import Lincy from "../assets/members/Lincy.jpg";
 import Fabiana from "../assets/members/Fabiana.png";
-import May from "../assets/members/May.jpg";
+import May from "../assets/members/DrMay.jpg";
 import Devin from "../assets/members/Devin.jpg";
 import Matthew from "../assets/members/Matthew.png";
 import Katherine from "../assets/members/Katherine.jpg";
