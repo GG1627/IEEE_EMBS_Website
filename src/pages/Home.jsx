@@ -42,19 +42,19 @@ export default function Home() {
               <h1 className="text-[1.5rem] md:text-7xl font-bold text-white text-center">
                 IEEE Engineering in Medicine & Biology Society
               </h1>
-              <h2 className="text-md md:text-2xl font-semibold md:font-bold text-white text-center">
+              <h2 className="text-md md:text-3xl font-semibold md:font-bold text-white text-center">
                 University of Florida Chapter
               </h2>
-              <h2 className="text-xs text-white md:text-white text-center">
+              <h2 className="text-xs md:text-lg text-white md:text-white text-center">
                 “Bridging innovation, AI, and human health, we empower students
                 to explore the frontiers of biomedical technology through
                 collaboration, research, and real-world impact.”
               </h2>
               <div className="flex flex-row gap-2 md:gap-4 justify-center">
-                <button className="bg-white/20 backdrop-blur-md text-xs text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
                   Learn More
                 </button>
-                <button className="bg-white/20 backdrop-blur-md text-xs text-white py-0 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
                   Join Now
                 </button>
               </div>
