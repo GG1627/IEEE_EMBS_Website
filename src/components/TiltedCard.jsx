@@ -125,8 +125,8 @@ export default function TiltedCard({
           </div>
 
           {/* Info Section (bottom 30%) */}
-          <div className="h-[30%] p-3 flex flex-col justify-center items-center bg-white">
-            <h3 className="font-bold text-lg text-gray-800 truncate">
+          <div className="h-[30%] p-1 flex flex-col justify-start items-center bg-white gap-1">
+            <h3 className="font-bold text-lg text-gray-800 break-words text-center leading-none">
               {memberName}
             </h3>
             <p className="text-md text-gray-600 truncate">{memberPosition}</p>
