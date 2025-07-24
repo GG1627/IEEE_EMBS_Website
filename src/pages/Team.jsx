@@ -14,6 +14,8 @@ import Devin from "../assets/members/Devin.jpg";
 import Matthew from "../assets/members/Matthew.png";
 import Katherine from "../assets/members/Katherine.jpg";
 
+import Footer from "../components/Footer";
+
 // Next Step:
 // 1. Add all the actual member of the organization
 // 2. Add a hover effect where if you hover over the member card, it will show a popup with more information about the member
@@ -114,147 +116,152 @@ export default function Team() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 py-12">
-      <div className="container mx-auto max-w-7xl">
-        <h1 className="text-4xl font-bold text-center mb-12 mt-8 text-gray-800">
-          Meet the Team
-        </h1>
+    <>
+      <div className="min-h-screen flex flex-col bg-gray-50 pt-16">
+        <div className="flex-1 py-12">
+          <div className="container mx-auto max-w-7xl">
+            <h1 className="text-4xl font-bold text-center mb-12 mt-8 text-gray-800">
+              Meet the Team
+            </h1>
 
-        <h1 className="text-3xl font-bold text-center mb-4 mt-8 text-gray-800">
-          Executive Board
-        </h1>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {/* Grid container with 4 cards per row, full width, centered */}
-          {executiveBoard.map((member, index) => (
-            <div key={index} className="max-w-[320px] mx-auto">
-              <TiltedCard
-                memberCardMode={true}
-                imageSrc={member.imgURL || defaultAvatar}
-                altText={`${member.name} - ${member.position}`}
-                memberName={member.name}
-                memberPosition={member.position}
-                memberLinkedIn={member.linkedin}
-                containerHeight="280px"
-                containerWidth="220px"
-                imageHeight="280px"
-                imageWidth="220px"
-                rotateAmplitude={8}
-                scaleOnHover={1.03}
-                showMobileWarning={false}
-                showTooltip={false}
-              />
+            <h1 className="text-3xl font-bold text-center mb-4 mt-8 text-gray-800">
+              Executive Board
+            </h1>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {/* Grid container with 4 cards per row, full width, centered */}
+              {executiveBoard.map((member, index) => (
+                <div key={index} className="max-w-[320px] mx-auto">
+                  <TiltedCard
+                    memberCardMode={true}
+                    imageSrc={member.imgURL || defaultAvatar}
+                    altText={`${member.name} - ${member.position}`}
+                    memberName={member.name}
+                    memberPosition={member.position}
+                    memberLinkedIn={member.linkedin}
+                    containerHeight="280px"
+                    containerWidth="220px"
+                    imageHeight="280px"
+                    imageWidth="220px"
+                    rotateAmplitude={8}
+                    scaleOnHover={1.03}
+                    showMobileWarning={false}
+                    showTooltip={false}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
-          Tech Leads
-        </h1>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {/* Grid container with 4 cards per row, full width, centered */}
-          {techLeads.map((member, index) => (
-            <div key={index} className="max-w-[320px] mx-auto">
-              <TiltedCard
-                memberCardMode={true}
-                imageSrc={member.imgURL || defaultAvatar}
-                altText={`${member.name} - ${member.position}`}
-                memberName={member.name}
-                memberPosition={member.position}
-                memberLinkedIn={member.linkedin}
-                containerHeight="280px"
-                containerWidth="220px"
-                imageHeight="280px"
-                imageWidth="220px"
-                rotateAmplitude={8}
-                scaleOnHover={1.03}
-                showMobileWarning={false}
-                showTooltip={false}
-              />
+            <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
+              Tech Leads
+            </h1>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {/* Grid container with 4 cards per row, full width, centered */}
+              {techLeads.map((member, index) => (
+                <div key={index} className="max-w-[320px] mx-auto">
+                  <TiltedCard
+                    memberCardMode={true}
+                    imageSrc={member.imgURL || defaultAvatar}
+                    altText={`${member.name} - ${member.position}`}
+                    memberName={member.name}
+                    memberPosition={member.position}
+                    memberLinkedIn={member.linkedin}
+                    containerHeight="280px"
+                    containerWidth="220px"
+                    imageHeight="280px"
+                    imageWidth="220px"
+                    rotateAmplitude={8}
+                    scaleOnHover={1.03}
+                    showMobileWarning={false}
+                    showTooltip={false}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
-          Web Team
-        </h1>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {/* Grid container with 4 cards per row, full width, centered */}
-          {webTeam.map((member, index) => (
-            <div key={index} className="max-w-[320px] mx-auto">
-              <TiltedCard
-                memberCardMode={true}
-                imageSrc={member.imgURL || defaultAvatar}
-                altText={`${member.name} - ${member.position}`}
-                memberName={member.name}
-                memberPosition={member.position}
-                memberLinkedIn={member.linkedin}
-                containerHeight="280px"
-                containerWidth="220px"
-                imageHeight="280px"
-                imageWidth="220px"
-                rotateAmplitude={8}
-                scaleOnHover={1.03}
-                showMobileWarning={false}
-                showTooltip={false}
-              />
+            <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
+              Web Team
+            </h1>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {/* Grid container with 4 cards per row, full width, centered */}
+              {webTeam.map((member, index) => (
+                <div key={index} className="max-w-[320px] mx-auto">
+                  <TiltedCard
+                    memberCardMode={true}
+                    imageSrc={member.imgURL || defaultAvatar}
+                    altText={`${member.name} - ${member.position}`}
+                    memberName={member.name}
+                    memberPosition={member.position}
+                    memberLinkedIn={member.linkedin}
+                    containerHeight="280px"
+                    containerWidth="220px"
+                    imageHeight="280px"
+                    imageWidth="220px"
+                    rotateAmplitude={8}
+                    scaleOnHover={1.03}
+                    showMobileWarning={false}
+                    showTooltip={false}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
-          Communications & Outreach
-        </h1>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {/* Grid container with 4 cards per row, full width, centered */}
-          {communicationsOutreach.map((member, index) => (
-            <div key={index} className="max-w-[320px] mx-auto">
-              <TiltedCard
-                memberCardMode={true}
-                imageSrc={member.imgURL || defaultAvatar}
-                altText={`${member.name} - ${member.position}`}
-                memberName={member.name}
-                memberPosition={member.position}
-                memberLinkedIn={member.linkedin}
-                containerHeight="280px"
-                containerWidth="220px"
-                imageHeight="280px"
-                imageWidth="220px"
-                rotateAmplitude={8}
-                scaleOnHover={1.03}
-                showMobileWarning={false}
-                showTooltip={false}
-              />
+            <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
+              Communications & Outreach
+            </h1>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {/* Grid container with 4 cards per row, full width, centered */}
+              {communicationsOutreach.map((member, index) => (
+                <div key={index} className="max-w-[320px] mx-auto">
+                  <TiltedCard
+                    memberCardMode={true}
+                    imageSrc={member.imgURL || defaultAvatar}
+                    altText={`${member.name} - ${member.position}`}
+                    memberName={member.name}
+                    memberPosition={member.position}
+                    memberLinkedIn={member.linkedin}
+                    containerHeight="280px"
+                    containerWidth="220px"
+                    imageHeight="280px"
+                    imageWidth="220px"
+                    rotateAmplitude={8}
+                    scaleOnHover={1.03}
+                    showMobileWarning={false}
+                    showTooltip={false}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
-          Advisors
-        </h1>
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {/* Grid container with 4 cards per row, full width, centered */}
-          {advisors.map((member, index) => (
-            <div key={index} className="max-w-[320px] mx-auto">
-              <TiltedCard
-                memberCardMode={true}
-                imageSrc={member.imgURL || defaultAvatar}
-                altText={`${member.name} - ${member.position}`}
-                memberName={member.name}
-                memberPosition={member.position}
-                memberLinkedIn={member.linkedin}
-                containerHeight="280px"
-                containerWidth="220px"
-                imageHeight="280px"
-                imageWidth="220px"
-                rotateAmplitude={8}
-                scaleOnHover={1.03}
-                showMobileWarning={false}
-                showTooltip={false}
-              />
+            <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
+              Advisors
+            </h1>
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {/* Grid container with 4 cards per row, full width, centered */}
+              {advisors.map((member, index) => (
+                <div key={index} className="max-w-[320px] mx-auto">
+                  <TiltedCard
+                    memberCardMode={true}
+                    imageSrc={member.imgURL || defaultAvatar}
+                    altText={`${member.name} - ${member.position}`}
+                    memberName={member.name}
+                    memberPosition={member.position}
+                    memberLinkedIn={member.linkedin}
+                    containerHeight="280px"
+                    containerWidth="220px"
+                    imageHeight="280px"
+                    imageWidth="220px"
+                    rotateAmplitude={8}
+                    scaleOnHover={1.03}
+                    showMobileWarning={false}
+                    showTooltip={false}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
+        <Footer />
       </div>
-    </div>
+    </>
   );
 }
