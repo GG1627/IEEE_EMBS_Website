@@ -49,7 +49,7 @@ export default function Team() {
 
   const techLeads = [
     {
-      name: "Matthew",
+      name: "Matthew Valenti",
       position: "BME Tech Lead",
       linkedin: "https://www.linkedin.com/in/matthew-valenti-a46960297/",
       imgURL: Matthew,
@@ -85,7 +85,7 @@ export default function Team() {
 
   const communicationsOutreach = [
     {
-      name: "Katherine",
+      name: "Katherine Phy",
       position: "Fundraising Lead",
       linkedin: "https://www.linkedin.com/in/katherine-phy-66a0a4297/",
       imgURL: Katherine,

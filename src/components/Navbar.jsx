@@ -28,10 +28,18 @@ export default function Navbar() {
 
             <div className="flex-shrink-0 flex items-center flex-row">
               <Link to="/" className="flex items-center">
-                <img src={EMBSLogo} alt="UF Logo" className="w-50 h-50" />
+                <img
+                  src={EMBSLogo}
+                  alt="UF Logo"
+                  className="w-20 h-20 md:w-46 md:h-46"
+                />
               </Link>
               <div className="mx-4 h-8 w-px bg-gray-400"></div>
-              <img src={UFLogo} alt="UF Logo" className="w-50 h-50" />
+              <img
+                src={UFLogo}
+                alt="UF Logo"
+                className="w-20 h-20 md:w-46 md:h-46"
+              />
             </div>
 
             {/* Desktop Navigation Links */}
@@ -54,7 +62,7 @@ export default function Navbar() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-white hover:text-[#772583] transition-colors duration-300 p-2"
+                className="text-black hover:text-[#772583] transition-colors duration-300 p-2"
               >
                 <svg
                   className="w-6 h-6"
