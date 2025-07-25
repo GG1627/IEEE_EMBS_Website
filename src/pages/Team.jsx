@@ -1,7 +1,7 @@
 import TiltedCard from "../components/TiltedCard";
 import defaultAvatar from "../assets/default-avatar.png";
 import Veronica from "../assets/members/Veronica.jpg";
-import Christian from "../assets/members/Christian.jpg";
+import Christian from "../assets/members/Christian2.jpg";
 import Viola from "../assets/members/Viola.png";
 import Krish from "../assets/members/Krish.png";
 import Gael from "../assets/members/Gael.jpg";
@@ -23,7 +23,7 @@ export default function Team() {
   // Sample team data - you can replace with real data later
   const executiveBoard = [
     {
-      name: "Veronica Rodriguez",
+      name: "Veronica Ramos Rodriguez",
       position: "President",
       linkedin: "https://www.linkedin.com/in/veronicasramos/",
       imgURL: Veronica,
