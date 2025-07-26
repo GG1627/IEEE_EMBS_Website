@@ -13,11 +13,15 @@ export default function About() {
           <section>
             <h2 className="text-2xl font-semibold mb-2">Our Purpose at UF</h2>
             <p className="text-lg leading-relaxed">
-              The University of Florida IEEE EMBS chapter is dedicated to
-              uniting students interested in biomedical engineering, healthcare
-              innovation, and interdisciplinary collaboration. We aim to provide
-              a platform for learning, research, and community outreach at the
-              intersection of engineering and medicine.
+              The IEEE EMBS chapter at the University of Florida is a student-led organization 
+              focused on empowering engineers to innovate at the intersection of healthcare and technology. 
+              Our mission is to provide students with the tools, connections, and experiences needed to grow 
+              academically, professionally, and personally in the field of biomedical engineering.
+              <br /><br />
+              We foster a community where students from all backgrounds can access mentorship, industry insights, 
+              and hands-on opportunities, regardless of experience level. Through leadership development, research 
+              exposure, and interdisciplinary collaboration, we prepare students to make meaningful contributions 
+              to society through engineering in medicine.
             </p>
           </section>
 
@@ -47,12 +51,15 @@ export default function About() {
               What Makes Our Chapter Unique
             </h2>
             <p className="text-lg leading-relaxed">
-              Our chapter combines the strengths of a top-ranked engineering
-              program with UF’s robust health sciences network. We host hands-on
-              workshops, speaker events with industry professionals,
-              collaborative design challenges, and opportunities to explore
-              research and clinical applications. Whether you're an engineer, a
-              pre-med, or just curious — there's a place for you here.
+              Our chapter uniquely combines UF’s strengths in engineering and health sciences to support 
+              student development in an emerging, interdisciplinary field. We offer workshops, technical 
+              projects, guest speakers, and design challenges that give students real-world exposure and a 
+              head start in their careers. 
+              <br /><br />
+              We believe in breaking down barriers to involvement and democratizing access to skills and knowledge 
+              that are often reserved for graduate students. Whether you’re exploring the role of AI in diagnostics, 
+              learning about wearable biosensors, or just curious about the future of healthcare technology, EMBS is 
+              your gateway to grow, connect, and lead.
             </p>
           </section>
         </div>
