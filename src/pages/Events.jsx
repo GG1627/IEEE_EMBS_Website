@@ -3,7 +3,7 @@ import Footer from "../components/Footer";
 export default function Events() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <div className="flex-1">
+      <div className="flex-1 py-16">
         <h1 className="text-3xl font-bold mb-4">Upcoming Events</h1>
         <div className="p-4">
           <div className="overflow-hidden rounded shadow-lg">
