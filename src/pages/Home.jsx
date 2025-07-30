@@ -5,9 +5,19 @@ import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import EventCard from "../components/EventCard";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
+import TiltedCard from "../components/TiltedCard";
+import ResearchIcon from "../assets/icons/research.png";
+import ProjectsIcon from "../assets/icons/projects.png";
+import OutreachIcon from "../assets/icons/outreach.png";
+import WorkshopsIcon from "../assets/icons/workshops.png";
+import IndustryIcon from "../assets/icons/industry.png";
+import NetworkingIcon from "../assets/icons/networking.png";
 
 export default function Home() {
   const iconRef = useRef(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     gsap.to(iconRef.current, {
@@ -98,30 +108,38 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Branches */}
-        <div className="w-full mt-16">
-          <h1 className="text-4xl font-bold text-center mb-4">Branches</h1>
-          <div className="flex flex-col">
-            <div className="flex h-35 md:h-100 flex-row">
-              <div className="w-1/2 bg-[#5d9cc3]"></div>
-              <div className="w-1/2 bg-[#5d9cc3]/10 flex items-center justify-center">
-                <h1 className="text-lg text-center">Image Here</h1>
-              </div>
-            </div>
-            <div className="flex flex-row h-35 md:h-100">
-              <div className="w-1/2 bg-[#b17cb3]/10 flex items-center justify-center">
-                <h1 className="text-lg text-center">Image Here</h1>
-              </div>
-              <div className="w-1/2 bg-[#b17cb3]"></div>
-            </div>
-            <div className="flex flex-row h-35 md:h-100">
-              <div className="w-1/2 bg-[#5d9cc3]"></div>
-              <div className="w-1/2 bg-[#5d9cc3]/10 flex items-center justify-center">
-                <h1 className="text-lg text-center">Image Here</h1>
-              </div>
+        {/* Branches Section */}
+          <div className="w-full mt-16 px-4 md:px-0">
+            <h1 className="text-4xl font-bold text-center mb-8">Our Branches</h1>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {[
+                { name: "Research", icon: ResearchIcon, page: "/research" },
+                { name: "Projects", icon: ProjectsIcon, page: "/projects" },
+                { name: "Outreach", icon: OutreachIcon, page: "/outreach" },
+                { name: "Workshops", icon: WorkshopsIcon, page: "/workshops" },
+                { name: "Industry", icon: IndustryIcon, page: "/industry" },
+                { name: "Networking", icon: NetworkingIcon, page: "/networking" },
+              ].map(({ name, icon, page }) => (
+                <div
+                  key={name}
+                  onClick={() => navigate(page)}
+                  className="cursor-pointer flex justify-center"
+                >
+                  <TiltedCard
+                    imageSrc={icon}
+                    memberCardMode={true}
+                    memberName={name}
+                    memberPosition="Learn More"
+                    containerHeight="260px"
+                    imageHeight="180px"
+                    imageWidth="180px"
+                    showTooltip={false}
+                  />
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+
 
         {/* Footer */}
         <Footer />

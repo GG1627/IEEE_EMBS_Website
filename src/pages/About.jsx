@@ -5,6 +5,7 @@ export default function About() {
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-1 py-16 px-6 sm:px-12 lg:px-24">
         <div className="max-w-4xl mx-auto space-y-10 text-gray-800">
+          <div className="h-2"></div>
           <h1 className="text-4xl font-bold text-center text-[#00629b]">
             About Us
           </h1>
