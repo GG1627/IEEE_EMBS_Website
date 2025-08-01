@@ -18,7 +18,6 @@ export default function Home() {
   const iconRef = useRef(null);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     gsap.to(iconRef.current, {
       y: 10,
@@ -64,8 +63,11 @@ export default function Home() {
                 <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
                   Learn More
                 </button>
-                <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
-                  Join Now
+                <button
+                  onClick={() => navigate("/attendance/checkin")}
+                  className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300 cursor-pointer"
+                >
+                  Check In
                 </button>
               </div>
             </div>
@@ -109,37 +111,36 @@ export default function Home() {
         </div>
 
         {/* Branches Section */}
-          <div className="w-full mt-16 px-4 md:px-0">
-            <h1 className="text-4xl font-bold text-center mb-8">Our Branches</h1>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-              {[
-                { name: "Research", icon: ResearchIcon, page: "/research" },
-                { name: "Projects", icon: ProjectsIcon, page: "/projects" },
-                { name: "Outreach", icon: OutreachIcon, page: "/outreach" },
-                { name: "Workshops", icon: WorkshopsIcon, page: "/workshops" },
-                { name: "Industry", icon: IndustryIcon, page: "/industry" },
-                { name: "Networking", icon: NetworkingIcon, page: "/networking" },
-              ].map(({ name, icon, page }) => (
-                <div
-                  key={name}
-                  onClick={() => navigate(page)}
-                  className="cursor-pointer flex justify-center"
-                >
-                  <TiltedCard
-                    imageSrc={icon}
-                    memberCardMode={true}
-                    memberName={name}
-                    memberPosition="Learn More"
-                    containerHeight="260px"
-                    imageHeight="180px"
-                    imageWidth="180px"
-                    showTooltip={false}
-                  />
-                </div>
-              ))}
-            </div>
+        <div className="w-full mt-16 px-4 md:px-0">
+          <h1 className="text-4xl font-bold text-center mb-8">Our Branches</h1>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {[
+              { name: "Research", icon: ResearchIcon, page: "/research" },
+              { name: "Projects", icon: ProjectsIcon, page: "/projects" },
+              { name: "Outreach", icon: OutreachIcon, page: "/outreach" },
+              { name: "Workshops", icon: WorkshopsIcon, page: "/workshops" },
+              { name: "Industry", icon: IndustryIcon, page: "/industry" },
+              { name: "Networking", icon: NetworkingIcon, page: "/networking" },
+            ].map(({ name, icon, page }) => (
+              <div
+                key={name}
+                onClick={() => navigate(page)}
+                className="cursor-pointer flex justify-center"
+              >
+                <TiltedCard
+                  imageSrc={icon}
+                  memberCardMode={true}
+                  memberName={name}
+                  memberPosition="Learn More"
+                  containerHeight="260px"
+                  imageHeight="180px"
+                  imageWidth="180px"
+                  showTooltip={false}
+                />
+              </div>
+            ))}
           </div>
-
+        </div>
 
         {/* Footer */}
         <Footer />
