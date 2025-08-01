@@ -31,7 +31,7 @@ export default function CheckIn() {
         navigate("/");
       } else {
         // User doesn't exist, redirect to register page
-        navigate("/auth/signup", { state: { email: email } });
+        navigate("/attendance/register", { state: { email: email } });
       }
     } catch (error) {
       console.log("Error: ", error.message);
