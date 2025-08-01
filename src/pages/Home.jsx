@@ -5,9 +5,11 @@ import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import EventCard from "../components/EventCard";
 import Footer from "../components/Footer";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const iconRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     gsap.to(iconRef.current, {
@@ -54,8 +56,11 @@ export default function Home() {
                 <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
                   Learn More
                 </button>
-                <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
-                  Join Now
+                <button
+                  onClick={() => navigate("/attendance/checkin")}
+                  className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300 cursor-pointer"
+                >
+                  Check In
                 </button>
               </div>
             </div>
