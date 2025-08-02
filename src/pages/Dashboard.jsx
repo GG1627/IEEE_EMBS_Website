@@ -1,6 +1,6 @@
 import { useAuth } from "./auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../components/SnackBar";
+import { useSnackbar } from "../components/Snackbar";
 
 export default function Dashboard() {
   const { signOut } = useAuth();

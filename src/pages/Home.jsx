@@ -14,7 +14,7 @@ import WorkshopsIcon from "../assets/icons/workshops.png";
 import IndustryIcon from "../assets/icons/industry.png";
 import NetworkingIcon from "../assets/icons/networking.png";
 import { useAuth } from "./auth/AuthContext";
-import { useSnackbar } from "../components/SnackBar";
+import { useSnackbar } from "../components/Snackbar";
 import { supabase } from "../lib/supabase";
 
 export default function Home() {

@@ -13,7 +13,7 @@ import Networking from "./pages/Networking";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/Dashboard";
-import { SnackbarProvider } from "./components/SnackBar";
+import { SnackbarProvider } from "./components/Snackbar";
 import { AuthProvider } from "./pages/auth/AuthContext";
 
 function App() {
