@@ -13,10 +13,15 @@ import OutreachIcon from "../assets/icons/outreach.png";
 import WorkshopsIcon from "../assets/icons/workshops.png";
 import IndustryIcon from "../assets/icons/industry.png";
 import NetworkingIcon from "../assets/icons/networking.png";
+import { useAuth } from "./auth/AuthContext";
+import { useSnackbar } from "../components/Snackbar";
+import { supabase } from "../lib/supabase";
 
 export default function Home() {
   const iconRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     gsap.to(iconRef.current, {
@@ -27,6 +32,106 @@ export default function Home() {
       duration: 1,
     });
   }, []);
+
+  // Check for successful authentication
+  useEffect(() => {
+    if (user) {
+      // Check if this is a fresh login (not just page refresh)
+      const hasShownWelcome = sessionStorage.getItem("welcome_shown");
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Check for various Supabase auth success indicators
+      const accessToken = urlParams.get("access_token");
+      const refreshToken = urlParams.get("refresh_token");
+      const type = urlParams.get("type");
+      const tokenHash = window.location.hash;
+
+      // Detect if this is a fresh login from magic link
+      const isFromMagicLink =
+        type === "magiclink" ||
+        accessToken ||
+        refreshToken ||
+        tokenHash.includes("access_token") ||
+        (user && !hasShownWelcome && window.location.pathname === "/");
+
+      if (isFromMagicLink && !hasShownWelcome) {
+        // Ensure user is in members table
+        const ensureUserInMembersTable = async () => {
+          try {
+            // Check if user already exists in members table
+            const { data: existingMember, error: checkError } = await supabase
+              .from("members")
+              .select("*")
+              .eq("email", user.email)
+              .single();
+
+            if (checkError && checkError.code !== "PGRST116") {
+              // PGRST116 is "not found"
+              console.error("❌ Error checking member:", checkError);
+              return;
+            }
+
+            // If user doesn't exist in members table, add them
+            if (!existingMember) {
+              const memberData = {
+                email: user.email,
+                first_name: user.user_metadata?.first_name || "",
+                last_name: user.user_metadata?.last_name || "",
+              };
+
+              const { data: insertData, error: insertError } = await supabase
+                .from("members")
+                .insert([memberData]);
+
+              if (insertError) {
+                console.error(
+                  "❌ Error adding user to members table (backup):",
+                  insertError
+                );
+              } else {
+                console.log(
+                  "✅ User successfully added to members table (backup)!"
+                );
+              }
+            } else {
+              console.log("✅ User already exists in members table");
+            }
+          } catch (error) {
+            console.error(
+              "❌ Exception ensuring user in members table:",
+              error
+            );
+          }
+        };
+
+        // Run the check
+        ensureUserInMembersTable();
+
+        // Show welcome message for new login
+        showSnackbar(
+          `Welcome back, ${user.user_metadata?.first_name || "User"}!`,
+          {
+            customColor: "#772583",
+          }
+        );
+
+        // Mark that we've shown the welcome message
+        sessionStorage.setItem("welcome_shown", "true");
+
+        // Clean up URL parameters
+        if (window.location.search || window.location.hash) {
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+          );
+        }
+      }
+    } else {
+      // Clear the welcome flag when user logs out
+      sessionStorage.removeItem("welcome_shown");
+    }
+  }, [user, showSnackbar]);
 
   return (
     <>
@@ -64,10 +169,12 @@ export default function Home() {
                   Learn More
                 </button>
                 <button
-                  onClick={() => navigate("/attendance/checkin")}
+                  onClick={() =>
+                    user ? navigate("/dashboard") : navigate("/auth/login")
+                  }
                   className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300 cursor-pointer"
                 >
-                  Check In
+                  {user ? "Dashboard" : "Check In"}
                 </button>
               </div>
             </div>

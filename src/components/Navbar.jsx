@@ -1,11 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import EMBSLogo from "../assets/logos/EMBS.svg";
 import UFLogo from "../assets/logos/UF.svg";
+import { FaUserCircle } from "react-icons/fa";
+import { useAuth } from "../pages/auth/AuthContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userInitials, setUserInitials] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   // helper function to check active path for link styling
   const linkClass = (path) => {
@@ -19,9 +24,27 @@ export default function Navbar() {
       : "text-black hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
   };
 
+  // get the users initials
+  useEffect(() => {
+    if (user?.user_metadata) {
+      const firstName = user.user_metadata.first_name || "";
+      const lastName = user.user_metadata.last_name || "";
+
+      if (firstName && lastName) {
+        setUserInitials(
+          firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()
+        );
+      } else {
+        setUserInitials("NA");
+      }
+    } else {
+      setUserInitials("");
+    }
+  }, [user]);
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-800">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logos */}
@@ -56,6 +79,26 @@ export default function Navbar() {
               <Link to="/team" className={linkClass("/team")}>
                 Team
               </Link>
+              {user ? (
+                <div className="flex items-center justify-center">
+                  <div
+                    className="w-6 h-6 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
+                    onClick={() => navigate("/dashboard")}
+                    title="Go to Dashboard"
+                  >
+                    <span className="text-white text-xs font-semibold">
+                      {userInitials}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center">
+                  <FaUserCircle
+                    onClick={() => navigate("/auth/login")}
+                    className="w-5 h-5 cursor-pointer"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
