@@ -10,30 +10,40 @@ import Outreach from "./pages/Outreach";
 import Workshops from "./pages/Workshops";
 import Industry from "./pages/Industry";
 import Networking from "./pages/Networking";
-import CheckIn from "./pages/attendance/CheckIn";
-import Register from "./pages/attendance/Register";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Dashboard from "./pages/Dashboard";
+import { SnackbarProvider } from "./components/SnackBar";
+import { AuthProvider } from "./pages/auth/AuthContext";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/events" element={<Events />} />
+      <AuthProvider>
+        <SnackbarProvider>
+          <BrowserRouter>
+            <Navbar />
+            <div className="fixed top-16 left-0 right-0 z-40 h-4 w-full bg-gradient-to-b from-white to-transparent pointer-events-none"></div>
 
-          <Route path="/research" element={<Research />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/outreach" element={<Outreach />} />
-          <Route path="/workshops" element={<Workshops />} />
-          <Route path="/industry" element={<Industry />} />
-          <Route path="/networking" element={<Networking />} />
-          <Route path="/attendance/checkin" element={<CheckIn />} />
-          <Route path="/attendance/register" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/events" element={<Events />} />
+
+              <Route path="/research" element={<Research />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/outreach" element={<Outreach />} />
+              <Route path="/workshops" element={<Workshops />} />
+              <Route path="/industry" element={<Industry />} />
+              <Route path="/networking" element={<Networking />} />
+              <Route path="/auth/login" element={<Login />} />
+              <Route path="/auth/register" element={<Register />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+            </Routes>
+          </BrowserRouter>
+        </SnackbarProvider>
+      </AuthProvider>
     </>
   );
 }

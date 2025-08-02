@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { supabase } from "../../lib/supabase";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { signUp } = useAuth();
 
   // auto fill the email input field
   useEffect(() => {
@@ -17,31 +19,29 @@ export default function Register() {
     }
   }, [location.state]);
 
-  // function to register to user to the database
   async function handleSignUp(e) {
     e.preventDefault();
     if (loading) return;
 
+    // Validate email domain
+    if (!email.toLowerCase().endsWith("@ufl.edu")) {
+      setMessage("Error: Please use your @ufl.edu email address");
+      return;
+    }
+
     setLoading(true);
+    setMessage("");
 
     try {
-      // insert the user into the database
-      const { data, error } = await supabase.from("members").insert([
-        {
-          email: email,
-          first_name: firstName,
-          last_name: lastName,
-        },
-      ]);
+      const { data, error } = await signUp(email, firstName, lastName);
 
       if (error) {
-        console.log("Database Error: ", error.message);
+        setMessage("Error: " + error.message);
       } else {
-        console.log("User created successfully!");
-        navigate("/");
+        setMessage("Check your email for the magic link!");
       }
     } catch (error) {
-      console.log("Error: ", error.message);
+      setMessage("Error: " + error.message);
     } finally {
       setLoading(false);
     }
@@ -56,7 +56,22 @@ export default function Register() {
               <h2 className="text-center text-3xl font-bold text-gray-900">
                 Register your account with IEEE EMBS
               </h2>
+              <p className="mt-2 text-center text-gray-600">
+                We'll send you a magic link to verify your email
+              </p>
             </div>
+
+            {message && (
+              <div
+                className={`max-w-md mx-auto p-4 rounded-md ${
+                  message.includes("Error")
+                    ? "bg-red-50 text-red-700 border border-red-200"
+                    : "bg-green-50 text-green-700 border border-green-200"
+                }`}
+              >
+                {message}
+              </div>
+            )}
 
             <form
               onSubmit={handleSignUp}
@@ -75,9 +90,18 @@ export default function Register() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  placeholder="Enter your @ufl email"
+                  className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
+                    email && !email.toLowerCase().endsWith("@ufl.edu")
+                      ? "border-red-300 focus:border-red-500 focus:ring-red-500"
+                      : "border-gray-300"
+                  }`}
+                  placeholder="Enter your @ufl.edu email"
                 />
+                {email && !email.toLowerCase().endsWith("@ufl.edu") && (
+                  <p className="mt-1 text-sm text-red-600">
+                    Please use your @ufl.edu email address
+                  </p>
+                )}
               </div>
 
               <div>
@@ -118,12 +142,25 @@ export default function Register() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={
+                  loading ||
+                  (email && !email.toLowerCase().endsWith("@ufl.edu"))
+                }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
               >
-                {loading ? "Creating account..." : "Register Account"}
+                {loading ? "Sending magic link..." : "Register with Magic Link"}
               </button>
             </form>
+
+            <p className="text-center text-gray-600 ">
+              Already have an account?
+              <span
+                onClick={() => navigate("/auth/login")}
+                className="text-[#772583] cursor-pointer ml-1 hover:underline"
+              >
+                Login
+              </span>
+            </p>
           </div>
         </div>
       </div>
