@@ -239,9 +239,9 @@ export default function Home() {
                   memberCardMode={true}
                   memberName={name}
                   memberPosition="Learn More"
-                  containerHeight="260px"
-                  imageHeight="180px"
-                  imageWidth="180px"
+                  containerHeight="280px"
+                  imageHeight="200px"
+                  imageWidth="300px"
                   showTooltip={false}
                 />
               </div>
