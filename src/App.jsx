@@ -1,19 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Team from "./pages/Team";
-import About from "./pages/About";
-import Events from "./pages/Events";
-import Research from "./pages/Research";
-import Projects from "./pages/Projects";
-import Outreach from "./pages/Outreach";
-import Workshops from "./pages/Workshops";
-import Industry from "./pages/Industry";
-import Networking from "./pages/Networking";
+import Navbar from "./components/layout/Navbar";
+import Home from "./pages/main/Home";
+import Team from "./pages/main/Team";
+import About from "./pages/main/About";
+import Events from "./pages/main/Events";
+import Careers from "./pages/main/Careers";
+import Research from "./pages/branches/Research";
+import Projects from "./pages/branches/Projects";
+import Outreach from "./pages/branches/Outreach";
+import Workshops from "./pages/branches/Workshops";
+import Industry from "./pages/branches/Industry";
+import Networking from "./pages/branches/Networking";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Dashboard from "./pages/Dashboard";
-import { SnackbarProvider } from "./components/Snackbar";
+import Dashboard from "./pages/dashboard/Dashboard";
+import { SnackbarProvider } from "./components/ui/Snackbar";
 import { AuthProvider } from "./pages/auth/AuthContext";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
               <Route path="/team" element={<Team />} />
               <Route path="/about" element={<About />} />
               <Route path="/events" element={<Events />} />
+              <Route path="/careers" element={<Careers />} />
 
               <Route path="/research" element={<Research />} />
               <Route path="/projects" element={<Projects />} />
@@ -37,8 +39,10 @@ function App() {
               <Route path="/workshops" element={<Workshops />} />
               <Route path="/industry" element={<Industry />} />
               <Route path="/networking" element={<Networking />} />
+
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/register" element={<Register />} />
+
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </BrowserRouter>

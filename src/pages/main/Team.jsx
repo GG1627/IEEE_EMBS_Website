@@ -1,20 +1,20 @@
-import TiltedCard from "../components/TiltedCard";
-import defaultAvatar from "../assets/default-avatar.png";
-import Veronica from "../assets/members/Veronica.jpg";
-import Christian from "../assets/members/Christian2.jpg";
-import Viola from "../assets/members/Viola.png";
-import Krish from "../assets/members/Krish.png";
-import Gael from "../assets/members/Gael.jpg";
-import Clea from "../assets/members/Clea.jpg";
-import Michael from "../assets/members/Michael.jpg";
-import Lincy from "../assets/members/Lincy.jpg";
-import Fabiana from "../assets/members/Fabiana.png";
-import May from "../assets/members/DrMay.jpg";
-import Devin from "../assets/members/Devin.jpg";
-import Matthew from "../assets/members/Matthew.png";
-import Katherine from "../assets/members/Katherine.jpg";
+import TiltedCard from "../../components/ui/TiltedCard";
+import defaultAvatar from "../../assets/default-avatar.png";
+import Veronica from "../../assets/members/Veronica.jpg";
+import Christian from "../../assets/members/Christian2.jpg";
+import Viola from "../../assets/members/Viola.png";
+import Krish from "../../assets/members/Krish.png";
+import Gael from "../../assets/members/Gael.jpg";
+import Clea from "../../assets/members/Clea.jpg";
+import Michael from "../../assets/members/Michael.jpg";
+import Lincy from "../../assets/members/Lincy.jpg";
+import Fabiana from "../../assets/members/Fabiana.png";
+import May from "../../assets/members/DrMay.jpg";
+import Devin from "../../assets/members/Devin.jpg";
+import Matthew from "../../assets/members/Matthew.png";
+import Katherine from "../../assets/members/Katherine.jpg";
 
-import Footer from "../components/Footer";
+import Footer from "../../components/layout/Footer";
 
 // Next Step:
 // 1. Add a hover effect where if you hover over the member card, it will show a popup with more information about the member
@@ -126,10 +126,10 @@ export default function Team() {
             <h1 className="text-3xl font-bold text-center mb-4 mt-8 text-gray-800">
               Executive Board
             </h1>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="w-full flex flex-wrap justify-center gap-24 max-w-[1400px] mx-auto">
               {/* Grid container with 4 cards per row, full width, centered */}
               {executiveBoard.map((member, index) => (
-                <div key={index} className="max-w-[320px] mx-auto">
+                <div key={index} className="max-w-[320px]">
                   <TiltedCard
                     memberCardMode={true}
                     imageSrc={member.imgURL || defaultAvatar}
@@ -153,10 +153,10 @@ export default function Team() {
             <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
               Tech Leads
             </h1>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="w-full flex flex-wrap justify-center gap-24 max-w-[1400px] mx-auto">
               {/* Grid container with 4 cards per row, full width, centered */}
               {techLeads.map((member, index) => (
-                <div key={index} className="max-w-[320px] mx-auto">
+                <div key={index} className="max-w-[320px]">
                   <TiltedCard
                     memberCardMode={true}
                     imageSrc={member.imgURL || defaultAvatar}
@@ -180,10 +180,10 @@ export default function Team() {
             <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
               Web Team
             </h1>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="w-full flex flex-wrap justify-center gap-24 max-w-[1400px] mx-auto">
               {/* Grid container with 4 cards per row, full width, centered */}
               {webTeam.map((member, index) => (
-                <div key={index} className="max-w-[320px] mx-auto">
+                <div key={index} className="max-w-[320px]">
                   <TiltedCard
                     memberCardMode={true}
                     imageSrc={member.imgURL || defaultAvatar}
@@ -207,10 +207,10 @@ export default function Team() {
             <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
               Communications & Outreach
             </h1>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="w-full flex flex-wrap justify-center gap-24 max-w-[1400px] mx-auto">
               {/* Grid container with 4 cards per row, full width, centered */}
               {communicationsOutreach.map((member, index) => (
-                <div key={index} className="max-w-[320px] mx-auto">
+                <div key={index} className="max-w-[320px]">
                   <TiltedCard
                     memberCardMode={true}
                     imageSrc={member.imgURL || defaultAvatar}
@@ -234,10 +234,10 @@ export default function Team() {
             <h1 className="text-3xl font-bold text-center mb-4 mt-16 text-gray-800">
               Advisors
             </h1>
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="w-full flex flex-wrap justify-center gap-24 max-w-[1400px] mx-auto">
               {/* Grid container with 4 cards per row, full width, centered */}
               {advisors.map((member, index) => (
-                <div key={index} className="max-w-[320px] mx-auto">
+                <div key={index} className="max-w-[320px]">
                   <TiltedCard
                     memberCardMode={true}
                     imageSrc={member.imgURL || defaultAvatar}

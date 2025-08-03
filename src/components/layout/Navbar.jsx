@@ -1,9 +1,9 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import EMBSLogo from "../assets/logos/EMBS.svg";
-import UFLogo from "../assets/logos/UF.svg";
+import EMBSLogo from "../../assets/logos/EMBS.svg";
+import UFLogo from "../../assets/logos/UF.svg";
 import { FaUserCircle } from "react-icons/fa";
-import { useAuth } from "../pages/auth/AuthContext";
+import { useAuth } from "../../pages/auth/AuthContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,6 +75,9 @@ export default function Navbar() {
               </Link>
               <Link to="/events" className={linkClass("/events")}>
                 Events
+              </Link>
+              <Link to="/careers" className={linkClass("/careers")}>
+                Careers
               </Link>
               <Link to="/team" className={linkClass("/team")}>
                 Team

@@ -1,21 +1,21 @@
-import Background from "../assets/images/background.jpg";
-import BackgroundMobile from "../assets/images/mobile_background.jpg";
+import Background from "../../assets/images/background.jpg";
+import BackgroundMobile from "../../assets/images/mobile_background.jpg";
 import { IoIosArrowDown } from "react-icons/io";
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
-import EventCard from "../components/EventCard";
-import Footer from "../components/Footer";
+import EventCard from "../../components/ui/EventCard";
+import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
-import TiltedCard from "../components/TiltedCard";
-import ResearchIcon from "../assets/icons/research.png";
-import ProjectsIcon from "../assets/icons/projects.png";
-import OutreachIcon from "../assets/icons/outreach.png";
-import WorkshopsIcon from "../assets/icons/workshops.png";
-import IndustryIcon from "../assets/icons/industry.png";
-import NetworkingIcon from "../assets/icons/networking.png";
-import { useAuth } from "./auth/AuthContext";
-import { useSnackbar } from "../components/Snackbar";
-import { supabase } from "../lib/supabase";
+import TiltedCard from "../../components/ui/TiltedCard";
+import ResearchIcon from "../../assets/icons/research.png";
+import ProjectsIcon from "../../assets/icons/projects.png";
+import OutreachIcon from "../../assets/icons/outreach.png";
+import WorkshopsIcon from "../../assets/icons/workshops.png";
+import IndustryIcon from "../../assets/icons/industry.png";
+import NetworkingIcon from "../../assets/icons/networking.png";
+import { useAuth } from "../../pages/auth/AuthContext";
+import { useSnackbar } from "../../components/ui/Snackbar";
+import { supabase } from "../../lib/supabase";
 
 export default function Home() {
   const iconRef = useRef(null);
@@ -33,7 +33,7 @@ export default function Home() {
     });
   }, []);
 
-  // Check for successful authentication
+  // Check for successful authentication (vibe coded with cursor lol ^-^)
   useEffect(() => {
     if (user) {
       // Check if this is a fresh login (not just page refresh)
@@ -108,12 +108,9 @@ export default function Home() {
         ensureUserInMembersTable();
 
         // Show welcome message for new login
-        showSnackbar(
-          `Welcome back, ${user.user_metadata?.first_name || "User"}!`,
-          {
-            customColor: "#772583",
-          }
-        );
+        showSnackbar(`Welcome ${user.user_metadata?.first_name || "User"}!`, {
+          customColor: "#772583",
+        });
 
         // Mark that we've shown the welcome message
         sessionStorage.setItem("welcome_shown", "true");
@@ -132,6 +129,12 @@ export default function Home() {
       sessionStorage.removeItem("welcome_shown");
     }
   }, [user, showSnackbar]);
+
+  const handleTest = () => {
+    showSnackbar("Test", {
+      customColor: "#772583",
+    });
+  };
 
   return (
     <>
@@ -165,7 +168,10 @@ export default function Home() {
                 collaboration, research, and real-world impact.”
               </h2>
               <div className="flex flex-row gap-2 md:gap-4 justify-center">
-                <button className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300">
+                <button
+                  onClick={handleTest}
+                  className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300"
+                >
                   Learn More
                 </button>
                 <button
