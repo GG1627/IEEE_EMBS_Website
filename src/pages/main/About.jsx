@@ -1,4 +1,4 @@
-import Footer from "../components/Footer";
+import Footer from "../../components/layout/Footer";
 
 export default function About() {
   return (
@@ -14,15 +14,20 @@ export default function About() {
           <section>
             <h2 className="text-2xl font-semibold mb-2">Our Purpose at UF</h2>
             <p className="text-lg leading-relaxed">
-              The IEEE EMBS chapter at the University of Florida is a student-led organization 
-              focused on empowering engineers to innovate at the intersection of healthcare and technology. 
-              Our mission is to provide students with the tools, connections, and experiences needed to grow 
-              academically, professionally, and personally in the field of biomedical engineering.
-              <br /><br />
-              We foster a community where students from all backgrounds can access mentorship, industry insights, 
-              and hands-on opportunities, regardless of experience level. Through leadership development, research 
-              exposure, and interdisciplinary collaboration, we prepare students to make meaningful contributions 
-              to society through engineering in medicine.
+              The IEEE EMBS chapter at the University of Florida is a
+              student-led organization focused on empowering engineers to
+              innovate at the intersection of healthcare and technology. Our
+              mission is to provide students with the tools, connections, and
+              experiences needed to grow academically, professionally, and
+              personally in the field of biomedical engineering.
+              <br />
+              <br />
+              We foster a community where students from all backgrounds can
+              access mentorship, industry insights, and hands-on opportunities,
+              regardless of experience level. Through leadership development,
+              research exposure, and interdisciplinary collaboration, we prepare
+              students to make meaningful contributions to society through
+              engineering in medicine.
             </p>
           </section>
 
@@ -52,15 +57,19 @@ export default function About() {
               What Makes Our Chapter Unique
             </h2>
             <p className="text-lg leading-relaxed">
-              Our chapter uniquely combines UF’s strengths in engineering and health sciences to support 
-              student development in an emerging, interdisciplinary field. We offer workshops, technical 
-              projects, guest speakers, and design challenges that give students real-world exposure and a 
-              head start in their careers. 
-              <br /><br />
-              We believe in breaking down barriers to involvement and democratizing access to skills and knowledge 
-              that are often reserved for graduate students. Whether you’re exploring the role of AI in diagnostics, 
-              learning about wearable biosensors, or just curious about the future of healthcare technology, EMBS is 
-              your gateway to grow, connect, and lead.
+              Our chapter uniquely combines UF’s strengths in engineering and
+              health sciences to support student development in an emerging,
+              interdisciplinary field. We offer workshops, technical projects,
+              guest speakers, and design challenges that give students
+              real-world exposure and a head start in their careers.
+              <br />
+              <br />
+              We believe in breaking down barriers to involvement and
+              democratizing access to skills and knowledge that are often
+              reserved for graduate students. Whether you’re exploring the role
+              of AI in diagnostics, learning about wearable biosensors, or just
+              curious about the future of healthcare technology, EMBS is your
+              gateway to grow, connect, and lead.
             </p>
           </section>
         </div>

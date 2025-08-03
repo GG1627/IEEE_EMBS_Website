@@ -1,6 +1,6 @@
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "../../pages/auth/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "../components/Snackbar";
+import { useSnackbar } from "../../components/ui/Snackbar";
 
 export default function Dashboard() {
   const { signOut } = useAuth();
@@ -12,18 +12,17 @@ export default function Dashboard() {
       const { error } = await signOut();
       if (error) {
         showSnackbar("Error logging out: " + error.message, {
-          customColor: "#772583", // Your theme purple
+          customColor: "#b00000",
         });
       } else {
-        // Custom purple color to match your theme
         showSnackbar("Logged out successfully!", {
-          customColor: "#772583", // Your theme purple
+          customColor: "#009623",
         });
         navigate("/");
       }
     } catch (error) {
       showSnackbar("Error logging out. Please try again.", {
-        customColor: "#772583", // Your theme purple
+        customColor: "#b00000",
       });
     }
   };

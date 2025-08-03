@@ -6,3 +6,31 @@
     padding: 0;
   }
 }
+
+/* Geometric boxy scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8f8f8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e1e1e;
+  border-radius: 0;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #000000;
+}
+
+/* Hide scrollbar arrows/buttons */
+::-webkit-scrollbar-button {
+  display: none;
+}
