@@ -34,3 +34,8 @@
 ::-webkit-scrollbar-button {
   display: none;
 }
+
+/* index.css */
+.backface-hidden {
+  backface-visibility: hidden;
+}

@@ -21,12 +21,13 @@ export default function TiltedCard({
   showTooltip = true,
   overlayContent = null,
   displayOverlayContent = false,
-  // New props for member card layout
   memberCardMode = false,
   memberName = "",
   memberPosition = "",
   memberLinkedIn = "",
+  summary = "",
 }) {
+
   const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -96,83 +97,47 @@ export default function TiltedCard({
     return (
       <figure
         ref={ref}
-        className="relative w-full [perspective:800px] flex flex-col items-center justify-center cursor-pointer"
-        style={{
-          height: containerHeight,
-          width: containerWidth,
-        }}
+        className="relative w-full [perspective:1000px] flex flex-col items-center justify-center cursor-pointer"
+        style={{ height: containerHeight, width: containerWidth }}
         onMouseMove={handleMouse}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         <motion.div
-          className="relative [transform-style:preserve-3d] bg-white rounded-xl border-2 border-gray-200 shadow-lg overflow-hidden"
+          className="relative w-full h-full transform-style preserve-3d transition-transform duration-700"
           style={{
-            width: imageWidth,
-            height: imageHeight,
             rotateX,
             rotateY,
             scale,
+            transformStyle: "preserve-3d",
+            transform: isHovered ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
-          {/* Image Section (top 70%) */}
-          <div className="relative flex justify-center items-center h-[70%] p-3">
-            <motion.img
+          {/* Front Face */}
+          <div className="absolute inset-0 backface-hidden bg-white rounded-xl border-2 border-gray-200 shadow-lg flex flex-col items-center justify-between p-4">
+            <img
               src={imageSrc}
               alt={altText}
-              className="aspect-square h-full w-auto object-cover rounded-full"
+              className="aspect-square h-2/3 w-auto object-cover rounded-full"
             />
+            <div className="text-center mt-2">
+              <h3 className="font-bold text-lg text-gray-800">{memberName}</h3>
+              <p className="text-sm text-gray-600">{memberPosition}</p>
+            </div>
           </div>
 
-          {/* Info Section (bottom 30%) */}
-          <div className="h-[30%] p-1 flex flex-col justify-start items-center bg-white gap-1">
-            <h3 className="font-bold text-lg text-gray-800 break-words text-center leading-none">
-              {memberName}
-            </h3>
-            <p className="text-md text-gray-600 truncate">{memberPosition}</p>
-          </div>
-
-          {/* Hover Overlay */}
-          <motion.div
-            className="absolute inset-0 bg-[#000000]/90 bg-opacity-80 flex flex-col items-center justify-center text-white rounded-[10px]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-            style={{ pointerEvents: isHovered ? "auto" : "none" }}
-          >
-            <p className="text-sm text-gray-300 mb-4 text-center px-4">
-              Click to see more!
+          {/* Back Face */}
+          <div className="absolute inset-0 backface-hidden bg-gray-100 rounded-xl border-2 border-gray-200 shadow-lg transform rotate-y-180 flex flex-col justify-center items-center text-center p-4">
+            <p className="text-sm text-gray-700">
+              {summary || "This branch focuses on biomedical innovation and real-world impact."}
             </p>
-            {memberLinkedIn && (
-              <a
-                href={memberLinkedIn}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center text-[#0072b1] hover:text-blue-300 transition-colors text-sm font-medium"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <LinkedInIcon />
-              </a>
-            )}
-          </motion.div>
+            <p className="text-xs text-gray-500 mt-2">Click to see more →</p>
+          </div>
         </motion.div>
-
-        {showTooltip && !memberCardMode && (
-          <motion.figcaption
-            className="pointer-events-none absolute left-0 top-0 rounded-[4px] bg-white px-[10px] py-[4px] text-[10px] text-[#2d2d2d] opacity-0 z-[3] hidden sm:block"
-            style={{
-              x,
-              y,
-              opacity,
-              rotate: rotateFigcaption,
-            }}
-          >
-            {captionText}
-          </motion.figcaption>
-        )}
       </figure>
     );
   }
+
 
   // Original TiltedCard layout for backwards compatibility
   return (
