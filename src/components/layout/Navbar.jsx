@@ -79,6 +79,9 @@ export default function Navbar() {
               <Link to="/careers" className={linkClass("/careers")}>
                 Careers
               </Link>
+              <Link to="/blog" className={linkClass("/blog")}>
+                Blog
+              </Link>
               <Link to="/team" className={linkClass("/team")}>
                 Team
               </Link>

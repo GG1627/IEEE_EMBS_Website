@@ -7,6 +7,7 @@ import EventCard from "../../components/ui/EventCard";
 import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
 import TiltedCard from "../../components/ui/TiltedCard";
+import FlipCard from "../../components/ui/FlipCard";
 import ResearchIcon from "../../assets/icons/research.png";
 import ProjectsIcon from "../../assets/icons/projects.png";
 import OutreachIcon from "../../assets/icons/outreach.png";
@@ -189,7 +190,6 @@ export default function Home() {
 
         {/* Scroll Down Icon */}
         <div className="w-full justify-center flex mt-8 flex-col items-center mb-4">
-          <span className="text-gray-700 text-sm">Scroll Down</span>
           <IoIosArrowDown ref={iconRef} className="text-black text-4xl" />
         </div>
 
@@ -228,30 +228,53 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-center mb-8">Our Branches</h1>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
-              { name: "Research", icon: ResearchIcon, page: "/research" },
-              { name: "Projects", icon: ProjectsIcon, page: "/projects" },
-              { name: "Outreach", icon: OutreachIcon, page: "/outreach" },
-              { name: "Workshops", icon: WorkshopsIcon, page: "/workshops" },
-              { name: "Industry", icon: IndustryIcon, page: "/industry" },
-              { name: "Networking", icon: NetworkingIcon, page: "/networking" },
-            ].map(({ name, icon, page }) => (
-              <div
-                key={name}
-                onClick={() => navigate(page)}
-                className="cursor-pointer flex justify-center"
-              >
-                <TiltedCard
+              {
+                name: "Research",
+                icon: ResearchIcon,
+                page: "/research",
+                summary: "Conducting hands-on biomedical investigations.",
+              },
+              {
+                name: "Projects",
+                icon: ProjectsIcon,
+                page: "/projects",
+                summary: "Collaborative engineering teams solving real-world problems.",
+              },
+              {
+                name: "Outreach",
+                icon: OutreachIcon,
+                page: "/outreach",
+                summary: "Connecting with the community through STEM initiatives.",
+              },
+              {
+                name: "Workshops",
+                icon: WorkshopsIcon,
+                page: "/workshops",
+                summary: "Skill-building events on hardware, software, and more.",
+              },
+              {
+                name: "Industry",
+                icon: IndustryIcon,
+                page: "/industry",
+                summary: "Professional development and career exploration.",
+              },
+              {
+                name: "Networking",
+                icon: NetworkingIcon,
+                page: "/networking",
+                summary: "Building lasting relationships with peers and mentors.",
+              },
+            ].map(({ name, icon, page, summary }) => (
+              <div key={name} className="flex justify-center">
+                <FlipCard
+                  name={name}
                   imageSrc={icon}
-                  memberCardMode={true}
-                  memberName={name}
-                  memberPosition="Learn More"
-                  containerHeight="280px"
-                  imageHeight="200px"
-                  imageWidth="300px"
-                  showTooltip={false}
+                  summary={summary}
+                  onClick={() => navigate(page)}
                 />
               </div>
             ))}
+
           </div>
         </div>
 

@@ -5,6 +5,7 @@ import Team from "./pages/main/Team";
 import About from "./pages/main/About";
 import Events from "./pages/main/Events";
 import Careers from "./pages/main/Careers";
+import Blog from "./pages/main/Blog";
 import Research from "./pages/branches/Research";
 import Projects from "./pages/branches/Projects";
 import Outreach from "./pages/branches/Outreach";
@@ -16,6 +17,7 @@ import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
 import { SnackbarProvider } from "./components/ui/Snackbar";
 import { AuthProvider } from "./pages/auth/AuthContext";
+
 
 function App() {
   return (
@@ -32,6 +34,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/events" element={<Events />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/blog" element={<Blog />} />
 
               <Route path="/research" element={<Research />} />
               <Route path="/projects" element={<Projects />} />
