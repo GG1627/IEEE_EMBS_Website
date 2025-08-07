@@ -78,6 +78,9 @@ export default function Home() {
                 email: user.email,
                 first_name: user.user_metadata?.first_name || "",
                 last_name: user.user_metadata?.last_name || "",
+                points: 0,
+                events_attended: 0,
+                user_id: user.id,
               };
 
               const { data: insertData, error: insertError } = await supabase
@@ -238,19 +241,22 @@ export default function Home() {
                 name: "Projects",
                 icon: ProjectsIcon,
                 page: "/projects",
-                summary: "Collaborative engineering teams solving real-world problems.",
+                summary:
+                  "Collaborative engineering teams solving real-world problems.",
               },
               {
                 name: "Outreach",
                 icon: OutreachIcon,
                 page: "/outreach",
-                summary: "Connecting with the community through STEM initiatives.",
+                summary:
+                  "Connecting with the community through STEM initiatives.",
               },
               {
                 name: "Workshops",
                 icon: WorkshopsIcon,
                 page: "/workshops",
-                summary: "Skill-building events on hardware, software, and more.",
+                summary:
+                  "Skill-building events on hardware, software, and more.",
               },
               {
                 name: "Industry",
@@ -262,7 +268,8 @@ export default function Home() {
                 name: "Networking",
                 icon: NetworkingIcon,
                 page: "/networking",
-                summary: "Building lasting relationships with peers and mentors.",
+                summary:
+                  "Building lasting relationships with peers and mentors.",
               },
             ].map(({ name, icon, page, summary }) => (
               <div key={name} className="flex justify-center">
@@ -274,7 +281,6 @@ export default function Home() {
                 />
               </div>
             ))}
-
           </div>
         </div>
 
