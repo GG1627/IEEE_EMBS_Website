@@ -16,12 +16,12 @@ export default function Navbar() {
   const linkClass = (path) => {
     if (path === "/") {
       return location.pathname === "/"
-        ? "text-[#772583] underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
-        : "text-black hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
+        ? "text-[#772583] text-xl underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
+        : "text-black text-xl hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
     }
     return location.pathname.startsWith(path)
-      ? "text-[#772583] underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
-      : "text-black hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
+      ? "text-[#772583] text-xl underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
+      : "text-black text-xl hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
   };
 
   // get the users initials
@@ -159,6 +159,20 @@ export default function Navbar() {
                 className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Events
+              </Link>
+              <Link
+                to="/careers"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+              >
+                Careers
+              </Link>
+              <Link
+                to="/blog"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+              >
+                Blog
               </Link>
               <Link
                 to="/team"
