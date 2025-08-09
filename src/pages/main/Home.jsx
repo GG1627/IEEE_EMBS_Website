@@ -6,7 +6,6 @@ import { useEffect, useRef } from "react";
 import EventCard from "../../components/ui/EventCard";
 import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
-import TiltedCard from "../../components/ui/TiltedCard";
 import FlipCard from "../../components/ui/FlipCard";
 import ResearchIcon from "../../assets/icons/research.png";
 import ProjectsIcon from "../../assets/icons/projects.png";
