@@ -7,6 +7,20 @@
   }
 }
 
+@keyframes move-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  } /* we duplicate the row, so -50% loops */
+}
+
+/* optional: control speed via a CSS var */
+:root {
+  --marquee-duration: 28s;
+}
+
 /* Geometric boxy scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
