@@ -1,11 +1,26 @@
-import Background from "../../assets/images/background.jpg";
-import BackgroundMobile from "../../assets/images/mobile_background.jpg";
+import DesktopBackgroundFiller from "../../assets/images/desktop_background_filler.png";
+import DesktopBackgroundDNA from "../../assets/images/desktop_background_dna.png";
+
+import Image0 from "../../assets/grid/img0.jpg";
+import Image1 from "../../assets/grid/img1.jpg";
+import Image2 from "../../assets/grid/img2.jpg";
+import Image3 from "../../assets/grid/img3.jpg";
+import Image4 from "../../assets/grid/img4.jpg";
+import Image5 from "../../assets/grid/img5.jpg";
+import Image6 from "../../assets/grid/img6.jpg";
+import Image7 from "../../assets/grid/img7.jpg";
+import Image8 from "../../assets/grid/img8.jpg";
+import Image9 from "../../assets/grid/img9.jpg";
+import Image10 from "../../assets/grid/img10.jpg";
+import Image11 from "../../assets/grid/img11.jpg";
+import Image12 from "../../assets/grid/img12.jpg";
+
 import { IoIosArrowDown } from "react-icons/io";
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import EventCard from "../../components/ui/EventCard";
 import Footer from "../../components/layout/Footer";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FlipCard from "../../components/ui/FlipCard";
 import ResearchIcon from "../../assets/icons/research.png";
 import ProjectsIcon from "../../assets/icons/projects.png";
@@ -22,6 +37,34 @@ export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
+
+  // Preload critical hero images and warm the cache ASAP
+  useEffect(() => {
+    const urlsToPreload = [DesktopBackgroundFiller, DesktopBackgroundDNA];
+
+    urlsToPreload.forEach((url) => {
+      if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
+        const link = document.createElement("link");
+        link.rel = "preload";
+        link.as = "image";
+        link.href = url;
+        link.setAttribute("fetchpriority", "high");
+        document.head.appendChild(link);
+      }
+
+      // Warm the cache via JS image prefetch as a fallback
+      const img = new Image();
+      img.decoding = "async";
+      try {
+        // Some browsers support this; if not, it is safely ignored
+        // @ts-ignore
+        img.fetchPriority = "high";
+      } catch (_) {
+        /* no-op */
+      }
+      img.src = url;
+    });
+  }, []);
 
   useEffect(() => {
     gsap.to(iconRef.current, {
@@ -133,70 +176,247 @@ export default function Home() {
     }
   }, [user, showSnackbar]);
 
-  const handleTest = () => {
-    showSnackbar("Test", {
-      customColor: "#772583",
-    });
-  };
+  // No hero CTA buttons for now per new design
 
   return (
     <>
       {/* Hero Section */}
-      <div className="min-h-screen bg-[#f2f0ef] pt-16 relative">
-        {/* Background */}
-        <div className="relative">
-          <img
-            src={Background}
-            alt="Background"
-            className="hidden md:block w-screen h-auto"
-          />
-          <img
-            src={BackgroundMobile}
-            alt="Background"
-            className="block md:hidden w-screen h-auto"
-          />
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-[#00629b]/70 to-[#772583]/70"></div>
-          {/* Content */}
-          <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center z-10">
-            <div className="max-w-4xl md:max-w-3xl mx-auto relative z-10 flex flex-col gap-1.5 md:gap-4 p-2 md:p-0">
-              <h1 className="text-[1.5rem] md:text-7xl font-bold text-white text-center">
-                IEEE Engineering in Medicine & Biology Society
+      <div className="relative">
+        {/* Full-width background extensions - only for hero */}
+        <div className="absolute inset-0 h-[100dvh] bg-[#1A1A1A]" />
+        <div
+          className="absolute top-0 bottom-0 right-0 bg-[#D9D9D9] hidden md:block h-[100dvh]"
+          style={{ left: "60%" }}
+        />
+
+        {/* Centered content container */}
+        <div className="relative min-h-[100dvh] max-w-[1600px] mx-auto overflow-hidden bg-[#1A1A1A]">
+          {/* Right half overlay (desktop only) - positioned relative to container */}
+          <div className="absolute inset-y-0 right-0 hidden md:block md:w-[46.5%] bg-[#D9D9D9] z-0" />
+
+          {/* Centered DNA with filler behind */}
+          <div className="absolute inset-0 z-10 pointer-events-none">
+            {/* Filler and DNA sized to viewport height on desktop */}
+            <img
+              src={DesktopBackgroundFiller}
+              alt="Background Filler"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:-translate-x-[30%] block h-auto md:h-screen md:w-auto z-10 opacity-100"
+            />
+            <div className="absolute inset-0 flex items-center justify-center z-20">
+              <img
+                src={DesktopBackgroundDNA}
+                alt="DNA"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="block h-auto md:h-screen md:w-auto"
+              />
+            </div>
+          </div>
+
+          {/* Desktop Text Content */}
+          <div className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-30 md:w-[48%] lg:w-[44%] xl:w-[40%] 2xl:w-[38%] h-[70vh] p-2 rounded-xl overflow-x-hidden overflow-y-auto">
+            <div className="flex flex-col h-full justify-center gap-3 md:gap-4 lg:gap-5">
+              <h1 className="font-bold text-left text-[#B17CB3] mb-2 md:mb-3 leading-[1.08] tracking-tight text-[clamp(2rem,3.8vw,4rem)]">
+                IEEE Engineering in Medicine &amp; Biology Society
               </h1>
-              <h2 className="text-md md:text-3xl font-semibold md:font-bold text-white text-center">
+              <h2 className="font-bold text-left text-[#97BDD7] mb-2 md:mb-3 leading-tight text-[clamp(1.25rem,2.2vw,2.5rem)]">
                 University of Florida Chapter
               </h2>
-              <h2 className="text-xs md:text-lg text-white md:text-white text-center">
-                “Bridging innovation, AI, and human health, we empower students
+              <p className="text-left text-[clamp(1rem,1.4vw,1.5rem)] text-white/95 max-w-[65ch]">
+                "Bridging innovation, AI, and human health, we empower students
                 to explore the frontiers of biomedical technology through
-                collaboration, research, and real-world impact.”
-              </h2>
-              <div className="flex flex-row gap-2 md:gap-4 justify-center">
-                <button
-                  onClick={handleTest}
-                  className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300"
-                >
+                collaboration, research, and real-world impact."
+              </p>
+              <div className="flex flex-row flex-wrap items-center justify-start gap-3 md:gap-4 mt-4 md:mt-6 pl-20">
+                <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
                   Learn More
                 </button>
-                <button
-                  onClick={() =>
-                    user ? navigate("/dashboard") : navigate("/auth/login")
-                  }
-                  className="bg-white/20 backdrop-blur-md text-xs md:text-lg text-white py-1 md:px-4 md:py-2 rounded-[20px] w-25 md:w-36 border border-white/30 hover:bg-white/30 transition-all duration-300 cursor-pointer"
-                >
-                  {user ? "Dashboard" : "Check In"}
-                </button>
+                {user ? (
+                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
+                    <Link className="no-underline" to="/dashboard">
+                      Dashboard
+                    </Link>
+                  </button>
+                ) : (
+                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
+                    <Link className="no-underline" to="/login">
+                      Login
+                    </Link>
+                  </button>
+                )}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Scroll Down Icon */}
-        <div className="w-full justify-center flex mt-8 flex-col items-center mb-4">
-          <IoIosArrowDown ref={iconRef} className="text-black text-4xl" />
-        </div>
+          {/* Mobile Text Content */}
+          <div className="md:hidden absolute inset-x-0 bottom-16 z-30 px-6">
+            <div className="flex flex-col items-center text-center gap-4">
+              <h1 className="font-bold text-[#B17CB3] leading-tight text-2xl sm:text-3xl">
+                IEEE Engineering in Medicine &amp; Biology Society
+              </h1>
+              <h2 className="font-bold text-[#97BDD7] leading-tight text-lg sm:text-xl">
+                University of Florida Chapter
+              </h2>
+              <p className="text-white/95 text-sm sm:text-base max-w-[90%]">
+                "Bridging innovation, AI, and human health, we empower students
+                to explore the frontiers of biomedical technology through
+                collaboration, research, and real-world impact."
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
+                <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                  Learn More
+                </button>
+                {user ? (
+                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                    <Link className="no-underline" to="/dashboard">
+                      Dashboard
+                    </Link>
+                  </button>
+                ) : (
+                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                    <Link className="no-underline" to="/login">
+                      Login
+                    </Link>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
 
+          {/* Image Grid */}
+          <div className="hidden md:block absolute -right-0 top-20 bottom-0 my-auto z-30 w-[50%] h-[80vh]">
+            {/* Inner grid */}
+            <div className="h-full w-full grid grid-cols-[41fr_39fr_103fr] gap-[0.25rem] p-2">
+              {/* Column 1 */}
+              <div className="flex flex-col gap-1 h-[56%] mt-[65%] items-end">
+                {/* <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]" /> */}
+                <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]">
+                  <img
+                    src={Image0}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-full">
+                  <img
+                    src={Image1}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-[85%]">
+                  <img
+                    src={Image3}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+              {/* Column 2 */}
+              <div className="flex flex-col gap-1 h-[78%] mt-[20%] items-end">
+                <div className="bg-[#b0b0b0] rounded-lg h-[25%] w-full">
+                  <img
+                    src={Image2}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-[#b0b0b0] rounded-lg h-[40%] w-full">
+                  <img
+                    src={Image4}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-full">
+                  <img
+                    src={Image5}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg"
+                  />
+                </div>
+              </div>
+              {/* Column 3 */}
+              <div className="flex flex-col gap-1 h-full items-start">
+                {/* Row 1 */}
+                <div className="flex flex-row gap-1 h-[35%] w-[85%]">
+                  <div className="bg-[#b0b0b0] rounded-lg h-full w-[40%]">
+                    <img
+                      src={Image6}
+                      alt="Image Grid"
+                      className="h-full w-full object-cover rounded-lg"
+                    />
+                  </div>
+                  <div className="bg-[#b0b0b0] rounded-lg h-[80%] w-[60%] self-end">
+                    <img
+                      src={Image7}
+                      alt="Image Grid"
+                      className="h-full w-full object-cover rounded-lg"
+                    />
+                  </div>
+                </div>
+                {/* Row 2 */}
+                <div className="flex flex-row h-[70%] gap-1 w-full">
+                  <div className="flex flex-col gap-1 h-full w-[53%]">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[50%] w-full">
+                      <img
+                        src={Image8}
+                        alt="Image Grid"
+                        className="h-full w-full object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="flex flex-row gap-1 h-[30%] w-full">
+                      <div className="bg-[#b0b0b0] rounded-lg h-full w-[47%]">
+                        <img
+                          src={Image10}
+                          alt="Image Grid"
+                          className="h-full w-full object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="bg-[#b0b0b0] rounded-lg h-[85%] w-[53%]">
+                        <img
+                          src={Image12}
+                          alt="Image Grid"
+                          className="h-full w-full object-cover rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 h-[70%] w-[47%]">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[60%] w-full">
+                      <img
+                        src={Image9}
+                        alt="Image Grid"
+                        className="h-full w-full object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-[80%]">
+                      <img
+                        src={Image11}
+                        alt="Image Grid"
+                        className="h-full w-full object-cover rounded-lg"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Scroll Down Icon */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-2">
+            <IoIosArrowDown ref={iconRef} className="text-white text-4xl" />
+          </div>
+        </div>
+      </div>
+
+      {/* Rest of page content */}
+      <div className="bg-[#ffffff]">
         {/* Upcoming Events */}
-        <div className="max-w-7xl mx-auto p-4 md:p-0">
+        <div className="max-w-7xl mx-auto p-4 md:p-0 mt-16">
           <h1 className="text-4xl font-bold text-center mb-4">
             Upcoming Events
           </h1>

@@ -1,16 +1,18 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import EMBSLogo from "../../assets/logos/EMBS.svg";
-import UFLogo from "../../assets/logos/UF.svg";
+import EMBSLogo from "../../assets/logos/EMBS_logo.png";
 import { FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../pages/auth/AuthContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userInitials, setUserInitials] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const isHomePage = location.pathname === "/";
 
   // helper function to check active path for link styling
   const linkClass = (path) => {
@@ -23,6 +25,17 @@ export default function Navbar() {
       ? "text-[#772583] text-xl underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
       : "text-black text-xl hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
   };
+
+  // scroll detection effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 20); // Change threshold as needed
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // get the users initials
   useEffect(() => {
@@ -42,10 +55,21 @@ export default function Navbar() {
     }
   }, [user]);
 
+  // determine navbar styling based on page and scroll position
+  const navbarBgClass =
+    isHomePage && !isScrolled
+      ? "bg-transparent"
+      : "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)]";
+
+  const titleTextColor =
+    isHomePage && !isScrolled ? "text-white" : "text-black";
+
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navbarBgClass}`}
+      >
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logos */}
 
@@ -54,19 +78,18 @@ export default function Navbar() {
                 <img
                   src={EMBSLogo}
                   alt="UF Logo"
-                  className="w-20 h-20 md:w-46 md:h-46"
+                  className="w-20 h-20 md:w-12 md:h-12"
                 />
               </Link>
-              <div className="mx-4 h-8 w-px bg-gray-400"></div>
-              <img
-                src={UFLogo}
-                alt="UF Logo"
-                className="w-20 h-20 md:w-46 md:h-46"
-              />
+              <h1
+                className={`text-2xl font-bold ml-6 transition-all duration-300 ${titleTextColor}`}
+              >
+                IEEE EMBS - University of Florida
+              </h1>
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-end space-x-12">
+            <div className="hidden md:flex items-end space-x-8">
               <Link to="/" className={linkClass("/")}>
                 Home
               </Link>
@@ -88,7 +111,7 @@ export default function Navbar() {
               {user ? (
                 <div className="flex items-center justify-center">
                   <div
-                    className="w-6 h-6 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
+                    className="w-7 h-7 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
                     onClick={() => navigate("/dashboard")}
                     title="Go to Dashboard"
                   >
@@ -111,7 +134,11 @@ export default function Navbar() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-black hover:text-[#772583] transition-colors duration-300 p-2"
+                className={`${
+                  isHomePage && !isScrolled
+                    ? "text-white hover:text-[#B17CB3]"
+                    : "text-black hover:text-[#772583]"
+                } transition-colors duration-300 p-2`}
               >
                 <svg
                   className="w-6 h-6"
@@ -137,47 +164,47 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-black border-t border-gray-800">
+          <div className="md:hidden bg-white border-t border-gray-200 shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
             <div className="px-2 pt-2 pb-3 space-y-1">
               <Link
                 to="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Home
               </Link>
               <Link
                 to="/about"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 About
               </Link>
               <Link
                 to="/events"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Events
               </Link>
               <Link
                 to="/careers"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Careers
               </Link>
               <Link
                 to="/blog"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Blog
               </Link>
               <Link
                 to="/team"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-white hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Team
               </Link>

@@ -18,7 +18,6 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import { SnackbarProvider } from "./components/ui/Snackbar";
 import { AuthProvider } from "./pages/auth/AuthContext";
 
-
 function App() {
   return (
     <>
@@ -26,7 +25,7 @@ function App() {
         <SnackbarProvider>
           <BrowserRouter>
             <Navbar />
-            <div className="fixed top-16 left-0 right-0 z-40 h-4 w-full bg-gradient-to-b from-white to-transparent pointer-events-none"></div>
+            {/* <div className="fixed top-16 left-0 right-0 z-40 h-4 w-full bg-gradient-to-b from-white to-transparent pointer-events-none"></div> */}
 
             <Routes>
               <Route path="/" element={<Home />} />
