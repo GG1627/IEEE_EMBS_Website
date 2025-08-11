@@ -1,19 +1,19 @@
 import DesktopBackgroundFiller from "../../assets/images/desktop_background_filler.png";
 import DesktopBackgroundDNA from "../../assets/images/desktop_background_dna.png";
 
-import Image0 from "../../assets/grid/img0.jpg";
-import Image1 from "../../assets/grid/img1.jpg";
-import Image2 from "../../assets/grid/img2.jpg";
-import Image3 from "../../assets/grid/img3.jpg";
-import Image4 from "../../assets/grid/img4.jpg";
-import Image5 from "../../assets/grid/img5.jpg";
-import Image6 from "../../assets/grid/img6.jpg";
-import Image7 from "../../assets/grid/img7.jpg";
-import Image8 from "../../assets/grid/img8.jpg";
-import Image9 from "../../assets/grid/img9.jpg";
-import Image10 from "../../assets/grid/img10.jpg";
-import Image11 from "../../assets/grid/img11.jpg";
-import Image12 from "../../assets/grid/img12.jpg";
+import Image0 from "../../assets/grid/img0.avif";
+import Image1 from "../../assets/grid/img1.avif";
+import Image2 from "../../assets/grid/img2.avif";
+import Image3 from "../../assets/grid/img3.avif";
+import Image4 from "../../assets/grid/img4.avif";
+import Image5 from "../../assets/grid/img5.avif";
+import Image6 from "../../assets/grid/img6.avif";
+import Image7 from "../../assets/grid/img7.avif";
+import Image8 from "../../assets/grid/img8.avif";
+import Image9 from "../../assets/grid/img9.avif";
+import Image10 from "../../assets/grid/img10.avif";
+import Image11 from "../../assets/grid/img11.avif";
+import Image12 from "../../assets/grid/img12.avif";
 
 import { IoIosArrowDown } from "react-icons/io";
 import { gsap } from "gsap";
@@ -31,12 +31,16 @@ import NetworkingIcon from "../../assets/icons/networking.png";
 import { useAuth } from "../../pages/auth/AuthContext";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { supabase } from "../../lib/supabase";
+import { slidingText } from "../../data/slidingText";
+import ParticlesBg from "../../components/ui/ParticlesBG";
 
 export default function Home() {
   const iconRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
+
+  const itemsTwice = [...slidingText, ...slidingText]; // duplicate for seamless loop
 
   // Preload critical hero images and warm the cache ASAP
   useEffect(() => {
@@ -194,6 +198,13 @@ export default function Home() {
           {/* Right half overlay (desktop only) - positioned relative to container */}
           <div className="absolute inset-y-0 right-0 hidden md:block md:w-[46.5%] bg-[#D9D9D9] z-0" />
 
+          {/* Large Circle with Particles - positioned so leftmost edge is at screen center */}
+          <div className="absolute top-1/2 left-1/2 -translate-y-1/2 hidden md:block z-20">
+            <div className="w-[100vh] h-[100vh] rounded-full bg-transparent relative overflow-hidden">
+              <ParticlesBg />
+            </div>
+          </div>
+
           {/* Centered DNA with filler behind */}
           <div className="absolute inset-0 z-10 pointer-events-none">
             {/* Filler and DNA sized to viewport height on desktop */}
@@ -294,49 +305,61 @@ export default function Home() {
               {/* Column 1 */}
               <div className="flex flex-col gap-1 h-[56%] mt-[65%] items-end">
                 {/* <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]" /> */}
-                <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]">
+                <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%] opacity-60 hover:opacity-100 transition-opacity duration-300">
                   <img
                     src={Image0}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-full">
+                <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
                   <img
                     src={Image1}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-[85%]">
+                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-[85%] opacity-60 hover:opacity-100 transition-opacity duration-300">
                   <img
                     src={Image3}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
               {/* Column 2 */}
               <div className="flex flex-col gap-1 h-[78%] mt-[20%] items-end">
-                <div className="bg-[#b0b0b0] rounded-lg h-[25%] w-full">
+                <div className="bg-[#b0b0b0] rounded-lg h-[25%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
                   <img
                     src={Image2}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[40%] w-full">
+                <div className="bg-[#b0b0b0] rounded-lg h-[40%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
                   <img
                     src={Image4}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-full">
+                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
                   <img
                     src={Image5}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -344,61 +367,75 @@ export default function Home() {
               <div className="flex flex-col gap-1 h-full items-start">
                 {/* Row 1 */}
                 <div className="flex flex-row gap-1 h-[35%] w-[85%]">
-                  <div className="bg-[#b0b0b0] rounded-lg h-full w-[40%]">
+                  <div className="bg-[#b0b0b0] rounded-lg h-full w-[40%] opacity-60 hover:opacity-100 transition-opacity duration-300">
                     <img
                       src={Image6}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
-                  <div className="bg-[#b0b0b0] rounded-lg h-[80%] w-[60%] self-end">
+                  <div className="bg-[#b0b0b0] rounded-lg h-[80%] w-[60%] self-end opacity-60 hover:opacity-100 transition-opacity duration-300">
                     <img
                       src={Image7}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg"
+                      loading="lazy"
+                      decoding="async"
                     />
                   </div>
                 </div>
                 {/* Row 2 */}
                 <div className="flex flex-row h-[70%] gap-1 w-full">
                   <div className="flex flex-col gap-1 h-full w-[53%]">
-                    <div className="bg-[#b0b0b0] rounded-lg h-[50%] w-full">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[50%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
                       <img
                         src={Image8}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="flex flex-row gap-1 h-[30%] w-full">
-                      <div className="bg-[#b0b0b0] rounded-lg h-full w-[47%]">
+                      <div className="bg-[#b0b0b0] rounded-lg h-full w-[47%] opacity-60 hover:opacity-100 transition-opacity duration-300">
                         <img
                           src={Image10}
                           alt="Image Grid"
                           className="h-full w-full object-cover rounded-lg"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
-                      <div className="bg-[#b0b0b0] rounded-lg h-[85%] w-[53%]">
+                      <div className="bg-[#b0b0b0] rounded-lg h-[85%] w-[53%] opacity-60 hover:opacity-100 transition-opacity duration-300">
                         <img
                           src={Image12}
                           alt="Image Grid"
                           className="h-full w-full object-cover rounded-lg"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 h-[70%] w-[47%]">
-                    <div className="bg-[#b0b0b0] rounded-lg h-[60%] w-full">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[60%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
                       <img
                         src={Image9}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
-                    <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-[80%]">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-[80%] opacity-60 hover:opacity-100 transition-opacity duration-300">
                       <img
                         src={Image11}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg"
+                        loading="lazy"
+                        decoding="async"
                       />
                     </div>
                   </div>
@@ -410,6 +447,29 @@ export default function Home() {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-2">
             <IoIosArrowDown ref={iconRef} className="text-white text-4xl" />
           </div>
+        </div>
+      </div>
+
+      {/* Cool Sliding Content Banner */}
+      <div className="w-full bg-[#1A1A1A] py-4 overflow-hidden relative">
+        {/* Left gradient overlay */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-32 z-10 bg-gradient-to-r from-[#1A1A1A] via-[#1A1A1A]/80 to-transparent" />
+        {/* Right gradient overlay */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-32 z-10 bg-gradient-to-l from-[#1A1A1A] via-[#1A1A1A]/80 to-transparent" />
+        <div
+          className="
+          inline-flex items-center gap-6 whitespace-nowrap
+          animate-[move-left_28s_linear_infinite]
+          motion-reduce:animate-none
+        "
+        >
+          {itemsTwice.map((text, i) => (
+            <span key={i} className="inline-flex items-center">
+              <span className="text-[#5a5a5a] font-semibold text-4xl leading-tight">
+                {text}
+              </span>
+            </span>
+          ))}
         </div>
       </div>
 

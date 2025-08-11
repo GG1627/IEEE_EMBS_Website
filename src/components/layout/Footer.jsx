@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <>
       <div className="w-full h-16 bg-[#f2f0ef] mt-10 border border-t-1 border-black">
-        <div className="max-w-7xl h-full mx-auto flex items-center justify-between px-2">
+        <div className="max-w-[1600px] h-full mx-auto flex items-center justify-between px-4">
           <h1 className="text-black text-lg font-bold md:text-2xl">UF EMBS</h1>
           {/* Icons */}
           <div className="flex flex-row gap-1 md:gap-2">
@@ -36,7 +36,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="w-full h-10 bg-[#000000]">
-        <div className="max-w-7xl mx-auto h-full flex items-center px-2">
+        <div className="max-w-[1600px] mx-auto h-full flex items-center px-4">
           <h1 className="text-white text-xs md:text-sm">
             Copyright &copy; 2025 UF IEEE Engineering in Medicine and Biology
             Society
