@@ -243,18 +243,18 @@ export default function Home() {
                 collaboration, research, and real-world impact."
               </p>
               <div className="flex flex-row flex-wrap items-center justify-start gap-3 md:gap-4 mt-4 md:mt-6 pl-20">
-                <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
+                <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
                   Learn More
                 </button>
                 {user ? (
-                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
+                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
                     <Link className="no-underline" to="/dashboard">
                       Dashboard
                     </Link>
                   </button>
                 ) : (
-                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80">
-                    <Link className="no-underline" to="/login">
+                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
+                    <Link className="no-underline" to="/auth/login">
                       Login
                     </Link>
                   </button>
@@ -278,18 +278,18 @@ export default function Home() {
                 collaboration, research, and real-world impact."
               </p>
               <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
-                <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300 min-w-[120px] text-center">
                   Learn More
                 </button>
                 {user ? (
-                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300 min-w-[120px] text-center">
                     <Link className="no-underline" to="/dashboard">
                       Dashboard
                     </Link>
                   </button>
                 ) : (
-                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
-                    <Link className="no-underline" to="/login">
+                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300 min-w-[120px] text-center">
+                    <Link className="no-underline" to="/auth/login">
                       Login
                     </Link>
                   </button>
