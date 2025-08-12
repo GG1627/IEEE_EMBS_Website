@@ -464,7 +464,7 @@ export default function Home() {
         </div>
 
         {/* Mobile Image Grid - Positioned over particle circle */}
-        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[25] w-[90vw] h-[90vw] max-w-[500px] max-h-[500px]">
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[35] w-[90vw] h-[90vw] max-w-[500px] max-h-[500px]">
           {/* Inner grid - scaled for mobile */}
           <div className="h-full w-full grid grid-cols-[41fr_39fr_103fr] gap-[0.15rem] p-1">
             {/* Column 1 */}
