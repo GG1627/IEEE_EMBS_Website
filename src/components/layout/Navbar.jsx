@@ -55,14 +55,16 @@ export default function Navbar() {
     }
   }, [user]);
 
-  // determine navbar styling based on page and scroll position
+  // determine navbar styling based on page, scroll position, and mobile menu state
   const navbarBgClass =
-    isHomePage && !isScrolled
+    isHomePage && !isScrolled && !isMobileMenuOpen
       ? "bg-transparent"
       : "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)]";
 
   const titleTextColor =
-    isHomePage && !isScrolled ? "text-white" : "text-black";
+    isHomePage && !isScrolled && !isMobileMenuOpen
+      ? "text-white"
+      : "text-black";
 
   return (
     <>
@@ -71,18 +73,19 @@ export default function Navbar() {
       >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logos - Hidden on mobile */}
-
-            <div className="flex-shrink-0 items-center flex-row hidden md:flex">
+            {/* Logo - Desktop always visible, Mobile only when menu open */}
+            <div className="flex-shrink-0 items-center flex-row flex">
               <Link to="/" className="flex items-center">
                 <img
                   src={EMBSLogo}
                   alt="UF Logo"
-                  className="w-20 h-20 md:w-12 md:h-12"
+                  className={`w-10 h-10 md:w-12 md:h-12 transition-all duration-0 ${
+                    isMobileMenuOpen ? "block md:block" : "hidden md:block"
+                  }`}
                 />
               </Link>
               <h1
-                className={`text-2xl font-bold ml-6 transition-all duration-300 ${titleTextColor}`}
+                className={`text-2xl font-bold ml-6 transition-all duration-300 ${titleTextColor} hidden md:block`}
               >
                 IEEE EMBS - University of Florida
               </h1>
