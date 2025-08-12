@@ -71,9 +71,9 @@ export default function Navbar() {
       >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logos */}
+            {/* Logos - Hidden on mobile */}
 
-            <div className="flex-shrink-0 flex items-center flex-row">
+            <div className="flex-shrink-0 items-center flex-row hidden md:flex">
               <Link to="/" className="flex items-center">
                 <img
                   src={EMBSLogo}
@@ -130,15 +130,11 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            {/* Mobile Menu Button - Centered on mobile */}
+            <div className="md:hidden flex-1 flex justify-end">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className={`${
-                  isHomePage && !isScrolled
-                    ? "text-white hover:text-[#B17CB3]"
-                    : "text-black hover:text-[#772583]"
-                } transition-colors duration-300 p-2`}
+                className="text-black hover:text-[#772583] transition-colors duration-300 p-2"
               >
                 <svg
                   className="w-6 h-6"

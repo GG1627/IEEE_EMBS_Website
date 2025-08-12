@@ -1,5 +1,7 @@
 import DesktopBackgroundFiller from "../../assets/images/desktop_background_filler.png";
 import DesktopBackgroundDNA from "../../assets/images/desktop_background_dna.png";
+import MobileBackgroundFiller from "../../assets/images/mobile_background_filler.png";
+import MobileBackgroundDNA from "../../assets/images/mobile_background_dna.png";
 
 import Image0 from "../../assets/grid/img0.avif";
 import Image1 from "../../assets/grid/img1.avif";
@@ -184,37 +186,36 @@ export default function Home() {
 
   return (
     <>
-      {/* Hero Section */}
-      <div className="relative">
-        {/* Full-width background extensions - only for hero */}
+      {/* Desktop Hero Section */}
+      <div className="hidden md:block relative">
+        {/* Full-width background extensions - desktop only */}
         <div className="absolute inset-0 h-[100dvh] bg-[#1A1A1A]" />
         <div
-          className="absolute top-0 bottom-0 right-0 bg-[#D9D9D9] hidden md:block h-[100dvh]"
+          className="absolute top-0 bottom-0 right-0 bg-[#D9D9D9] h-[100dvh]"
           style={{ left: "60%" }}
         />
 
         {/* Centered content container */}
         <div className="relative min-h-[100dvh] max-w-[1600px] mx-auto overflow-hidden bg-[#1A1A1A]">
-          {/* Right half overlay (desktop only) - positioned relative to container */}
-          <div className="absolute inset-y-0 right-0 hidden md:block md:w-[46.5%] bg-[#D9D9D9] z-0" />
+          {/* Right half overlay - positioned relative to container */}
+          <div className="absolute inset-y-0 right-0 w-[46.5%] bg-[#D9D9D9] z-0" />
 
-          {/* Large Circle with Particles - positioned so leftmost edge is at screen center */}
-          <div className="absolute top-1/2 left-1/2 -translate-y-1/2 hidden md:block z-20">
+          {/* Large Circle with Particles */}
+          <div className="absolute top-1/2 left-1/2 -translate-y-1/2 z-20">
             <div className="w-[100vh] h-[100vh] rounded-full bg-transparent relative overflow-hidden">
-              <ParticlesBg />
+              <ParticlesBg id="particles-desktop" />
             </div>
           </div>
 
           {/* Centered DNA with filler behind */}
           <div className="absolute inset-0 z-10 pointer-events-none">
-            {/* Filler and DNA sized to viewport height on desktop */}
             <img
               src={DesktopBackgroundFiller}
               alt="Background Filler"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 md:-translate-x-[30%] block h-auto md:h-screen md:w-auto z-10 opacity-100"
+              className="absolute left-1/2 top-1/2 -translate-x-[30%] -translate-y-1/2 h-screen w-auto z-10 opacity-100"
             />
             <div className="absolute inset-0 flex items-center justify-center z-20">
               <img
@@ -223,18 +224,18 @@ export default function Home() {
                 loading="eager"
                 decoding="async"
                 fetchPriority="high"
-                className="block h-auto md:h-screen md:w-auto"
+                className="h-screen w-auto"
               />
             </div>
           </div>
 
           {/* Desktop Text Content */}
-          <div className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-30 md:w-[48%] lg:w-[44%] xl:w-[40%] 2xl:w-[38%] h-[70vh] p-2 rounded-xl overflow-x-hidden overflow-y-auto">
-            <div className="flex flex-col h-full justify-center gap-3 md:gap-4 lg:gap-5">
-              <h1 className="font-bold text-left text-[#B17CB3] mb-2 md:mb-3 leading-[1.08] tracking-tight text-[clamp(2rem,3.8vw,4rem)]">
+          <div className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-[48%] lg:w-[44%] xl:w-[40%] 2xl:w-[38%] h-[70vh] p-2 rounded-xl overflow-x-hidden overflow-y-auto">
+            <div className="flex flex-col h-full justify-center gap-4 lg:gap-5">
+              <h1 className="font-bold text-left text-[#B17CB3] mb-3 leading-[1.08] tracking-tight text-[clamp(2rem,3.8vw,4rem)]">
                 IEEE Engineering in Medicine &amp; Biology Society
               </h1>
-              <h2 className="font-bold text-left text-[#97BDD7] mb-2 md:mb-3 leading-tight text-[clamp(1.25rem,2.2vw,2.5rem)]">
+              <h2 className="font-bold text-left text-[#97BDD7] mb-3 leading-tight text-[clamp(1.25rem,2.2vw,2.5rem)]">
                 University of Florida Chapter
               </h2>
               <p className="text-left text-[clamp(1rem,1.4vw,1.5rem)] text-white/95 max-w-[65ch]">
@@ -242,18 +243,18 @@ export default function Home() {
                 to explore the frontiers of biomedical technology through
                 collaboration, research, and real-world impact."
               </p>
-              <div className="flex flex-row flex-wrap items-center justify-start gap-3 md:gap-4 mt-4 md:mt-6 pl-20">
-                <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
+              <div className="flex flex-row flex-wrap items-center justify-start gap-4 mt-6 pl-20">
+                <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
                   Learn More
                 </button>
                 {user ? (
-                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
+                  <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
                     <Link className="no-underline" to="/dashboard">
                       Dashboard
                     </Link>
                   </button>
                 ) : (
-                  <button className="bg-[#ffffff] text-black px-5 md:px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
+                  <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
                     <Link className="no-underline" to="/auth/login">
                       Login
                     </Link>
@@ -263,71 +264,36 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Mobile Text Content */}
-          <div className="md:hidden absolute inset-x-0 bottom-16 z-30 px-6">
-            <div className="flex flex-col items-center text-center gap-4">
-              <h1 className="font-bold text-[#B17CB3] leading-tight text-2xl sm:text-3xl">
-                IEEE Engineering in Medicine &amp; Biology Society
-              </h1>
-              <h2 className="font-bold text-[#97BDD7] leading-tight text-lg sm:text-xl">
-                University of Florida Chapter
-              </h2>
-              <p className="text-white/95 text-sm sm:text-base max-w-[90%]">
-                "Bridging innovation, AI, and human health, we empower students
-                to explore the frontiers of biomedical technology through
-                collaboration, research, and real-world impact."
-              </p>
-              <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
-                <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300 min-w-[120px] text-center">
-                  Learn More
-                </button>
-                {user ? (
-                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300 min-w-[120px] text-center">
-                    <Link className="no-underline" to="/dashboard">
-                      Dashboard
-                    </Link>
-                  </button>
-                ) : (
-                  <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-sm shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300 min-w-[120px] text-center">
-                    <Link className="no-underline" to="/auth/login">
-                      Login
-                    </Link>
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Image Grid */}
-          <div className="hidden md:block absolute -right-0 top-20 bottom-0 my-auto z-30 w-[50%] h-[80vh]">
+          {/* Desktop Image Grid */}
+          <div className="absolute -right-0 top-20 bottom-0 my-auto z-30 w-[50%] h-[80vh]">
             {/* Inner grid */}
             <div className="h-full w-full grid grid-cols-[41fr_39fr_103fr] gap-[0.25rem] p-2">
               {/* Column 1 */}
               <div className="flex flex-col gap-1 h-[56%] mt-[65%] items-end">
                 {/* <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]" /> */}
-                <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%] opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]">
                   <img
                     src={Image0}
                     alt="Image Grid"
-                    className="h-full w-full object-cover rounded-lg"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                     decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-full">
                   <img
                     src={Image1}
                     alt="Image Grid"
-                    className="h-full w-full object-cover rounded-lg"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                     decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-[85%] opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-[85%]">
                   <img
                     src={Image3}
                     alt="Image Grid"
-                    className="h-full w-full object-cover rounded-lg"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                     decoding="async"
                   />
@@ -335,29 +301,29 @@ export default function Home() {
               </div>
               {/* Column 2 */}
               <div className="flex flex-col gap-1 h-[78%] mt-[20%] items-end">
-                <div className="bg-[#b0b0b0] rounded-lg h-[25%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-[#b0b0b0] rounded-lg h-[25%] w-full">
                   <img
                     src={Image2}
                     alt="Image Grid"
-                    className="h-full w-full object-cover rounded-lg"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                     decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[40%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-[#b0b0b0] rounded-lg h-[40%] w-full">
                   <img
                     src={Image4}
                     alt="Image Grid"
-                    className="h-full w-full object-cover rounded-lg"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                     decoding="async"
                   />
                 </div>
-                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-full">
                   <img
                     src={Image5}
                     alt="Image Grid"
-                    className="h-full w-full object-cover rounded-lg"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                     decoding="async"
                   />
@@ -367,20 +333,20 @@ export default function Home() {
               <div className="flex flex-col gap-1 h-full items-start">
                 {/* Row 1 */}
                 <div className="flex flex-row gap-1 h-[35%] w-[85%]">
-                  <div className="bg-[#b0b0b0] rounded-lg h-full w-[40%] opacity-60 hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-[#b0b0b0] rounded-lg h-full w-[40%]">
                     <img
                       src={Image6}
                       alt="Image Grid"
-                      className="h-full w-full object-cover rounded-lg"
+                      className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                       loading="lazy"
                       decoding="async"
                     />
                   </div>
-                  <div className="bg-[#b0b0b0] rounded-lg h-[80%] w-[60%] self-end opacity-60 hover:opacity-100 transition-opacity duration-300">
+                  <div className="bg-[#b0b0b0] rounded-lg h-[80%] w-[60%] self-end">
                     <img
                       src={Image7}
                       alt="Image Grid"
-                      className="h-full w-full object-cover rounded-lg"
+                      className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                       loading="lazy"
                       decoding="async"
                     />
@@ -389,30 +355,30 @@ export default function Home() {
                 {/* Row 2 */}
                 <div className="flex flex-row h-[70%] gap-1 w-full">
                   <div className="flex flex-col gap-1 h-full w-[53%]">
-                    <div className="bg-[#b0b0b0] rounded-lg h-[50%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[50%] w-full">
                       <img
                         src={Image8}
                         alt="Image Grid"
-                        className="h-full w-full object-cover rounded-lg"
+                        className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                         loading="lazy"
                         decoding="async"
                       />
                     </div>
                     <div className="flex flex-row gap-1 h-[30%] w-full">
-                      <div className="bg-[#b0b0b0] rounded-lg h-full w-[47%] opacity-60 hover:opacity-100 transition-opacity duration-300">
+                      <div className="bg-[#b0b0b0] rounded-lg h-full w-[47%]">
                         <img
                           src={Image10}
                           alt="Image Grid"
-                          className="h-full w-full object-cover rounded-lg"
+                          className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                           loading="lazy"
                           decoding="async"
                         />
                       </div>
-                      <div className="bg-[#b0b0b0] rounded-lg h-[85%] w-[53%] opacity-60 hover:opacity-100 transition-opacity duration-300">
+                      <div className="bg-[#b0b0b0] rounded-lg h-[85%] w-[53%]">
                         <img
                           src={Image12}
                           alt="Image Grid"
-                          className="h-full w-full object-cover rounded-lg"
+                          className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                           loading="lazy"
                           decoding="async"
                         />
@@ -420,20 +386,20 @@ export default function Home() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 h-[70%] w-[47%]">
-                    <div className="bg-[#b0b0b0] rounded-lg h-[60%] w-full opacity-60 hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[60%] w-full">
                       <img
                         src={Image9}
                         alt="Image Grid"
-                        className="h-full w-full object-cover rounded-lg"
+                        className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                         loading="lazy"
                         decoding="async"
                       />
                     </div>
-                    <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-[80%] opacity-60 hover:opacity-100 transition-opacity duration-300">
+                    <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-[80%]">
                       <img
                         src={Image11}
                         alt="Image Grid"
-                        className="h-full w-full object-cover rounded-lg"
+                        className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
                         loading="lazy"
                         decoding="async"
                       />
@@ -447,6 +413,240 @@ export default function Home() {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-2">
             <IoIosArrowDown ref={iconRef} className="text-white text-4xl" />
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Hero Section */}
+      <div className="md:hidden relative min-h-[100dvh] bg-[#1A1A1A] overflow-hidden">
+        <div
+          className="absolute left-0 right-0 bg-[#D9D9D9]"
+          style={{
+            top: "-5%",
+            height: "clamp(25dvh, 35vh, 40dvh)",
+            left: "0%",
+          }}
+        />
+
+        <div
+          className="absolute left-1/2 -translate-x-1/2 z-10 pointer-events-none w-screen"
+          style={{ top: "clamp(15%, 25vh, 35%)" }}
+        >
+          {/* Filler positioned relative to this container */}
+          <img
+            src={MobileBackgroundFiller}
+            alt="Background Filler"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            className="absolute left-1/2 -translate-x-1/2 -translate-y-[15%] h-auto w-screen z-10 opacity-100"
+          />
+          {/* DNA positioned relative to this container */}
+          <img
+            src={MobileBackgroundDNA}
+            alt="DNA"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            className="absolute left-1/2 -translate-x-1/2 -translate-y-[8%] h-auto w-screen z-20"
+          />
+        </div>
+
+        {/* Particle Circle - Above background images */}
+        <div className="absolute -top-[5%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+          <div
+            className="rounded-full bg-transparent relative overflow-hidden"
+            style={{ width: "min(120vh, 180vw)", height: "min(120vh, 180vw)" }}
+          >
+            <div className="absolute inset-0 w-full h-full">
+              <ParticlesBg id="particles-mobile" particleCount={250} />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Image Grid - Positioned over particle circle */}
+        <div className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-[25] w-[90vw] h-[90vw] max-w-[500px] max-h-[500px]">
+          {/* Inner grid - scaled for mobile */}
+          <div className="h-full w-full grid grid-cols-[41fr_39fr_103fr] gap-[0.15rem] p-1">
+            {/* Column 1 */}
+            <div className="flex flex-col gap-[0.15rem] h-[56%] mt-[65%] items-end">
+              <div className="bg-[#b0b0b0] rounded-lg h-[20%] w-[70%]">
+                <img
+                  src={Image0}
+                  alt="Image Grid"
+                  className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-full">
+                <img
+                  src={Image1}
+                  alt="Image Grid"
+                  className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-[85%]">
+                <img
+                  src={Image3}
+                  alt="Image Grid"
+                  className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+            {/* Column 2 */}
+            <div className="flex flex-col gap-[0.15rem] h-[78%] mt-[20%] items-end">
+              <div className="bg-[#b0b0b0] rounded-lg h-[25%] w-full">
+                <img
+                  src={Image2}
+                  alt="Image Grid"
+                  className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="bg-[#b0b0b0] rounded-lg h-[40%] w-full">
+                <img
+                  src={Image4}
+                  alt="Image Grid"
+                  className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="bg-[#b0b0b0] rounded-lg h-[30%] w-full">
+                <img
+                  src={Image5}
+                  alt="Image Grid"
+                  className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+            {/* Column 3 */}
+            <div className="flex flex-col gap-[0.15rem] h-full items-start">
+              {/* Row 1 */}
+              <div className="flex flex-row gap-[0.15rem] h-[35%] w-[85%]">
+                <div className="bg-[#b0b0b0] rounded-lg h-full w-[40%]">
+                  <img
+                    src={Image6}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="bg-[#b0b0b0] rounded-lg h-[80%] w-[60%] self-end">
+                  <img
+                    src={Image7}
+                    alt="Image Grid"
+                    className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+              {/* Row 2 */}
+              <div className="flex flex-row h-[70%] gap-[0.15rem] w-full">
+                <div className="flex flex-col gap-[0.15rem] h-full w-[53%]">
+                  <div className="bg-[#b0b0b0] rounded-lg h-[50%] w-full">
+                    <img
+                      src={Image8}
+                      alt="Image Grid"
+                      className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div className="flex flex-row gap-[0.15rem] h-[30%] w-full">
+                    <div className="bg-[#b0b0b0] rounded-lg h-full w-[47%]">
+                      <img
+                        src={Image10}
+                        alt="Image Grid"
+                        className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div className="bg-[#b0b0b0] rounded-lg h-[85%] w-[53%]">
+                      <img
+                        src={Image12}
+                        alt="Image Grid"
+                        className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-[0.15rem] h-[70%] w-[47%]">
+                  <div className="bg-[#b0b0b0] rounded-lg h-[60%] w-full">
+                    <img
+                      src={Image9}
+                      alt="Image Grid"
+                      className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div className="bg-[#b0b0b0] rounded-lg h-[35%] w-[80%]">
+                    <img
+                      src={Image11}
+                      alt="Image Grid"
+                      className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Text Content - Positioned below DNA */}
+        <div
+          className="absolute left-0 right-0 z-30 px-6"
+          style={{ top: "clamp(45%, 52vh, 65%)" }}
+        >
+          <div className="text-center">
+            <h1 className="font-bold text-[#B17CB3] mb-4 text-[clamp(1.2rem,6.5vw,2.25rem)] leading-tight">
+              IEEE Engineering in Medicine & Biology Society
+            </h1>
+            <h2 className="font-bold text-[#97BDD7] mb-4 text-[clamp(0.9rem,4.8vw,1.5rem)] leading-tight">
+              University of Florida Chapter
+            </h2>
+            <p className="text-white/95 mb-6 text-[clamp(0.8rem,3.8vw,1.05rem)] leading-relaxed">
+              "Bridging innovation, AI, and human health, we empower students to
+              explore the frontiers of biomedical technology through
+              collaboration, research, and real-world impact."
+            </p>
+            <div className="flex flex-row gap-3 items-center justify-center">
+              <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                Learn More
+              </button>
+              {user ? (
+                <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                  <Link className="no-underline" to="/dashboard">
+                    Dashboard
+                  </Link>
+                </button>
+              ) : (
+                <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
+                  <Link className="no-underline" to="/auth/login">
+                    Login
+                  </Link>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-4">
+          <IoIosArrowDown ref={iconRef} className="text-white text-4xl" />
         </div>
       </div>
 
@@ -465,7 +665,7 @@ export default function Home() {
         >
           {itemsTwice.map((text, i) => (
             <span key={i} className="inline-flex items-center">
-              <span className="text-[#5a5a5a] font-semibold text-4xl leading-tight">
+              <span className="text-[#5a5a5a] font-semibold text-xl md:text-4xl leading-tight">
                 {text}
               </span>
             </span>
