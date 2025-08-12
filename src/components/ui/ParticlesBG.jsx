@@ -2,7 +2,10 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { useEffect, useState } from "react";
 
-export default function ParticlesBg() {
+export default function ParticlesBg({
+  id = "particles",
+  particleCount = 220,
+} = {}) {
   const [init, setInit] = useState(false);
 
   useEffect(() => {
@@ -19,14 +22,17 @@ export default function ParticlesBg() {
 
   return (
     <Particles
-      id="bg"
-      className="absolute inset-0 z-10"
+      id={id}
+      className="absolute inset-0 z-10 pointer-events-none"
       options={{
         fpsLimit: 60,
         detectRetina: true,
         background: { color: "transparent" },
         particles: {
-          number: { value: 220, density: { enable: true, area: 800 } },
+          number: {
+            value: particleCount,
+            density: { enable: true, area: 800 },
+          },
           size: { value: { min: 1, max: 4 } },
           opacity: { value: 0.6 },
           color: {
