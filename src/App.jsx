@@ -14,7 +14,9 @@ import Industry from "./pages/branches/Industry";
 import Networking from "./pages/branches/Networking";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Dashboard from "./pages/dashboard/Dashboard";
+import MemberDashboard from "./pages/dashboard/memberDashboard";
+import AdminDashboard from "./pages/dashboard/adminDashboard";
+import CheckInPage from "./pages/dashboard/checkin";
 import { SnackbarProvider } from "./components/ui/Snackbar";
 import { AuthProvider } from "./pages/auth/AuthContext";
 
@@ -45,7 +47,9 @@ function App() {
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/register" element={<Register />} />
 
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<MemberDashboard />} />
+              <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/checkin" element={<CheckInPage />} />
             </Routes>
           </BrowserRouter>
         </SnackbarProvider>

@@ -57,6 +57,7 @@ export const AuthProvider = ({ children }) => {
         points: 0,
         events_attended: 0,
         user_id: data.user?.id,
+        role: "member",
       };
 
       const { data: insertData, error: memberError } = await supabase

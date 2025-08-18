@@ -3,11 +3,13 @@ import { useState, useEffect } from "react";
 import EMBSLogo from "../../assets/logos/EMBS_logo.png";
 import { FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../pages/auth/AuthContext";
+import { supabase } from "../../lib/supabase";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userInitials, setUserInitials] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
+  const [role, setRole] = useState("member");
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -66,6 +68,37 @@ export default function Navbar() {
       ? "text-white"
       : "text-black";
 
+  // check if the user is a "member" or "admin" from supabase members table
+  const fetchRole = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("members")
+        .select("role")
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        if (data[0].role === "admin") {
+          setRole("admin");
+        } else {
+          setRole("member");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching role:", error);
+    }
+  };
+
+  // Fetch user role when user changes
+  useEffect(() => {
+    if (user) {
+      fetchRole();
+    } else {
+      setRole("member"); // Reset to default when no user
+    }
+  }, [user]);
+
   return (
     <>
       <nav
@@ -92,7 +125,7 @@ export default function Navbar() {
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden md:flex items-end space-x-8">
+            <div className="hidden md:flex items-center space-x-8">
               <Link to="/" className={linkClass("/")}>
                 Home
               </Link>
@@ -112,24 +145,26 @@ export default function Navbar() {
                 Team
               </Link>
               {user ? (
-                <div className="flex items-center justify-center">
-                  <div
-                    className="w-7 h-7 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
-                    onClick={() => navigate("/dashboard")}
-                    title="Go to Dashboard"
-                  >
-                    <span className="text-white text-xs font-semibold">
-                      {userInitials}
-                    </span>
-                  </div>
+                <div
+                  className="w-7 h-7 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
+                  onClick={() =>
+                    navigate(
+                      role === "admin" ? "/admin-dashboard" : "/dashboard"
+                    )
+                  }
+                  title={`Go to ${
+                    role === "admin" ? "Admin" : "Member"
+                  } Dashboard`}
+                >
+                  <span className="text-white text-xs font-semibold">
+                    {userInitials}
+                  </span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center">
-                  <FaUserCircle
-                    onClick={() => navigate("/auth/login")}
-                    className="w-5 h-5 cursor-pointer"
-                  />
-                </div>
+                <FaUserCircle
+                  onClick={() => navigate("/auth/login")}
+                  className="w-5 h-5 cursor-pointer hover:text-[#772583] transition-colors duration-300"
+                />
               )}
             </div>
 

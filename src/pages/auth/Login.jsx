@@ -54,7 +54,7 @@ export default function Login() {
       if (error) {
         setMessage("Error: " + error.message);
       } else {
-        setMessage("Magic link sent! Check your email.");
+        setMessage("Login link sent! Check your email.");
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -73,7 +73,7 @@ export default function Login() {
                 Login to IEEE EMBS
               </h2>
               <p className="mt-2 text-center text-gray-600">
-                Enter your email to receive a magic link
+                Enter your email to receive a login link
               </p>
             </div>
 
@@ -123,9 +123,9 @@ export default function Login() {
                   loading ||
                   (email && !email.toLowerCase().endsWith("@ufl.edu"))
                 }
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Checking membership..." : "Send Magic Link"}
+                {loading ? "Checking membership..." : "Send Login Link"}
               </button>
             </form>
 

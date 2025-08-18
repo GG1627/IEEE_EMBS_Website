@@ -38,7 +38,7 @@ export default function Register() {
       if (error) {
         setMessage("Error: " + error.message);
       } else {
-        setMessage("Check your email for the magic link!");
+        setMessage("Check your email for the link!");
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -57,7 +57,7 @@ export default function Register() {
                 Register your account with IEEE EMBS
               </h2>
               <p className="mt-2 text-center text-gray-600">
-                We'll send you a magic link to verify your email
+                We'll send you a link to verify your email
               </p>
             </div>
 
@@ -146,9 +146,9 @@ export default function Register() {
                   loading ||
                   (email && !email.toLowerCase().endsWith("@ufl.edu"))
                 }
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Sending magic link..." : "Register with Magic Link"}
+                {loading ? "Sending link..." : "Register with Link"}
               </button>
             </form>
 
