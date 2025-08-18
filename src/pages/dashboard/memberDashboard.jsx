@@ -1,10 +1,12 @@
-import { useAuth } from "../../pages/auth/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { IoMdHeart } from "react-icons/io";
+import { FaQrcode, FaCamera } from "react-icons/fa";
 import { careerFields } from "../../data/careerFields";
 import { supabase } from "../../lib/supabase";
 import { useEffect, useState } from "react";
+import { Scanner } from "@yudiel/react-qr-scanner";
 
 const sampleEvents = [
   "Workshop",
@@ -17,21 +19,16 @@ const sampleEvents = [
   "Industry Talk",
 ];
 
-const sampleCareers = [
-  "Medical Imaging",
-  "Signal Processing",
-  "Medical Devices",
-  "Neuroengineering",
-  "AI & ML",
-];
-
-export default function Dashboard() {
+export default function MemberDashboard() {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
   const [favoriteFields, setFavoriteFields] = useState([]);
   const [selectedCareer, setSelectedCareer] = useState(null);
   const [userStats, setUserStats] = useState({ points: 0, eventsAttended: 0 });
+  const [eventCode, setEventCode] = useState("");
+  const [eventId, setEventId] = useState("");
+  const [showQRScanner, setShowQRScanner] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -108,6 +105,163 @@ export default function Dashboard() {
     }
   };
 
+  // get the event id from supabase
+  const getEventId = async (code) => {
+    console.log("Looking for event with code:", code);
+
+    const { data: event, error: eventError } = await supabase
+      .from("events")
+      .select("id, points, name, end_time")
+      .eq("code", code)
+      .single();
+
+    console.log("Event query result:", { event, eventError });
+
+    if (eventError) {
+      console.error("Event query error:", eventError);
+      showSnackbar("Error finding event: " + eventError.message, {
+        customColor: "#b00000",
+      });
+      return null;
+    }
+
+    if (!event) {
+      showSnackbar("No event found with that code", {
+        customColor: "#b00000",
+      });
+      return null;
+    }
+
+    // Check if event is still active -- remove logging when done
+    const now = new Date();
+    const endTime = new Date(event.end_time);
+
+    console.log("Time comparison:", {
+      now: now.toISOString(),
+      endTime: endTime.toISOString(),
+      isExpired: endTime < now,
+    });
+
+    console.log("Found valid event:", event);
+    return event.id;
+  };
+
+  const handleCheckIn = async (e) => {
+    e.preventDefault();
+
+    const eventId = await getEventId(eventCode);
+
+    console.log("User ID:", user.id);
+    console.log("Event ID:", eventId);
+    console.log("Code:", eventCode);
+
+    if (!eventId) {
+      // Error already shown in getEventId
+      return;
+    }
+
+    if (!user?.id || !eventCode) {
+      showSnackbar("Missing user data. Please try logging in again.", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    if (!eventCode.trim()) {
+      showSnackbar("Please enter an event code", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    // Debug: Check what the database function will see
+    const { data: debugEvent } = await supabase
+      .from("events")
+      .select("*")
+      .eq("id", eventId)
+      .eq("code", eventCode)
+      .single();
+
+    try {
+      const { data, error } = await supabase.rpc("claim_event", {
+        p_member_id: user.id,
+        p_event_id: eventId,
+        p_code: eventCode,
+      });
+
+      console.log("RPC Response:", { data, error });
+
+      if (error) {
+        console.error("Supabase RPC error:", error);
+        showSnackbar("Error checking in: " + error.message, {
+          customColor: "#b00000",
+        });
+      } else {
+        console.log("Function returned:", data);
+
+        // Check the return value from the function
+        if (data === "Points claimed successfully!") {
+          showSnackbar("Checked in successfully!", {
+            customColor: "#007377",
+          });
+          setEventCode(""); // Clear the input after successful check-in
+          // Refresh user stats
+          fetchUserStats();
+        } else {
+          // Function returned an error message
+          showSnackbar(data || "Check-in failed", {
+            customColor: "#b00000",
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      showSnackbar("Unexpected error occurred", {
+        customColor: "#b00000",
+      });
+    }
+  };
+
+  // Handle QR code scan result
+  const handleQRScan = (result) => {
+    if (result) {
+      // Extract the actual text from the result
+      const scannedText = result.text || result.rawValue || result;
+
+      if (scannedText) {
+        try {
+          // Extract code from URL or use result directly
+          const url = new URL(scannedText);
+          const codeParam = url.searchParams.get("code");
+          if (codeParam) {
+            setEventCode(codeParam);
+            setShowQRScanner(false);
+            showSnackbar("QR code scanned successfully!", {
+              customColor: "#007377",
+            });
+          } else {
+            showSnackbar("Invalid QR code format", { customColor: "#b00000" });
+          }
+        } catch (error) {
+          // If it's not a URL, try to use it as a direct code
+          setEventCode(scannedText);
+          setShowQRScanner(false);
+          showSnackbar("QR code scanned successfully!", {
+            customColor: "#007377",
+          });
+        }
+      }
+    }
+  };
+
+  // Handle QR scanner errors
+  const handleQRError = (error) => {
+    console.error("QR Scanner error:", error);
+    showSnackbar("Camera access denied or QR scanner error", {
+      customColor: "#b00000",
+    });
+  };
+
   return (
     <>
       <div className="min-h-screen bg-white p-6 md:p-12">
@@ -119,6 +273,77 @@ export default function Dashboard() {
             <p className="text-gray-600 text-base md:text-lg">
               Track your points and progress with UF IEEE EMBS!
             </p>
+          </div>
+          <div className="flex flex-col gap-4 w-full max-w-7xl px-4 md:px-0 mb-4">
+            <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-full h-45 items-start">
+              <h1 className="text-[#009ca6] text-xl md:text-3xl font-bold uppercase">
+                Event Check in
+              </h1>
+              <p className="text-gray-600 text-base md:text-lg">
+                Scan the QR code or enter the event code to check in and earn
+                points!
+              </p>
+              <div className="w-full space-y-4">
+                <form
+                  onSubmit={handleCheckIn}
+                  className="flex flex-row gap-4 w-1/2"
+                >
+                  <input
+                    type="text"
+                    placeholder="Enter event code"
+                    value={eventCode}
+                    onChange={(e) => setEventCode(e.target.value)}
+                    className="flex-1 px-3 py-2 border bg-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-[#009ca6] focus:border-[#009ca6] border-gray-300"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowQRScanner(true)}
+                    className="px-3 py-2 bg-[#007377] text-white rounded-md shadow-sm hover:bg-[#005c60] focus:outline-none focus:ring-[#007377] focus:border-[#007377] border-gray-300 hover:cursor-pointer flex items-center gap-2"
+                  >
+                    <FaQrcode />
+                    Scan QR
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-[#009ca6] text-white rounded-md shadow-sm hover:bg-[#007377] focus:outline-none focus:ring-[#009ca6] focus:border-[#009ca6] border-gray-300 hover:cursor-pointer"
+                  >
+                    Check in
+                  </button>
+                </form>
+
+                {/* QR Scanner Modal */}
+                {showQRScanner && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-semibold text-[#009ca6]">
+                          Scan QR Code
+                        </h3>
+                        <button
+                          onClick={() => setShowQRScanner(false)}
+                          className="text-gray-500 hover:text-gray-700 text-xl"
+                        >
+                          ×
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <Scanner
+                          onScan={(result) => handleQRScan(result)}
+                          onError={handleQRError}
+                          constraints={{ facingMode: "environment" }}
+                          styles={{
+                            container: { width: "100%", height: "300px" },
+                          }}
+                        />
+                      </div>
+                      <p className="text-sm text-gray-600 mt-4 text-center">
+                        Position the QR code within the camera view to scan
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <div className="flex flex-col md:flex-row gap-4 w-full max-w-7xl px-4 md:px-0">
             {/* Left column - 2/3 width */}

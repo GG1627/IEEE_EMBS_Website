@@ -33,6 +33,7 @@ import NetworkingIcon from "../../assets/icons/networking.png";
 import { useAuth } from "../../pages/auth/AuthContext";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { supabase } from "../../lib/supabase";
+import { useState } from "react";
 import { slidingText } from "../../data/slidingText";
 import ParticlesBg from "../../components/ui/ParticlesBG";
 
@@ -41,6 +42,7 @@ export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
+  const [userRole, setUserRole] = useState("member");
 
   const itemsTwice = [...slidingText, ...slidingText]; // duplicate for seamless loop
 
@@ -129,6 +131,7 @@ export default function Home() {
                 points: 0,
                 events_attended: 0,
                 user_id: user.id,
+                role: "member",
               };
 
               const { data: insertData, error: insertError } = await supabase
@@ -181,6 +184,31 @@ export default function Home() {
       sessionStorage.removeItem("welcome_shown");
     }
   }, [user, showSnackbar]);
+
+  // Fetch user role when user changes
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from("members")
+            .select("role")
+            .eq("user_id", user.id)
+            .single();
+
+          if (error) throw error;
+          setUserRole(data?.role || "member");
+        } catch (error) {
+          console.error("Error fetching user role:", error);
+          setUserRole("member"); // Default to member on error
+        }
+      } else {
+        setUserRole("member"); // Reset to default when no user
+      }
+    };
+
+    fetchUserRole();
+  }, [user]);
 
   // No hero CTA buttons for now per new design
 
@@ -249,7 +277,12 @@ export default function Home() {
                 </button>
                 {user ? (
                   <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
-                    <Link className="no-underline" to="/dashboard">
+                    <Link
+                      className="no-underline"
+                      to={
+                        userRole === "admin" ? "/admin-dashboard" : "/dashboard"
+                      }
+                    >
                       Dashboard
                     </Link>
                   </button>
@@ -631,7 +664,12 @@ export default function Home() {
               </button>
               {user ? (
                 <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
-                  <Link className="no-underline" to="/dashboard">
+                  <Link
+                    className="no-underline"
+                    to={
+                      userRole === "admin" ? "/admin-dashboard" : "/dashboard"
+                    }
+                  >
                     Dashboard
                   </Link>
                 </button>

@@ -67,7 +67,7 @@ export const careerFields = [
     name: "Healthcare Robotics",
     description: "Surgical Robotics, Autonomous Labs",
     professors: ["N/A"],
-    companies: ["Intuitive", "Disney (kinda lol)"],
+    companies: ["Intuitive", "Disney"],
     skills: ["N/A"],
   },
   {
