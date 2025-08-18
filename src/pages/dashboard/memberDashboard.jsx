@@ -149,44 +149,99 @@ export default function MemberDashboard() {
   const handleCheckIn = async (e) => {
     e.preventDefault();
 
-    const eventId = await getEventId(eventCode);
-
-    console.log("User ID:", user.id);
-    console.log("Event ID:", eventId);
-    console.log("Code:", eventCode);
-
-    if (!eventId) {
-      // Error already shown in getEventId
-      return;
-    }
-
-    if (!user?.id || !eventCode) {
-      showSnackbar("Missing user data. Please try logging in again.", {
-        customColor: "#b00000",
-      });
-      return;
-    }
-
-    if (!eventCode.trim()) {
+    if (!eventCode || !eventCode.trim()) {
       showSnackbar("Please enter an event code", {
         customColor: "#b00000",
       });
       return;
     }
 
-    // Debug: Check what the database function will see
-    const { data: debugEvent } = await supabase
-      .from("events")
-      .select("*")
-      .eq("id", eventId)
-      .eq("code", eventCode)
-      .single();
+    if (!user?.id) {
+      showSnackbar("Missing user data. Please try logging in again.", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    // Use the same check-in logic as QR scanning
+    await performCheckIn(eventCode);
+  };
+
+  // Handle QR code scan result
+  const handleQRScan = async (result) => {
+    if (result) {
+      // Extract the actual text from the result
+      const scannedText = result.text || result.rawValue || result;
+
+      if (scannedText) {
+        let extractedCode = null;
+
+        try {
+          // Extract code from URL or use result directly
+          const url = new URL(scannedText);
+          const codeParam = url.searchParams.get("code");
+          if (codeParam) {
+            extractedCode = codeParam;
+          } else {
+            showSnackbar("Invalid QR code format", { customColor: "#b00000" });
+            return;
+          }
+        } catch (error) {
+          // If it's not a URL, try to use it as a direct code
+          extractedCode = scannedText;
+        }
+
+        if (extractedCode) {
+          // Close the scanner immediately
+          setShowQRScanner(false);
+
+          // Set the event code
+          setEventCode(extractedCode);
+
+          // Show scanning success message
+          showSnackbar("QR code scanned! Processing check-in...", {
+            customColor: "#007377",
+          });
+
+          // Automatically trigger check-in
+          await performCheckIn(extractedCode);
+        }
+      }
+    }
+  };
+
+  // Separate function to handle the actual check-in logic
+  const performCheckIn = async (code) => {
+    if (!code || !code.trim()) {
+      showSnackbar("Invalid event code", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    const eventId = await getEventId(code);
+
+    console.log("User ID:", user.id);
+    console.log("Event ID:", eventId);
+    console.log("Code:", code);
+
+    if (!eventId) {
+      // Error already shown in getEventId
+      return;
+    }
+
+    if (!user?.id) {
+      showSnackbar("Missing user data. Please try logging in again.", {
+        customColor: "#b00000",
+      });
+      return;
+    }
 
     try {
       const { data, error } = await supabase.rpc("claim_event", {
         p_member_id: user.id,
         p_event_id: eventId,
-        p_code: eventCode,
+        p_code: code,
       });
 
       console.log("RPC Response:", { data, error });
@@ -201,9 +256,12 @@ export default function MemberDashboard() {
 
         // Check the return value from the function
         if (data === "Points claimed successfully!") {
-          showSnackbar("Checked in successfully!", {
-            customColor: "#007377",
-          });
+          showSnackbar(
+            "Checked in successfully! Points added to your account.",
+            {
+              customColor: "#007377",
+            }
+          );
           setEventCode(""); // Clear the input after successful check-in
           // Refresh user stats
           fetchUserStats();
@@ -222,38 +280,6 @@ export default function MemberDashboard() {
     }
   };
 
-  // Handle QR code scan result
-  const handleQRScan = (result) => {
-    if (result) {
-      // Extract the actual text from the result
-      const scannedText = result.text || result.rawValue || result;
-
-      if (scannedText) {
-        try {
-          // Extract code from URL or use result directly
-          const url = new URL(scannedText);
-          const codeParam = url.searchParams.get("code");
-          if (codeParam) {
-            setEventCode(codeParam);
-            setShowQRScanner(false);
-            showSnackbar("QR code scanned successfully!", {
-              customColor: "#007377",
-            });
-          } else {
-            showSnackbar("Invalid QR code format", { customColor: "#b00000" });
-          }
-        } catch (error) {
-          // If it's not a URL, try to use it as a direct code
-          setEventCode(scannedText);
-          setShowQRScanner(false);
-          showSnackbar("QR code scanned successfully!", {
-            customColor: "#007377",
-          });
-        }
-      }
-    }
-  };
-
   // Handle QR scanner errors
   const handleQRError = (error) => {
     console.error("QR Scanner error:", error);
@@ -264,134 +290,179 @@ export default function MemberDashboard() {
 
   return (
     <>
-      <div className="min-h-screen bg-white p-6 md:p-12">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 sm:p-6 md:p-12">
         <div className="justify-center items-center flex-col flex mt-16">
-          <div className="w-full max-w-7xl mb-8 px-4 md:px-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#009ca6] mb-2">
+          <div className="w-full max-w-7xl mb-6 sm:mb-8 px-2 sm:px-4 md:px-0">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#009ca6] mb-2">
               Welcome to Your Dashboard
             </h1>
-            <p className="text-gray-600 text-base md:text-lg">
+            <p className="text-gray-600 text-base sm:text-lg md:text-xl">
               Track your points and progress with UF IEEE EMBS!
             </p>
           </div>
-          <div className="flex flex-col gap-4 w-full max-w-7xl px-4 md:px-0 mb-4">
-            <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-full h-45 items-start">
-              <h1 className="text-[#009ca6] text-xl md:text-3xl font-bold uppercase">
-                Event Check in
+          <div className="flex flex-col gap-4 w-full max-w-7xl px-2 sm:px-4 md:px-0 mb-6">
+            <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-xl w-full shadow-sm items-start">
+              <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase">
+                Event Check In
               </h1>
-              <p className="text-gray-600 text-base md:text-lg">
+              <p className="text-gray-600 text-base sm:text-lg md:text-xl leading-relaxed">
                 Scan the QR code or enter the event code to check in and earn
                 points!
               </p>
               <div className="w-full space-y-4">
                 <form
                   onSubmit={handleCheckIn}
-                  className="flex flex-row gap-4 w-1/2"
+                  className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
                 >
-                  <input
-                    type="text"
-                    placeholder="Enter event code"
-                    value={eventCode}
-                    onChange={(e) => setEventCode(e.target.value)}
-                    className="flex-1 px-3 py-2 border bg-gray-200 rounded-md shadow-sm focus:outline-none focus:ring-[#009ca6] focus:border-[#009ca6] border-gray-300"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowQRScanner(true)}
-                    className="px-3 py-2 bg-[#007377] text-white rounded-md shadow-sm hover:bg-[#005c60] focus:outline-none focus:ring-[#007377] focus:border-[#007377] border-gray-300 hover:cursor-pointer flex items-center gap-2"
-                  >
-                    <FaQrcode />
-                    Scan QR
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-[#009ca6] text-white rounded-md shadow-sm hover:bg-[#007377] focus:outline-none focus:ring-[#009ca6] focus:border-[#009ca6] border-gray-300 hover:cursor-pointer"
-                  >
-                    Check in
-                  </button>
+                  <div className="flex-1 sm:min-w-0">
+                    <input
+                      type="text"
+                      placeholder="Enter event code"
+                      value={eventCode}
+                      onChange={(e) => setEventCode(e.target.value)}
+                      className="w-full px-4 py-3 border bg-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#009ca6] focus:border-[#009ca6] border-gray-300 text-base"
+                    />
+                  </div>
+                  <div className="flex gap-3 sm:flex-shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setShowQRScanner(true)}
+                      className="flex-1 sm:flex-none px-4 py-3 bg-[#007377] text-white rounded-lg shadow-sm hover:bg-[#005c60] focus:outline-none focus:ring-2 focus:ring-[#007377] focus:ring-offset-2 hover:cursor-pointer flex items-center justify-center gap-2 font-medium transition-colors duration-200"
+                    >
+                      <FaQrcode className="text-lg" />
+                      <span className="sm:hidden">Scan QR Code</span>
+                      <span className="hidden sm:inline">Scan QR</span>
+                    </button>
+                    <button
+                      type="submit"
+                      className="flex-1 sm:flex-none px-6 py-3 bg-[#009ca6] text-white rounded-lg shadow-sm hover:bg-[#007377] focus:outline-none focus:ring-2 focus:ring-[#009ca6] focus:ring-offset-2 hover:cursor-pointer font-medium transition-colors duration-200"
+                    >
+                      Check In
+                    </button>
+                  </div>
                 </form>
 
                 {/* QR Scanner Modal */}
                 {showQRScanner && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-                      <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold text-[#009ca6]">
-                          Scan QR Code
-                        </h3>
+                  <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-hidden">
+                      <div className="flex justify-between items-center p-6 border-b border-gray-200">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-[#009ca6] rounded-lg">
+                            <FaCamera className="text-white text-lg" />
+                          </div>
+                          <h3 className="text-xl font-bold text-[#009ca6]">
+                            Scan QR Code
+                          </h3>
+                        </div>
                         <button
                           onClick={() => setShowQRScanner(false)}
-                          className="text-gray-500 hover:text-gray-700 text-xl"
+                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                         >
-                          ×
+                          <svg
+                            className="w-6 h-6 text-gray-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
                         </button>
                       </div>
-                      <div className="relative">
-                        <Scanner
-                          onScan={(result) => handleQRScan(result)}
-                          onError={handleQRError}
-                          constraints={{ facingMode: "environment" }}
-                          styles={{
-                            container: { width: "100%", height: "300px" },
-                          }}
-                        />
+
+                      <div className="p-6">
+                        <div className="relative bg-gray-100 rounded-lg overflow-hidden mb-4">
+                          <Scanner
+                            onScan={(result) => handleQRScan(result)}
+                            onError={handleQRError}
+                            constraints={{ facingMode: "environment" }}
+                            styles={{
+                              container: {
+                                width: "100%",
+                                height: "280px",
+                                borderRadius: "8px",
+                              },
+                            }}
+                          />
+                          {/* Scanning overlay */}
+                          <div className="absolute inset-0 pointer-events-none">
+                            <div className="absolute inset-0 border-2 border-transparent">
+                              <div className="absolute top-4 left-4 w-6 h-6 border-l-4 border-t-4 border-[#009ca6] rounded-tl-lg"></div>
+                              <div className="absolute top-4 right-4 w-6 h-6 border-r-4 border-t-4 border-[#009ca6] rounded-tr-lg"></div>
+                              <div className="absolute bottom-4 left-4 w-6 h-6 border-l-4 border-b-4 border-[#009ca6] rounded-bl-lg"></div>
+                              <div className="absolute bottom-4 right-4 w-6 h-6 border-r-4 border-b-4 border-[#009ca6] rounded-br-lg"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="text-center">
+                          <p className="text-sm text-gray-600 mb-2">
+                            Position the QR code within the frame to scan
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Make sure you have good lighting and hold your
+                            device steady
+                          </p>
+                        </div>
+
+                        <button
+                          onClick={() => setShowQRScanner(false)}
+                          className="w-full mt-6 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors duration-200 font-medium"
+                        >
+                          Cancel
+                        </button>
                       </div>
-                      <p className="text-sm text-gray-600 mt-4 text-center">
-                        Position the QR code within the camera view to scan
-                      </p>
                     </div>
                   </div>
                 )}
               </div>
             </div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4 w-full max-w-7xl px-4 md:px-0">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-6 w-full max-w-7xl px-2 sm:px-4 md:px-0">
             {/* Left column - 2/3 width */}
             <div className="flex flex-col gap-4 w-full md:w-2/3">
               {/* Top row - 2 boxes */}
-              <div className="flex flex-row gap-4">
-                <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-1/2 h-34 md:h-52 items-center md:items-start">
-                  <h1 className="text-[#009ca6] text-lg md:text-3xl font-bold uppercase text-center">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col gap-3 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
+                  <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase text-center sm:text-left">
                     Points
                   </h1>
-                  <h1 className="text-[#009ca6] text-[1.4rem] md:text-8xl font-bold">
+                  <h1 className="text-[#009ca6] text-3xl sm:text-5xl md:text-8xl font-bold leading-none">
                     {userStats.points.toLocaleString()}
                   </h1>
-                  <div className="w-full h-1 bg-[#007377]"></div>
+                  <div className="w-full h-1 bg-[#007377] rounded"></div>
                 </div>
-                <div className="flex flex-col gap-2 md:gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-1/2 h-34 md:h-52 items-center md:items-start">
-                  <h1 className="text-[#009ca6] text-lg md:text-3xl font-bold uppercase text-center leading-none -mt-[0.4rem]">
+                <div className="flex flex-col gap-3 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
+                  <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase text-center sm:text-left leading-tight">
                     Events Attended
                   </h1>
-                  <h1 className="text-[#009ca6] text-[1.4rem] md:text-8xl font-bold mt-[0.38rem]">
+                  <h1 className="text-[#009ca6] text-3xl sm:text-5xl md:text-8xl font-bold leading-none">
                     {userStats.events_attended}
                   </h1>
-                  <div className="w-full h-1 bg-[#007377] mt-2"></div>
+                  <div className="w-full h-1 bg-[#007377] rounded"></div>
                 </div>
               </div>
               {/* Bottom box - full width of left column */}
-              <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-full h-90 items-start">
-                <h1 className="text-[#009ca6] text-xl md:text-3xl font-bold uppercase">
-                  Events
+              <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full min-h-[200px] items-start">
+                <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase">
+                  Events Attended
                 </h1>
-                {/* Events in a multi-column format with 6 events per column */}
-                <div className="flex flex-col md:flex-row gap-4 w-full">
-                  {Array.from({
-                    length: Math.ceil(sampleEvents.length / 6),
-                  }).map((_, colIndex) => (
-                    <div key={colIndex} className="flex flex-col gap-2 flex-1">
-                      {sampleEvents
-                        .slice(colIndex * 6, (colIndex + 1) * 6)
-                        .map((event, index) => (
-                          <div key={index} className="mb-2 flex items-center">
-                            <span className="text-[#009ca6] text-xl md:text-2xl mr-2">
-                              •
-                            </span>
-                            <h1 className="text-[#009ca6] text-xl md:text-2xl font-semibold">
-                              {event}
-                            </h1>
-                          </div>
-                        ))}
+                {/* Events in a responsive grid format */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-3 w-full">
+                  {sampleEvents.map((event, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center p-2 bg-white/30 rounded-lg hover:bg-white/50 transition-colors duration-200"
+                    >
+                      <div className="w-2 h-2 bg-[#007377] rounded-full mr-3 flex-shrink-0"></div>
+                      <h1 className="text-[#009ca6] text-lg sm:text-xl font-semibold leading-tight">
+                        {event}
+                      </h1>
                     </div>
                   ))}
                 </div>
@@ -402,25 +473,27 @@ export default function MemberDashboard() {
             <div className="flex flex-col gap-4 w-full md:w-1/3">
               {/* Top box */}
               <div
-                className={`flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-full items-start ${
-                  selectedCareer ? "h-auto" : "h-90"
+                className={`flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full items-start ${
+                  selectedCareer ? "h-auto" : "min-h-[200px] md:h-auto"
                 }`}
               >
-                <h1 className="text-[#009ca6] text-xl md:text-3xl font-bold uppercase">
+                <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase">
                   Favorite Careers
                 </h1>
                 <div
-                  className={`flex flex-col gap-2 w-full ${
-                    !selectedCareer ? "overflow-y-auto" : ""
+                  className={`flex flex-col gap-3 w-full ${
+                    !selectedCareer
+                      ? "overflow-y-auto max-h-60 md:max-h-none"
+                      : ""
                   }`}
                 >
                   {favoriteFields.length > 0 ? (
                     favoriteFields.map((career, index) => (
                       <div
                         key={index}
-                        className={`flex items-center cursor-pointer hover:bg-[#b3e5e7] rounded-md p-2 transition-colors ${
+                        className={`flex items-center cursor-pointer hover:bg-[#b3e5e7] rounded-lg p-3 transition-colors duration-200 ${
                           selectedCareer?.name === career.name
-                            ? "bg-[#b3e5e7]"
+                            ? "bg-[#b3e5e7] ring-2 ring-[#007377]/20"
                             : ""
                         }`}
                         onClick={() =>
@@ -429,25 +502,30 @@ export default function MemberDashboard() {
                           )
                         }
                       >
-                        <IoMdHeart className="text-[#007377] text-xl md:text-2xl mr-2" />
-                        <h1 className="text-[#009ca6] text-xl md:text-2xl font-semibold">
+                        <IoMdHeart className="text-[#007377] text-xl sm:text-2xl mr-3 flex-shrink-0" />
+                        <h1 className="text-[#009ca6] text-lg sm:text-xl md:text-2xl font-semibold leading-tight">
                           {career.name}
                         </h1>
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-600 text-center text-lg py-4">
-                      No favorite careers yet. Visit the Careers page to add
-                      some!
-                    </p>
+                    <div className="text-center py-6">
+                      <div className="w-16 h-16 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <IoMdHeart className="text-[#007377] text-2xl" />
+                      </div>
+                      <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                        No favorite careers yet. Visit the Careers page to add
+                        some!
+                      </p>
+                    </div>
                   )}
                 </div>
 
                 {/* Career Details Section */}
                 {selectedCareer && (
-                  <div className="mt-4 bg-white rounded-lg border border-[#87d7db] p-4 w-full">
+                  <div className="mt-4 bg-white rounded-lg border border-[#87d7db] p-4 sm:p-6 w-full">
                     {selectedCareer.description && (
-                      <p className="text-gray-600 text-base mb-4">
+                      <p className="text-gray-600 text-sm sm:text-base mb-4 leading-relaxed">
                         {selectedCareer.description}
                       </p>
                     )}
@@ -455,14 +533,14 @@ export default function MemberDashboard() {
                     {selectedCareer.professors &&
                       selectedCareer.professors.length > 0 && (
                         <div className="mb-4">
-                          <h3 className="text-[#009ca6] font-semibold mb-2">
+                          <h3 className="text-[#009ca6] font-semibold mb-3 text-sm sm:text-base">
                             Professors
                           </h3>
                           <div className="flex flex-wrap gap-2">
                             {selectedCareer.professors.map((professor, idx) => (
                               <span
                                 key={idx}
-                                className="bg-[#e4e6ec] text-[#007377] px-3 py-1 rounded-full text-sm"
+                                className="bg-[#e4e6ec] text-[#007377] px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium"
                               >
                                 {professor}
                               </span>
@@ -474,14 +552,14 @@ export default function MemberDashboard() {
                     {selectedCareer.companies &&
                       selectedCareer.companies.length > 0 && (
                         <div className="mb-4">
-                          <h3 className="text-[#009ca6] font-semibold mb-2">
+                          <h3 className="text-[#009ca6] font-semibold mb-3 text-sm sm:text-base">
                             Companies
                           </h3>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 gap-2">
                             {selectedCareer.companies.map((company, idx) => (
                               <div
                                 key={idx}
-                                className="bg-[#f8f9fa] p-2 rounded-md text-sm"
+                                className="bg-[#f8f9fa] p-3 rounded-lg text-xs sm:text-sm font-medium text-gray-700"
                               >
                                 {company}
                               </div>
@@ -493,14 +571,14 @@ export default function MemberDashboard() {
                     {selectedCareer.skills &&
                       selectedCareer.skills.length > 0 && (
                         <div>
-                          <h3 className="text-[#009ca6] font-semibold mb-2">
+                          <h3 className="text-[#009ca6] font-semibold mb-3 text-sm sm:text-base">
                             Required Skills
                           </h3>
                           <div className="flex flex-wrap gap-2">
                             {selectedCareer.skills.map((skill, idx) => (
                               <span
                                 key={idx}
-                                className="bg-[#007377] text-white px-3 py-1 rounded-full text-sm"
+                                className="bg-[#007377] text-white px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium"
                               >
                                 {skill}
                               </span>
@@ -512,20 +590,45 @@ export default function MemberDashboard() {
                 )}
               </div>
               {/* Bottom box */}
-              <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 rounded-md w-full h-40 md:h-52 items-start">
-                <h1 className="text-[#009ca6] text-xl md:text-3xl font-bold uppercase">
-                  N/A
-                </h1>
+              <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full min-h-[120px] md:h-56 items-center justify-center">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span className="text-[#007377] text-xl font-bold">?</span>
+                  </div>
+                  <h1 className="text-[#009ca6] text-lg sm:text-xl md:text-2xl font-bold uppercase mb-2">
+                    Coming Soon
+                  </h1>
+                  <p className="text-gray-600 text-sm">
+                    More features will be added here
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer mt-8 hover:bg-blue-600 transition-colors"
-          >
-            Logout
-          </button>
+          <div className="w-full max-w-7xl px-2 sm:px-4 md:px-0 mt-8">
+            <button
+              onClick={handleLogout}
+              className="w-full sm:w-auto mx-auto block bg-gradient-to-r from-[#a44da0]/80 to-[#a44da0] text-white px-6 py-3 rounded-lg cursor-pointer hover:from-[#94c956]/80 hover:to-[#94c956]/80 transition-all duration-200 font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            >
+              <span className="flex items-center justify-center gap-2">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
+                </svg>
+                Logout
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </>
