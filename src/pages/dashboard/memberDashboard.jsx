@@ -196,10 +196,7 @@ export default function MemberDashboard() {
           const codeParam = url.searchParams.get("code");
 
           // Accept URLs from multiple domains (old .com and new .vercel.app)
-          const validDomains = [
-            "uf-ieee-embs.com",
-            "ieee-embs-website.vercel.app",
-          ];
+          const validDomains = ["ieee-embs-website.vercel.app"];
           const isValidDomain = validDomains.some((domain) =>
             url.hostname.includes(domain)
           );
