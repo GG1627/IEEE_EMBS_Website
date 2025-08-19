@@ -169,27 +169,56 @@ export default function MemberDashboard() {
 
   // Handle QR code scan result
   const handleQRScan = async (result) => {
-    if (result) {
-      // Extract the actual text from the result
-      const scannedText = result.text || result.rawValue || result;
+    console.log("QR Scan result:", result); // Debug log
 
-      if (scannedText) {
+    if (result) {
+      // Extract the actual text from the result - handle different result formats
+      let scannedText = null;
+
+      if (typeof result === "string") {
+        scannedText = result;
+      } else if (result.text) {
+        scannedText = result.text;
+      } else if (result.rawValue) {
+        scannedText = result.rawValue;
+      } else if (Array.isArray(result) && result.length > 0) {
+        scannedText = result[0].text || result[0].rawValue || result[0];
+      }
+
+      console.log("Extracted scanned text:", scannedText); // Debug log
+
+      if (scannedText && typeof scannedText === "string") {
         let extractedCode = null;
 
         try {
-          // Extract code from URL or use result directly
+          // Try to extract code from URL first
           const url = new URL(scannedText);
           const codeParam = url.searchParams.get("code");
-          if (codeParam) {
-            extractedCode = codeParam;
+
+          // Accept URLs from multiple domains (old .com and new .vercel.app)
+          const validDomains = [
+            "uf-ieee-embs.com",
+            "ieee-embs-website.vercel.app",
+          ];
+          const isValidDomain = validDomains.some((domain) =>
+            url.hostname.includes(domain)
+          );
+
+          if (codeParam && codeParam.trim() && isValidDomain) {
+            extractedCode = codeParam.trim();
+          } else if (codeParam && codeParam.trim()) {
+            // Accept code even if domain doesn't match (for flexibility)
+            extractedCode = codeParam.trim();
           } else {
-            showSnackbar("Invalid QR code format", { customColor: "#b00000" });
-            return;
+            // If URL doesn't have a valid code parameter, use the full URL as code
+            extractedCode = scannedText.trim();
           }
         } catch (error) {
-          // If it's not a URL, try to use it as a direct code
-          extractedCode = scannedText;
+          // If it's not a URL, use the scanned text directly as the code
+          extractedCode = scannedText.trim();
         }
+
+        console.log("Extracted code:", extractedCode); // Debug log
 
         if (extractedCode) {
           // Close the scanner immediately
@@ -205,7 +234,15 @@ export default function MemberDashboard() {
 
           // Automatically trigger check-in
           await performCheckIn(extractedCode);
+        } else {
+          showSnackbar("Invalid QR code - no code found", {
+            customColor: "#b00000",
+          });
         }
+      } else {
+        showSnackbar("Invalid QR code format", {
+          customColor: "#b00000",
+        });
       }
     }
   };
