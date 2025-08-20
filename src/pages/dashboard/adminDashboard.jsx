@@ -285,7 +285,7 @@ export default function AdminDashboard() {
                           <div className="flex-shrink-0 flex flex-col items-center">
                             <div className="bg-white p-4 rounded-lg border-2 border-gray-200 shadow-sm">
                               <QRCodeSVG
-                                value={`https://ieee-embs-website.vercel.app/checkin?code=${event.code}`}
+                                value={`https://www.ufembs.com/checkin?code=${event.code}`}
                                 size={100}
                                 level="H"
                                 className="block"
@@ -471,7 +471,7 @@ export default function AdminDashboard() {
                       <div className="bg-gray-50 rounded-lg p-6 flex flex-col items-center">
                         <div className="bg-white p-4 rounded-lg border-2 border-gray-200 shadow-sm">
                           <QRCodeSVG
-                            value={`https://ieee-embs-website.vercel.app/checkin?code=${eventQrcode}`}
+                            value={`https://www.ufembs.com/checkin?code=${eventQrcode}`}
                             size={120}
                             level="H"
                           />
