@@ -36,6 +36,7 @@ import { supabase } from "../../lib/supabase";
 import { useState } from "react";
 import { slidingText } from "../../data/slidingText";
 import ParticlesBg from "../../components/ui/ParticlesBG";
+import { LuDna } from "react-icons/lu";
 
 export default function Home() {
   const iconRef = useRef(null);
@@ -273,7 +274,9 @@ export default function Home() {
               </p>
               <div className="flex flex-row flex-wrap items-center justify-start gap-4 mt-6 pl-20">
                 <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
-                  Learn More
+                  <Link className="no-underline" to="/about">
+                    Learn More
+                  </Link>
                 </button>
                 {user ? (
                   <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
@@ -660,7 +663,9 @@ export default function Home() {
             </p>
             <div className="flex flex-row gap-3 items-center justify-center">
               <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
-                Learn More
+                <Link className="no-underline" to="/about">
+                  Learn More
+                </Link>
               </button>
               {user ? (
                 <button className="bg-[#ffffff] text-black px-5 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] transition-shadow duration-300">
@@ -706,6 +711,7 @@ export default function Home() {
               <span className="text-[#5a5a5a] font-semibold text-xl md:text-4xl leading-tight">
                 {text}
               </span>
+              <LuDna className="text-[#5a5a5a] text-xl md:text-4xl ml-6" />
             </span>
           ))}
         </div>
@@ -721,24 +727,24 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <EventCard
               eventName="First GBM 🎉"
-              location="Reitz Union Roof Top"
-              date="August 23"
-              time="6:00 PM - 7:00 PM"
+              location="TBA"
+              date="September 3"
+              time="6:30 PM - 7:30 PM"
               description="Come meet the board, learn about our mission, and hear what we have planned!"
             />
             <EventCard
-              eventName="First GBM 🎉"
-              location="Marston Pool"
-              date="August 24"
-              time="10:00 AM - 11:00 AM"
-              description="Come meet the board, learn about our mission, and hear what we have planned!"
+              eventName="TBA"
+              location="TBA"
+              date="TBA"
+              time="TBA"
+              description="TBA"
             />
             <EventCard
-              eventName="First GBM 🎉"
-              location="DJ Lagways House"
-              date="August 25"
-              time="6:00 PM - 7:00 PM"
-              description="Come meet the board, learn about our mission, and hear what we have planned!"
+              eventName="TBA"
+              location="TBA"
+              date="TBA"
+              time="TBA"
+              description="TBA"
             />
           </div>
         </div>

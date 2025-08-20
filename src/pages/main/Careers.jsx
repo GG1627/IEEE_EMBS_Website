@@ -72,7 +72,7 @@ export default function Careers() {
   return (
     <>
       <div className="min-h-screen flex flex-col bg-white">
-        <div className="flex-1 py-12">
+        <div className="flex-1 py-12 px-2 md:px-0">
           <div className="container mx-auto max-w-7xl">
             <h1 className="text-4xl font-bold text-center mb-12 mt-8 text-gray-800">
               Careers

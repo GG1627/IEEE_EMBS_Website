@@ -10,6 +10,7 @@ export default function Navbar() {
   const [userInitials, setUserInitials] = useState("");
   const [isScrolled, setIsScrolled] = useState(false);
   const [role, setRole] = useState("member");
+  const [isMenuTransitioning, setIsMenuTransitioning] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -63,6 +64,11 @@ export default function Navbar() {
       ? "bg-transparent"
       : "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)]";
 
+  // determine transition class - no transition during menu toggle, smooth for scroll
+  const transitionClass = isMenuTransitioning
+    ? "transition-none"
+    : "transition-all duration-300";
+
   const titleTextColor =
     isHomePage && !isScrolled && !isMobileMenuOpen
       ? "text-white"
@@ -102,7 +108,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navbarBgClass}`}
+        className={`fixed top-0 left-0 right-0 z-50 ${transitionClass} ${navbarBgClass}`}
       >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -112,7 +118,7 @@ export default function Navbar() {
                 <img
                   src={EMBSLogo}
                   alt="UF Logo"
-                  className={`w-10 h-10 md:w-12 md:h-12 transition-all duration-0 ${
+                  className={`w-10 h-10 md:w-12 md:h-12 ${
                     isMobileMenuOpen ? "block md:block" : "hidden md:block"
                   }`}
                 />
@@ -171,7 +177,12 @@ export default function Navbar() {
             {/* Mobile Menu Button - Centered on mobile */}
             <div className="md:hidden flex-1 flex justify-end">
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={() => {
+                  setIsMenuTransitioning(true);
+                  setIsMobileMenuOpen(!isMobileMenuOpen);
+                  // Reset transition state after a brief moment
+                  setTimeout(() => setIsMenuTransitioning(false), 50);
+                }}
                 className="text-black hover:text-[#772583] transition-colors duration-300 p-2"
               >
                 <svg
@@ -242,6 +253,43 @@ export default function Navbar() {
               >
                 Team
               </Link>
+
+              {/* Mobile User Profile Section */}
+              <div className="border-t border-gray-200 pt-3 mt-3">
+                {user ? (
+                  <div
+                    className="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors duration-300"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigate(
+                        role === "admin" ? "/admin-dashboard" : "/dashboard"
+                      );
+                    }}
+                  >
+                    <div className="w-8 h-8 bg-[#772583] rounded-full flex items-center justify-center mr-3">
+                      <span className="text-white text-sm font-semibold">
+                        {userInitials}
+                      </span>
+                    </div>
+                    <span className="text-black font-medium">
+                      {role === "admin"
+                        ? "Admin Dashboard"
+                        : "Member Dashboard"}
+                    </span>
+                  </div>
+                ) : (
+                  <div
+                    className="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors duration-300"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      navigate("/auth/login");
+                    }}
+                  >
+                    <FaUserCircle className="w-6 h-6 mr-3 text-gray-600" />
+                    <span className="text-black font-medium">Login</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
