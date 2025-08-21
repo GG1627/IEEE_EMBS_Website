@@ -38,8 +38,7 @@ export default function Footer() {
       <div className="w-full h-10 bg-[#000000]">
         <div className="max-w-[1600px] mx-auto h-full flex items-center px-4">
           <h1 className="text-white text-xs md:text-sm">
-            Copyright &copy; 2025 UF IEEE Engineering in Medicine and Biology
-            Society
+            Copyright &copy; 2025 UF Engineering in Medicine and Biology Society
           </h1>
         </div>
       </div>

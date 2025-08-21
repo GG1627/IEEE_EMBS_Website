@@ -126,7 +126,7 @@ export default function Navbar() {
               <h1
                 className={`text-2xl font-bold ml-6 transition-all duration-300 ${titleTextColor} hidden md:block`}
               >
-                IEEE EMBS - University of Florida
+                EMBS - University of Florida
               </h1>
             </div>
 
@@ -141,8 +141,8 @@ export default function Navbar() {
               <Link to="/events" className={linkClass("/events")}>
                 Events
               </Link>
-              <Link to="/careers" className={linkClass("/careers")}>
-                Careers
+              <Link to="/professions" className={linkClass("/professions")}>
+                Professions
               </Link>
               <Link to="/blog" className={linkClass("/blog")}>
                 Blog
@@ -233,11 +233,11 @@ export default function Navbar() {
                 Events
               </Link>
               <Link
-                to="/careers"
+                to="/professions"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
-                Careers
+                Professions
               </Link>
               <Link
                 to="/blog"

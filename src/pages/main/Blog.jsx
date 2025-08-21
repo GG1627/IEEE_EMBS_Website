@@ -5,7 +5,7 @@ export default function Blog() {
     {
       date: "August 6, 2025",
       title: "Welcome to the Blog",
-      body: "Here you'll find short summaries after every IEEE EMBS UF event and meeting, highlighting what we covered, explored, or accomplished. Whether you missed a GBM or just want a recap, check back here for all our latest updates!",
+      body: "Here you'll find short summaries after every UF EMBS event and meeting, highlighting what we covered, explored, or accomplished. Whether you missed a GBM or just want a recap, check back here for all our latest updates!",
     },
     // Future posts can be added here
   ];
