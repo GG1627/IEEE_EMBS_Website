@@ -14,7 +14,7 @@ export default function Events() {
               height="600"
               frameBorder="0"
               scrolling="no"
-              title="IEEE EMBS Calendar"
+              title="UF EMBS Calendar"
             ></iframe>
           </div>
         </div>

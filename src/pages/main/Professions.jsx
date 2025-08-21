@@ -7,7 +7,7 @@ import { supabase } from "../../lib/supabase";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { careerFields } from "../../data/careerFields";
 
-export default function Careers() {
+export default function Professions() {
   const [selectedField, setSelectedField] = useState(null);
   const [favoriteFields, setFavoriteFields] = useState([]);
   const { user } = useAuth();
@@ -75,7 +75,7 @@ export default function Careers() {
         <div className="flex-1 py-12 px-2 md:px-0">
           <div className="container mx-auto max-w-7xl">
             <h1 className="text-4xl font-bold text-center mb-12 mt-8 text-gray-800">
-              Careers
+              Professions
             </h1>
             <h2 className="text-2xl font-bold text-center mb-12 mt-8 text-gray-800">
               Explore all the wonderful fields of engineering in medicine and

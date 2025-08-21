@@ -1,6 +1,6 @@
-# UF IEEE EMBS Website
+# UF EMBS Website
 
-This is the official website for the University of Florida IEEE Engineering in Medicine and Biology Society (EMBS) chapter.
+This is the official website for the University of Florida Engineering in Medicine and Biology Society (EMBS) chapter.
 
 ## Getting Started
 

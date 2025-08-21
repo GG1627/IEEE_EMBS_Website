@@ -13,12 +13,12 @@ export default function About() {
               Our Purpose at UF
             </h2>
             <p className="text-gray-700 text-lg leading-relaxed mb-4">
-              The IEEE EMBS chapter at the University of Florida is a
-              student-led organization focused on empowering engineers to
-              innovate at the intersection of healthcare and technology. Our
-              mission is to provide students with the tools, connections, and
-              experiences needed to grow academically, professionally, and
-              personally in the field of biomedical engineering.
+              The EMBS chapter at the University of Florida is a student-led
+              organization focused on empowering engineers to innovate at the
+              intersection of healthcare and technology. Our mission is to
+              provide students with the tools, connections, and experiences
+              needed to grow academically, professionally, and personally in the
+              field of biomedical engineering.
             </p>
             <p className="text-gray-700 text-lg leading-relaxed">
               We foster a community where students from all backgrounds can

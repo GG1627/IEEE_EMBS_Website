@@ -54,7 +54,7 @@ export default function Register() {
           <div className="max-w-7xl w-full space-y-8 p-8">
             <div>
               <h2 className="text-center text-3xl font-bold text-gray-900">
-                Register your account with IEEE EMBS
+                Register your account with UF EMBS
               </h2>
               <p className="mt-2 text-center text-gray-600">
                 We'll send you a link to verify your email

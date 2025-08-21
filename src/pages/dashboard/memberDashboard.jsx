@@ -331,7 +331,7 @@ export default function MemberDashboard() {
               Welcome to Your Dashboard
             </h1>
             <p className="text-gray-600 text-base sm:text-lg md:text-xl">
-              Track your points and progress with UF IEEE EMBS!
+              Track your points and progress with UF EMBS!
             </p>
           </div>
           <div className="flex flex-col gap-4 w-full max-w-7xl px-2 sm:px-4 md:px-0 mb-6">

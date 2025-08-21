@@ -18,7 +18,7 @@ export default function Team() {
         <div className="flex-1 py-12 px-2 md:px-0 relative z-10">
           <div className="container mx-auto max-w-7xl">
             <h1 className="text-4xl font-bold text-center mb-0 mt-0 text-gray-800">
-              The Minds and Hearts Behind UF IEEE EMBS
+              The Minds and Hearts Behind UF EMBS
             </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto text-center mt-2">
               Passionate about technology and medicine, our leadership team
