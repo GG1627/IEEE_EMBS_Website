@@ -117,12 +117,9 @@ export default function About() {
             Get involved, make connections, and start building your future in
             biomedical engineering with us.
           </p>
-          <a
-            href="/contact"
-            className="inline-block bg-white text-[#00629b] px-5 py-2 rounded-full font-semibold hover:bg-gray-100 transition"
-          >
-            Contact Us
-          </a>
+          <p className="text-md">
+            <span className="font-semibold">Contact us</span> through the links in the footer below.
+          </p>
         </section>
       </div>
       <Footer />
