@@ -732,7 +732,7 @@ export default function Home() {
               time="6:30 PM - 7:30 PM"
               description="Come meet the board, learn about our mission, and hear what we have planned!"
             />
-            <EventCard
+            {/*<EventCard
               eventName="TBA"
               location="TBA"
               date="TBA"
@@ -745,7 +745,7 @@ export default function Home() {
               date="TBA"
               time="TBA"
               description="TBA"
-            />
+            />*/}
           </div>
         </div>
 
@@ -755,40 +755,34 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               {
-                name: "Research",
                 icon: ResearchIcon,
                 page: "/research",
                 summary: "Conducting hands-on biomedical investigations.",
               },
               {
-                name: "Projects",
                 icon: ProjectsIcon,
                 page: "/projects",
                 summary:
                   "Collaborative engineering teams solving real-world problems.",
               },
               {
-                name: "Outreach",
                 icon: OutreachIcon,
                 page: "/outreach",
                 summary:
                   "Connecting with the community through STEM initiatives.",
               },
               {
-                name: "Workshops",
                 icon: WorkshopsIcon,
                 page: "/workshops",
                 summary:
                   "Skill-building events on hardware, software, and more.",
               },
               {
-                name: "Industry",
                 icon: IndustryIcon,
                 page: "/industry",
                 summary: "Professional development and career exploration.",
               },
               {
-                name: "Networking",
                 icon: NetworkingIcon,
                 page: "/networking",
                 summary:

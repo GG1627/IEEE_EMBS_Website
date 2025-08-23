@@ -6,8 +6,11 @@ import { useAuth } from "../auth/AuthContext";
 import { supabase } from "../../lib/supabase";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { careerFields } from "../../data/careerFields";
+import GradientMesh from "../../components/ui/GradientMesh";
+import { gradientPresets } from "../../styles/ieeeColors";
 
 export default function Professions() {
+  <GradientMesh colors={gradientPresets.professions} />
   const [selectedField, setSelectedField] = useState(null);
   const [favoriteFields, setFavoriteFields] = useState([]);
   const { user } = useAuth();
