@@ -262,7 +262,7 @@ export default function Home() {
           <div className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-[48%] lg:w-[44%] xl:w-[40%] 2xl:w-[38%] h-[70vh] p-2 rounded-xl overflow-x-hidden overflow-y-auto">
             <div className="flex flex-col h-full justify-center gap-4 lg:gap-5">
               <h1 className="font-bold text-left text-[#B17CB3] mb-3 leading-[1.08] tracking-tight text-[clamp(2rem,3.8vw,4rem)]">
-                IEEE Engineering in Medicine &amp; Biology Society
+                Engineering in Medicine &amp; Biology Society
               </h1>
               <h2 className="font-bold text-left text-[#97BDD7] mb-3 leading-tight text-[clamp(1.25rem,2.2vw,2.5rem)]">
                 University of Florida Chapter
@@ -651,7 +651,7 @@ export default function Home() {
         >
           <div className="text-center">
             <h1 className="font-bold text-[#B17CB3] mb-4 text-[clamp(1.2rem,6.5vw,2.25rem)] leading-tight">
-              IEEE Engineering in Medicine & Biology Society
+              Engineering in Medicine & Biology Society
             </h1>
             <h2 className="font-bold text-[#97BDD7] mb-4 text-[clamp(0.9rem,4.8vw,1.5rem)] leading-tight">
               University of Florida Chapter
