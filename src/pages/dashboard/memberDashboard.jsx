@@ -32,28 +32,73 @@ export default function MemberDashboard() {
 
   useEffect(() => {
     if (user) {
+      console.log("🎯 Dashboard useEffect triggered with user:", user);
       fetchUserStats();
       fetchFavoriteFields();
+    } else {
+      console.log("⚠️ Dashboard useEffect triggered but no user found");
     }
   }, [user]);
 
   const fetchUserStats = async () => {
     try {
+      console.log("🔍 Fetching user stats for user:", {
+        userId: user.id,
+        userEmail: user.email,
+        userMetadata: user.user_metadata,
+      });
+
+      console.log("📊 Attempting to fetch real user stats from database...");
+
+      // Try to get real user stats from members table
       const { data, error } = await supabase
         .from("members")
-        .select("points, events_attended")
+        .select("points, events_attended, first_name, last_name, email")
         .eq("user_id", user.id)
         .single();
 
-      if (error) throw error;
+      console.log("📊 User stats query result:", { data, error });
+
+      if (error) {
+        console.error("❌ Error fetching user stats:", error);
+        // Fallback to defaults if query fails
+        console.log("🔄 Falling back to default values");
+        setUserStats({
+          points: 0,
+          events_attended: 0,
+        });
+        showSnackbar("Using default stats - database query failed", {
+          customColor: "#ff9800",
+        });
+        return;
+      }
 
       if (data) {
+        console.log("✅ Successfully fetched user stats:", data);
         setUserStats({
           points: data.points || 0,
           events_attended: data.events_attended || 0,
         });
+        console.log("🎯 Set user stats:", {
+          points: data.points || 0,
+          events_attended: data.events_attended || 0,
+        });
+      } else {
+        console.log("⚠️ No user data found in members table");
+        setUserStats({
+          points: 0,
+          events_attended: 0,
+        });
+        showSnackbar("User not found in database", {
+          customColor: "#ff9800",
+        });
       }
     } catch (error) {
+      console.error("❌ Exception in fetchUserStats:", error);
+      setUserStats({
+        points: 0,
+        events_attended: 0,
+      });
       showSnackbar("Error fetching user stats: " + error.message, {
         customColor: "#b00000",
       });
@@ -62,23 +107,61 @@ export default function MemberDashboard() {
 
   const fetchFavoriteFields = async () => {
     try {
+      console.log("❤️ Fetching favorite careers for user:", user.email);
+      console.log(
+        "🔍 Attempting to fetch real favorite careers from database..."
+      );
+
       const { data, error } = await supabase
         .from("favorite_careers")
-        .select("career_name")
+        .select("career_name, created_at")
         .eq("user_id", user.id);
 
-      if (error) throw error;
+      console.log("❤️ Favorite careers query result:", { data, error });
+
+      if (error) {
+        console.error("❌ Error fetching favorites:", error);
+        // Fallback to empty array if query fails
+        console.log("🔄 Falling back to empty favorites array");
+        setFavoriteFields([]);
+        showSnackbar("Using empty favorites - database query failed", {
+          customColor: "#ff9800",
+        });
+        return;
+      }
 
       if (data) {
+        console.log("✅ Successfully fetched favorite careers:", data);
+
         const favoritesWithInfo = data
-          .map((favorite) =>
-            careerFields.find((field) => field.name === favorite.career_name)
-          )
+          .map((favorite) => {
+            const careerInfo = careerFields.find(
+              (field) => field.name === favorite.career_name
+            );
+            console.log(
+              `🔍 Looking up career "${favorite.career_name}":`,
+              careerInfo ? "Found" : "Not found"
+            );
+            return careerInfo;
+          })
           .filter(Boolean);
 
+        console.log("🎯 Processed favorite careers:", favoritesWithInfo);
         setFavoriteFields(favoritesWithInfo);
+
+        if (favoritesWithInfo.length > 0) {
+          console.log(
+            "✅ Successfully fetched favorite careers:",
+            favoritesWithInfo
+          );
+        }
+      } else {
+        console.log("📝 No favorite careers found for user");
+        setFavoriteFields([]);
       }
     } catch (error) {
+      console.error("❌ Exception fetching favorite careers:", error);
+      setFavoriteFields([]); // Fallback to empty array
       showSnackbar("Error fetching favorite careers: " + error.message, {
         customColor: "#b00000",
       });
