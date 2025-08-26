@@ -643,7 +643,7 @@ export default function MemberDashboard() {
           <div className="w-full max-w-7xl px-2 sm:px-4 md:px-0 mt-8">
             <button
               onClick={handleLogout}
-              className="w-full sm:w-auto mx-auto block bg-gradient-to-r from-[#a44da0]/80 to-[#a44da0] text-white px-6 py-3 rounded-lg cursor-pointer hover:from-[#94c956]/80 hover:to-[#94c956]/80 transition-all duration-200 font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+              className="w-full sm:w-auto mx-auto block bg-[#96529a] hover:bg-[#772583] text-white px-6 py-3 rounded-lg cursor-pointer transition-all duration-200 font-medium shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             >
               <span className="flex items-center justify-center gap-2">
                 <svg

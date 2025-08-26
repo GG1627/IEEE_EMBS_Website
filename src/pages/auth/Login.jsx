@@ -10,40 +10,29 @@ export default function Login() {
   const { directLogin } = useAuth();
 
   async function handleLogin(e) {
-    console.log("🚀 Login form submitted");
     e.preventDefault();
     if (loading) {
-      console.log("⏳ Already loading, skipping...");
       return;
     }
 
-    console.log("📧 Email entered:", email);
-
     // check if email is valid UF email
     if (!email.toLowerCase().endsWith("@ufl.edu")) {
-      console.log("❌ Invalid email domain");
       setMessage("Error: Please use your @ufl.edu email address");
       return;
     }
 
-    console.log("✅ Email validation passed");
     setLoading(true);
     setMessage("");
 
     try {
-      console.log("🔄 Calling directLogin...");
       // Use direct login function that handles member verification and login
       const { data, error } = await directLogin(email);
 
-      console.log("📥 DirectLogin response:", { data, error });
-
       if (error) {
-        console.log("❌ Login error:", error);
         // If user doesn't exist in members table, redirect to registration
         if (error.message === "Email not found in members database") {
-          console.log("➡️ Redirecting to registration...");
           setMessage(
-            "Email not found in our members database. Redirecting to registration..."
+            "Email not found in our database. Redirecting to registration..."
           );
           setTimeout(() => {
             navigate("/auth/register", { state: { email: email } });
@@ -52,7 +41,6 @@ export default function Login() {
         }
         setMessage("Error: " + error.message);
       } else {
-        console.log("✅ Login successful, redirecting to home...");
         setMessage("Login successful! Redirecting...");
         // Redirect to dashboard or home page after successful login
         setTimeout(() => {
@@ -60,10 +48,8 @@ export default function Login() {
         }, 1500);
       }
     } catch (error) {
-      console.log("💥 Login exception:", error);
       setMessage("Error: " + error.message);
     } finally {
-      console.log("🏁 Setting loading to false");
       setLoading(false);
     }
   }
