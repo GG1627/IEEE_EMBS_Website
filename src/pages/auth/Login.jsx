@@ -1,18 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { supabase } from "../../lib/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { directLogin } = useAuth();
 
   async function handleLogin(e) {
     e.preventDefault();
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     // check if email is valid UF email
     if (!email.toLowerCase().endsWith("@ufl.edu")) {
@@ -24,12 +25,8 @@ export default function Login() {
     setMessage("");
 
     try {
-      // First, check if the user exists in the members table
-      const { data: existingMember, error: checkError } = await supabase
-        .from("members")
-        .select("*")
-        .eq("email", email.toLowerCase())
-        .single();
+      // Use direct login function that handles member verification and login
+      const { data, error } = await directLogin(email);
 
       if (checkError && checkError.code !== "PGRST116") {
         // PGRST116 is "not found"
@@ -75,7 +72,7 @@ export default function Login() {
                 Login to UF EMBS
               </h2>
               <p className="mt-2 text-center text-gray-600">
-                Enter your email to receive a login link
+                Enter your email to log in instantly
               </p>
             </div>
 

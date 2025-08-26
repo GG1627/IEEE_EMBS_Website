@@ -77,10 +77,17 @@ export default function Navbar() {
   // check if the user is a "member" or "admin" from supabase members table
   const fetchRole = async () => {
     try {
+      // If user already has role property (from our new login), use it
+      if (user.role) {
+        setRole(user.role);
+        return;
+      }
+
+      // Otherwise, fetch from database using email (more reliable)
       const { data, error } = await supabase
         .from("members")
         .select("role")
-        .eq("user_id", user.id);
+        .eq("email", user.email);
 
       if (error) throw error;
 
@@ -93,6 +100,8 @@ export default function Navbar() {
       }
     } catch (error) {
       console.error("Error fetching role:", error);
+      // Fallback to member role if there's an error
+      setRole("member");
     }
   };
 
