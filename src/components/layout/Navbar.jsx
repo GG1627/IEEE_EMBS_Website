@@ -76,42 +76,34 @@ export default function Navbar() {
 
   // check if the user is a "member" or "admin" from supabase members table
   const fetchRole = async () => {
-    try {
-      // If user already has role property (from our new login), use it
-      if (user.role) {
-        setRole(user.role);
-        return;
-      }
+    if (user) {
+      try {
+        console.log("👤 Navbar fetching user role for:", user.email);
+        const { data, error } = await supabase
+          .from("members")
+          .select("role")
+          .eq("user_id", user.id)
+          .single();
 
-      // Otherwise, fetch from database using email (more reliable)
-      const { data, error } = await supabase
-        .from("members")
-        .select("role")
-        .eq("email", user.email);
-
-      if (error) throw error;
-
-      if (data && data.length > 0) {
-        if (data[0].role === "admin") {
-          setRole("admin");
+        if (error) {
+          console.error("❌ Navbar error fetching user role:", error);
+          setRole("member"); // Default to member on error
         } else {
-          setRole("member");
+          console.log("✅ Navbar user role fetched:", data?.role || "member");
+          setRole(data?.role || "member");
         }
+      } catch (error) {
+        console.error("❌ Navbar exception fetching user role:", error);
+        setRole("member"); // Default to member on error
       }
-    } catch (error) {
-      console.error("Error fetching role:", error);
-      // Fallback to member role if there's an error
-      setRole("member");
+    } else {
+      setRole("member"); // Reset to default when no user
     }
   };
 
   // Fetch user role when user changes
   useEffect(() => {
-    if (user) {
-      fetchRole();
-    } else {
-      setRole("member"); // Reset to default when no user
-    }
+    fetchRole();
   }, [user]);
 
   return (
