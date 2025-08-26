@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         session?.user &&
         session.user.user_metadata?.first_name
       ) {
-        console.log("🔔 New user signed in, adding to members table...");
+        // console.log("🔔 New user signed in, adding to members table...");
         await addUserToMembersTable(session.user);
       }
     });
@@ -69,13 +69,13 @@ export const AuthProvider = ({ children }) => {
         .single();
 
       if (checkError && checkError.code !== "PGRST116") {
-        console.error("❌ Error checking existing member:", checkError);
+        // console.error("❌ Error checking existing member:", checkError);
         return { error: checkError };
       }
 
       // If user already exists, don't insert again
       if (existingMember) {
-        console.log("✅ User already exists in members table");
+        // console.log("✅ User already exists in members table");
         return { data: existingMember, error: null };
       }
 
@@ -97,14 +97,14 @@ export const AuthProvider = ({ children }) => {
         .single();
 
       if (memberError) {
-        console.error("❌ Error adding user to members table:", memberError);
+        // console.error("❌ Error adding user to members table:", memberError);
         return { error: memberError };
       } else {
-        console.log("✅ User successfully added to members table!");
+        // console.log("✅ User successfully added to members table!");
         return { data: insertData, error: null };
       }
     } catch (memberError) {
-      console.error("❌ Exception adding user to members table:", memberError);
+      // console.error("❌ Exception adding user to members table:", memberError);
       return { error: memberError };
     }
   };
@@ -121,20 +121,11 @@ export const AuthProvider = ({ children }) => {
 
   // Direct login function for existing members (bypasses magic link)
   const directLogin = async (email) => {
-    console.log("🔄 Starting directLogin for email:", email);
+    // console.log("🔄 Starting directLogin for email:", email);
 
     try {
-      console.log("📡 Querying members table...");
-      console.log("🔍 Query details:", {
-        table: "members",
-        email: email.toLowerCase(),
-        supabaseUrl: supabase.supabaseUrl,
-        supabaseKey: supabase.supabaseKey ? "***present***" : "missing",
-      });
-
-      // Skip Supabase Auth checks since they're causing issues
       // Go directly to member lookup
-      console.log("🔍 Looking up member in database...");
+      // console.log("🔍 Looking up member in database...");
 
       const { data: member, error: memberError } = await supabase
         .from("members")
@@ -142,24 +133,44 @@ export const AuthProvider = ({ children }) => {
         .eq("email", email.toLowerCase())
         .single();
 
-      console.log("📊 Member lookup result:", { member, memberError });
+      // console.log("📊 Member lookup result:", { member, memberError });
 
       if (memberError && memberError.code !== "PGRST116") {
-        console.log("❌ Member query error:", memberError);
+        // console.log("❌ Member query error:", memberError);
         // Fallback to direct login if there's an error
-        console.log("🔄 Falling back to direct login...");
+        // console.log("🔄 Falling back to direct login...");
       } else if (!member) {
-        console.log("❌ Member not found - redirecting to registration");
+        // console.log("❌ Member not found - redirecting to registration");
         return {
           data: null,
           error: { message: "Email not found in members database" },
         };
       } else {
-        console.log("🎉 Member found in database:", member);
+        // console.log("🎉 Member found in database:", member);
 
-        // Create user from real database data
+        // Determine the correct user ID to use
+        let userId = member.user_id;
+
+        // If user_id is null or empty, we need to create one or use the member's id
+        if (!userId) {
+          // console.log("⚠️ Member has no user_id, using member id as fallback");
+          userId = member.id;
+
+          // Update the member record to have a proper user_id for consistency
+          try {
+            await supabase
+              .from("members")
+              .update({ user_id: member.id })
+              .eq("id", member.id);
+            // console.log("✅ Updated member record with user_id");
+          } catch (updateError) {
+            // console.log("⚠️ Could not update member user_id:", updateError);
+          }
+        }
+
+        // Create user from real database data with actual user_id
         const realUser = {
-          id: member.user_id,
+          id: userId,
           email: member.email,
           user_metadata: {
             first_name: member.first_name,
@@ -169,54 +180,43 @@ export const AuthProvider = ({ children }) => {
           role: member.role,
         };
 
-        console.log("👤 Created real user from database:", realUser);
+        // console.log("👤 Created real user from database:", realUser);
         setUser(realUser);
         return { data: { user: realUser }, error: null };
       }
 
-      // Fallback to direct login approach
-      console.log("🔐 Using direct login fallback...");
-
-      // Create user session directly - this works perfectly!
-      const directUser = {
-        id: "user_" + Date.now(),
-        email: email,
-        user_metadata: {
-          first_name: email.split("@")[0].split(".")[0] || "User",
-          last_name: email.split("@")[0].split(".")[1] || "",
+      // If we reach here, the member wasn't found in database
+      // console.log("❌ Member not found in database, cannot create session");
+      return {
+        data: null,
+        error: {
+          message:
+            "Email not found in members database. Please register first.",
         },
-        created_at: new Date().toISOString(),
       };
-
-      console.log("👤 Created direct user:", directUser);
-      console.log("🔐 Setting user state...");
-      setUser(directUser);
-
-      console.log("✅ Direct login successful!");
-      return { data: { user: directUser }, error: null };
     } catch (error) {
-      console.log("💥 DirectLogin exception:", error);
+      // console.log("💥 DirectLogin exception:", error);
       return { data: null, error };
     }
   };
 
   const signOut = async () => {
-    console.log("🚪 Signing out user...");
+    // console.log("🚪 Signing out user...");
     try {
       // Try to sign out from Supabase (in case there's a real session)
       await supabase.auth.signOut();
     } catch (error) {
-      console.log(
-        "⚠️ Supabase signOut error (expected for mock sessions):",
-        error
-      );
+      // console.log(
+      //   "⚠️ Supabase signOut error (expected for mock sessions):",
+      //   error
+      // );
     }
 
     // Clear our custom user state
-    console.log("🧹 Clearing user state...");
+    // console.log("🧹 Clearing user state...");
     setUser(null);
 
-    console.log("✅ Logout successful!");
+    // console.log("✅ Logout successful!");
     return { error: null };
   };
 
