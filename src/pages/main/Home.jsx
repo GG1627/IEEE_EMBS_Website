@@ -85,8 +85,34 @@ export default function Home() {
     });
   }, []);
 
-  // Check for successful authentication (vibe coded with cursor lol ^-^)
+  // Check for authentication results (success or error)
   useEffect(() => {
+    // First check for authentication errors in the URL hash
+    const urlHash = window.location.hash.substring(1);
+    const hashParams = new URLSearchParams(urlHash);
+    const errorCode = hashParams.get("error_code");
+    const errorDescription = hashParams.get("error_description");
+
+    if (errorCode) {
+      console.error("🚨 Authentication error:", errorCode, errorDescription);
+
+      // Show appropriate error message
+      let errorMessage = "Authentication failed. ";
+      if (errorCode === "otp_expired") {
+        errorMessage += "The login link has expired. Please request a new one.";
+      } else if (errorCode === "access_denied") {
+        errorMessage += "Access was denied. Please try again.";
+      } else {
+        errorMessage += errorDescription || "Please try again.";
+      }
+
+      showSnackbar(errorMessage, "error", 10000);
+
+      // Clean up the URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
     if (user) {
       // Check if this is a fresh login (not just page refresh)
       const hasShownWelcome = sessionStorage.getItem("welcome_shown");

@@ -1,64 +1,69 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { supabase } from "../../lib/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { directLogin } = useAuth();
 
   async function handleLogin(e) {
+    console.log("🚀 Login form submitted");
     e.preventDefault();
-    if (loading) return;
+    if (loading) {
+      console.log("⏳ Already loading, skipping...");
+      return;
+    }
+
+    console.log("📧 Email entered:", email);
 
     // check if email is valid UF email
     if (!email.toLowerCase().endsWith("@ufl.edu")) {
+      console.log("❌ Invalid email domain");
       setMessage("Error: Please use your @ufl.edu email address");
       return;
     }
 
+    console.log("✅ Email validation passed");
     setLoading(true);
     setMessage("");
 
     try {
-      // First, check if the user exists in the members table
-      const { data: existingMember, error: checkError } = await supabase
-        .from("members")
-        .select("*")
-        .eq("email", email.toLowerCase())
-        .single();
+      console.log("🔄 Calling directLogin...");
+      // Use direct login function that handles member verification and login
+      const { data, error } = await directLogin(email);
 
-      if (checkError && checkError.code !== "PGRST116") {
-        // PGRST116 is "not found"
-        setMessage("Error: " + checkError.message);
-        return;
-      }
-
-      // If user doesn't exist in members table, redirect to registration
-      if (!existingMember) {
-        setMessage(
-          "Email not found in our members database. Redirecting to registration..."
-        );
-        setTimeout(() => {
-          navigate("/auth/register", { state: { email: email } });
-        }, 1750);
-        return;
-      }
-
-      // If user exists, proceed with normal login
-      const { data, error } = await signIn(email);
+      console.log("📥 DirectLogin response:", { data, error });
 
       if (error) {
+        console.log("❌ Login error:", error);
+        // If user doesn't exist in members table, redirect to registration
+        if (error.message === "Email not found in members database") {
+          console.log("➡️ Redirecting to registration...");
+          setMessage(
+            "Email not found in our members database. Redirecting to registration..."
+          );
+          setTimeout(() => {
+            navigate("/auth/register", { state: { email: email } });
+          }, 2250);
+          return;
+        }
         setMessage("Error: " + error.message);
       } else {
-        setMessage("Login link sent! Check your email.");
+        console.log("✅ Login successful, redirecting to home...");
+        setMessage("Login successful! Redirecting...");
+        // Redirect to dashboard or home page after successful login
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       }
     } catch (error) {
+      console.log("💥 Login exception:", error);
       setMessage("Error: " + error.message);
     } finally {
+      console.log("🏁 Setting loading to false");
       setLoading(false);
     }
   }
@@ -73,7 +78,7 @@ export default function Login() {
                 Login to UF EMBS
               </h2>
               <p className="mt-2 text-center text-gray-600">
-                Enter your email to receive a login link
+                Enter your email to log in instantly
               </p>
             </div>
 
@@ -125,7 +130,7 @@ export default function Login() {
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Checking membership..." : "Send Login Link"}
+                {loading ? "Logging in..." : "Log in"}
               </button>
             </form>
 

@@ -38,7 +38,9 @@ export default function Register() {
       if (error) {
         setMessage("Error: " + error.message);
       } else {
-        setMessage("Check your email for the link!");
+        setMessage(
+          "Registration link sent! Check your email and click the link to complete your registration. The link will log you in automatically."
+        );
       }
     } catch (error) {
       setMessage("Error: " + error.message);
