@@ -129,14 +129,35 @@ export default function Home() {
     }
   }, [user, showSnackbar]);
 
-  // Simplified role management
+  // Fetch user role from database
   useEffect(() => {
-    if (user) {
-      console.log("👤 User logged in, setting default role");
-      setUserRole("member"); // Default role for simplified auth
-    } else {
-      setUserRole("member");
-    }
+    const fetchUserRole = async () => {
+      if (user) {
+        try {
+          console.log("👤 Fetching user role for:", user.email);
+          const { data, error } = await supabase
+            .from("members")
+            .select("role")
+            .eq("user_id", user.id)
+            .single();
+
+          if (error) {
+            console.error("❌ Error fetching user role:", error);
+            setUserRole("member"); // Default to member on error
+          } else {
+            console.log("✅ User role fetched:", data?.role || "member");
+            setUserRole(data?.role || "member");
+          }
+        } catch (error) {
+          console.error("❌ Exception fetching user role:", error);
+          setUserRole("member"); // Default to member on error
+        }
+      } else {
+        setUserRole("member"); // Reset to default when no user
+      }
+    };
+
+    fetchUserRole();
   }, [user]);
 
   // No hero CTA buttons for now per new design
