@@ -40,7 +40,7 @@ export default function Login() {
       // If user doesn't exist in members table, redirect to registration
       if (!existingMember) {
         setMessage(
-          "Email not found in our members database. Redirecting to registration..."
+          "Email not found in our database. Redirecting to registration..."
         );
         setTimeout(() => {
           navigate("/auth/register", { state: { email: email } });
@@ -54,7 +54,9 @@ export default function Login() {
       if (error) {
         setMessage("Error: " + error.message);
       } else {
-        setMessage("Login link sent! Check your email.");
+        setMessage(
+          "Check your email for the link! You will be automatically logged in after clicking the link. Make sure to check your spam/junk folder."
+        );
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -125,7 +127,7 @@ export default function Login() {
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Checking membership..." : "Send Login Link"}
+                {loading ? "Checking membership..." : "Send Link"}
               </button>
             </form>
 

@@ -14,6 +14,8 @@ import Industry from "./pages/branches/Industry";
 import Networking from "./pages/branches/Networking";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import ConfirmSignup from "./pages/auth/ConfirmSignup";
+import ConfirmLogin from "./pages/auth/ConfirmLogin";
 import MemberDashboard from "./pages/dashboard/memberDashboard";
 import AdminDashboard from "./pages/dashboard/adminDashboard";
 import CheckInPage from "./pages/dashboard/checkin";
@@ -46,6 +48,8 @@ function App() {
 
               <Route path="/auth/login" element={<Login />} />
               <Route path="/auth/register" element={<Register />} />
+              <Route path="/confirm-signup" element={<ConfirmSignup />} />
+              <Route path="/confirm-login" element={<ConfirmLogin />} />
 
               <Route path="/dashboard" element={<MemberDashboard />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />

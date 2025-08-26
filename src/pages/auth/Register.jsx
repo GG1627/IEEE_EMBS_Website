@@ -38,7 +38,9 @@ export default function Register() {
       if (error) {
         setMessage("Error: " + error.message);
       } else {
-        setMessage("Check your email for the link!");
+        setMessage(
+          "Check your email for the link! You will be automatically logged in after clicking the link. Make sure to check your spam/junk folder."
+        );
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -148,7 +150,7 @@ export default function Register() {
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Sending link..." : "Register with Link"}
+                {loading ? "Sending link..." : "Send Link"}
               </button>
             </form>
 
