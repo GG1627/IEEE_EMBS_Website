@@ -85,9 +85,9 @@ export default function Home() {
     });
   }, []);
 
-  // Check for authentication results (success or error)
+  // Simplified authentication result handling
   useEffect(() => {
-    // First check for authentication errors in the URL hash
+    // Check for authentication errors in the URL hash
     const urlHash = window.location.hash.substring(1);
     const hashParams = new URLSearchParams(urlHash);
     const errorCode = hashParams.get("error_code");
@@ -95,8 +95,6 @@ export default function Home() {
 
     if (errorCode) {
       console.error("🚨 Authentication error:", errorCode, errorDescription);
-
-      // Show appropriate error message
       let errorMessage = "Authentication failed. ";
       if (errorCode === "otp_expired") {
         errorMessage += "The login link has expired. Please request a new one.";
@@ -105,136 +103,40 @@ export default function Home() {
       } else {
         errorMessage += errorDescription || "Please try again.";
       }
-
       showSnackbar(errorMessage, "error", 10000);
-
-      // Clean up the URL
       window.history.replaceState({}, document.title, window.location.pathname);
       return;
     }
 
     if (user) {
-      // Check if this is a fresh login (not just page refresh)
+      // Show welcome message for new login
       const hasShownWelcome = sessionStorage.getItem("welcome_shown");
-      const urlParams = new URLSearchParams(window.location.search);
-
-      // Check for various Supabase auth success indicators
-      const accessToken = urlParams.get("access_token");
-      const refreshToken = urlParams.get("refresh_token");
-      const type = urlParams.get("type");
-      const tokenHash = window.location.hash;
-
-      // Detect if this is a fresh login from magic link
-      const isFromMagicLink =
-        type === "magiclink" ||
-        accessToken ||
-        refreshToken ||
-        tokenHash.includes("access_token") ||
-        (user && !hasShownWelcome && window.location.pathname === "/");
-
-      if (isFromMagicLink && !hasShownWelcome) {
-        // Ensure user is in members table
-        const ensureUserInMembersTable = async () => {
-          try {
-            // Check if user already exists in members table
-            const { data: existingMember, error: checkError } = await supabase
-              .from("members")
-              .select("*")
-              .eq("email", user.email)
-              .single();
-
-            if (checkError && checkError.code !== "PGRST116") {
-              // PGRST116 is "not found"
-              console.error("❌ Error checking member:", checkError);
-              return;
-            }
-
-            // If user doesn't exist in members table, add them
-            if (!existingMember) {
-              const memberData = {
-                email: user.email,
-                first_name: user.user_metadata?.first_name || "",
-                last_name: user.user_metadata?.last_name || "",
-                points: 0,
-                events_attended: 0,
-                user_id: user.id,
-                role: "member",
-              };
-
-              const { data: insertData, error: insertError } = await supabase
-                .from("members")
-                .insert([memberData]);
-
-              if (insertError) {
-                console.error(
-                  "❌ Error adding user to members table (backup):",
-                  insertError
-                );
-              } else {
-                console.log(
-                  "✅ User successfully added to members table (backup)!"
-                );
-              }
-            } else {
-              console.log("✅ User already exists in members table");
-            }
-          } catch (error) {
-            console.error(
-              "❌ Exception ensuring user in members table:",
-              error
-            );
-          }
-        };
-
-        // Run the check
-        ensureUserInMembersTable();
-
-        // Show welcome message for new login
+      if (!hasShownWelcome) {
         showSnackbar(`Welcome ${user.user_metadata?.first_name || "User"}!`, {
           customColor: "#772583",
         });
-
-        // Mark that we've shown the welcome message
         sessionStorage.setItem("welcome_shown", "true");
-
-        // Clean up URL parameters
-        if (window.location.search || window.location.hash) {
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
-        }
       }
-    } else {
-      // Clear the welcome flag when user logs out
-      sessionStorage.removeItem("welcome_shown");
+
+      // Clean up URL parameters
+      if (window.location.search || window.location.hash) {
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+      }
     }
   }, [user, showSnackbar]);
 
-  // Fetch user role when user changes
+  // Simplified role management
   useEffect(() => {
-    const fetchUserRole = async () => {
-      if (user) {
-        try {
-          const { data, error } = await supabase
-            .from("members")
-            .select("role")
-            .eq("user_id", user.id)
-            .single();
-
-          if (error) throw error;
-          setUserRole(data?.role || "member");
-        } catch (error) {
-          console.error("Error fetching user role:", error);
-          setUserRole("member"); // Default to member on error
-        }
-      } else {
-        setUserRole("member"); // Reset to default when no user
-      }
-    };
-
-    fetchUserRole();
+    if (user) {
+      console.log("👤 User logged in, setting default role");
+      setUserRole("member"); // Default role for simplified auth
+    } else {
+      setUserRole("member");
+    }
   }, [user]);
 
   // No hero CTA buttons for now per new design

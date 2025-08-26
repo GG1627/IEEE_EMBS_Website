@@ -32,28 +32,65 @@ export default function MemberDashboard() {
 
   useEffect(() => {
     if (user) {
+      console.log("🎯 Dashboard useEffect triggered with user:", user);
       fetchUserStats();
       fetchFavoriteFields();
+    } else {
+      console.log("⚠️ Dashboard useEffect triggered but no user found");
     }
   }, [user]);
 
   const fetchUserStats = async () => {
     try {
-      const { data, error } = await supabase
-        .from("members")
-        .select("points, events_attended")
-        .eq("user_id", user.id)
-        .single();
+      console.log("🔍 Fetching user stats for user:", {
+        userId: user.id,
+        userEmail: user.email,
+        userMetadata: user.user_metadata,
+      });
 
-      if (error) throw error;
+      // First, let's check if Supabase is configured properly
+      console.log("🔧 Supabase config check:", {
+        url: import.meta.env.VITE_SUPABASE_URL
+          ? "✅ URL found"
+          : "❌ URL missing",
+        key: import.meta.env.VITE_SUPABASE_ANON_KEY
+          ? "✅ Key found"
+          : "❌ Key missing",
+      });
 
-      if (data) {
-        setUserStats({
-          points: data.points || 0,
-          events_attended: data.events_attended || 0,
-        });
+      // First, let's try a simple query to see if we can connect to Supabase
+      console.log("🔌 Testing Supabase connection...");
+
+      try {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Query timeout after 5 seconds")),
+            5000
+          )
+        );
+
+        const queryPromise = supabase
+          .from("members")
+          .select("count", { count: "exact", head: true });
+
+        const { data: testData, error: testError } = await Promise.race([
+          queryPromise,
+          timeoutPromise,
+        ]);
+
+        console.log("🔌 Supabase connection test:", { testData, testError });
+      } catch (timeoutError) {
+        console.error("🔌 Supabase connection TIMEOUT:", timeoutError.message);
       }
+
+      // Use default values for simplified auth
+      console.log("📊 Setting default user stats (simplified mode)");
+      setUserStats({
+        points: 0,
+        events_attended: 0,
+      });
     } catch (error) {
+      console.error("❌ Error in fetchUserStats:", error);
       showSnackbar("Error fetching user stats: " + error.message, {
         customColor: "#b00000",
       });
@@ -62,22 +99,9 @@ export default function MemberDashboard() {
 
   const fetchFavoriteFields = async () => {
     try {
-      const { data, error } = await supabase
-        .from("favorite_careers")
-        .select("career_name")
-        .eq("user_id", user.id);
-
-      if (error) throw error;
-
-      if (data) {
-        const favoritesWithInfo = data
-          .map((favorite) =>
-            careerFields.find((field) => field.name === favorite.career_name)
-          )
-          .filter(Boolean);
-
-        setFavoriteFields(favoritesWithInfo);
-      }
+      console.log("❤️ Setting default favorite fields (simplified mode)");
+      // Use empty array for now - we'll add database functionality later
+      setFavoriteFields([]);
     } catch (error) {
       showSnackbar("Error fetching favorite careers: " + error.message, {
         customColor: "#b00000",
