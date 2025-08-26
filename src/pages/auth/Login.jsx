@@ -8,7 +8,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { directLogin } = useAuth();
+  const { signIn } = useAuth();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -50,24 +50,14 @@ export default function Login() {
         return;
       }
 
-      // If user exists, proceed with normal login
-      const { data, error: signInError } = await directLogin(email);
+      // If user exists, proceed with normal email login
+      const { data, error: signInError } = await signIn(email);
 
       if (signInError) {
-        // If user doesn't exist in members table, redirect to registration
-        if (signInError.message === "Email not found in members database") {
-          setMessage(
-            "Email not found in our database. Redirecting to registration..."
-          );
-          setTimeout(() => {
-            navigate("/auth/register", { state: { email: email } });
-          }, 2250);
-          return;
-        }
         setMessage("Error: " + signInError.message);
       } else {
         setMessage(
-          "Check your email for the link! You will be automatically logged in after clicking the link. Make sure to check your spam/junk folder."
+          "Check your email for the link! Make sure to check your spam/junk folder."
         );
       }
     } catch (error) {

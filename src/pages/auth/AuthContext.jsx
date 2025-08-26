@@ -15,8 +15,33 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        // Validate that this user exists in our members table
+        try {
+          const { data: member, error } = await supabase
+            .from("members")
+            .select("*")
+            .eq("user_id", session.user.id)
+            .single();
+
+          if (error || !member) {
+            // Invalid session - user not in members table, clear it
+            console.log("Invalid session detected, clearing...");
+            await supabase.auth.signOut();
+            setUser(null);
+          } else {
+            // Valid session
+            setUser(session.user);
+          }
+        } catch (error) {
+          console.log("Error validating session, clearing...");
+          await supabase.auth.signOut();
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
 
@@ -24,18 +49,40 @@ export const AuthProvider = ({ children }) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null);
-      setLoading(false);
+      if (event === "SIGNED_OUT" || !session?.user) {
+        setUser(null);
+      } else if (session?.user) {
+        // Validate session on auth change too
+        try {
+          const { data: member, error } = await supabase
+            .from("members")
+            .select("*")
+            .eq("user_id", session.user.id)
+            .single();
 
-      // If user just signed in and has user_metadata (from registration), add them to members table
-      if (
-        event === "SIGNED_IN" &&
-        session?.user &&
-        session.user.user_metadata?.first_name
-      ) {
-        // console.log("🔔 New user signed in, adding to members table...");
-        await addUserToMembersTable(session.user);
+          if (error || !member) {
+            console.log("Invalid session on auth change, clearing...");
+            await supabase.auth.signOut();
+            setUser(null);
+          } else {
+            setUser(session.user);
+
+            // If user just signed in and has user_metadata (from registration), add them to members table
+            if (
+              event === "SIGNED_IN" &&
+              session.user.user_metadata?.first_name
+            ) {
+              // console.log("🔔 New user signed in, adding to members table...");
+              await addUserToMembersTable(session.user);
+            }
+          }
+        } catch (error) {
+          console.log("Error validating session on auth change, clearing...");
+          await supabase.auth.signOut();
+          setUser(null);
+        }
       }
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -119,87 +166,6 @@ export const AuthProvider = ({ children }) => {
     return { data, error };
   };
 
-  // Direct login function for existing members (bypasses magic link)
-  const directLogin = async (email) => {
-    // console.log("🔄 Starting directLogin for email:", email);
-
-    try {
-      // Go directly to member lookup
-      // console.log("🔍 Looking up member in database...");
-
-      const { data: member, error: memberError } = await supabase
-        .from("members")
-        .select("*")
-        .eq("email", email.toLowerCase())
-        .single();
-
-      // console.log("📊 Member lookup result:", { member, memberError });
-
-      if (memberError && memberError.code !== "PGRST116") {
-        // console.log("❌ Member query error:", memberError);
-        // Fallback to direct login if there's an error
-        // console.log("🔄 Falling back to direct login...");
-      } else if (!member) {
-        // console.log("❌ Member not found - redirecting to registration");
-        return {
-          data: null,
-          error: { message: "Email not found in members database" },
-        };
-      } else {
-        // console.log("🎉 Member found in database:", member);
-
-        // Determine the correct user ID to use
-        let userId = member.user_id;
-
-        // If user_id is null or empty, we need to create one or use the member's id
-        if (!userId) {
-          // console.log("⚠️ Member has no user_id, using member id as fallback");
-          userId = member.id;
-
-          // Update the member record to have a proper user_id for consistency
-          try {
-            await supabase
-              .from("members")
-              .update({ user_id: member.id })
-              .eq("id", member.id);
-            // console.log("✅ Updated member record with user_id");
-          } catch (updateError) {
-            // console.log("⚠️ Could not update member user_id:", updateError);
-          }
-        }
-
-        // Create user from real database data with actual user_id
-        const realUser = {
-          id: userId,
-          email: member.email,
-          user_metadata: {
-            first_name: member.first_name,
-            last_name: member.last_name,
-          },
-          created_at: member.created_at,
-          role: member.role,
-        };
-
-        // console.log("👤 Created real user from database:", realUser);
-        setUser(realUser);
-        return { data: { user: realUser }, error: null };
-      }
-
-      // If we reach here, the member wasn't found in database
-      // console.log("❌ Member not found in database, cannot create session");
-      return {
-        data: null,
-        error: {
-          message:
-            "Email not found in members database. Please register first.",
-        },
-      };
-    } catch (error) {
-      // console.log("💥 DirectLogin exception:", error);
-      return { data: null, error };
-    }
-  };
-
   const signOut = async () => {
     // console.log("🚪 Signing out user...");
     try {
@@ -226,7 +192,6 @@ export const AuthProvider = ({ children }) => {
     signUp,
     signIn,
     signOut,
-    directLogin,
     addUserToMembersTable,
   };
 
