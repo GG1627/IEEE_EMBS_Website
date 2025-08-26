@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { supabase } from "../../lib/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,8 +26,12 @@ export default function Login() {
     setMessage("");
 
     try {
-      // Use direct login function that handles member verification and login
-      const { data, error } = await directLogin(email);
+      // First, check if the user exists in the members table
+      const { data: existingMember, error: checkError } = await supabase
+        .from("members")
+        .select("*")
+        .eq("email", email.toLowerCase())
+        .single();
 
       if (checkError && checkError.code !== "PGRST116") {
         // PGRST116 is "not found"
@@ -46,10 +51,20 @@ export default function Login() {
       }
 
       // If user exists, proceed with normal login
-      const { data, error } = await signIn(email);
+      const { data, error: signInError } = await directLogin(email);
 
-      if (error) {
-        setMessage("Error: " + error.message);
+      if (signInError) {
+        // If user doesn't exist in members table, redirect to registration
+        if (signInError.message === "Email not found in members database") {
+          setMessage(
+            "Email not found in our database. Redirecting to registration..."
+          );
+          setTimeout(() => {
+            navigate("/auth/register", { state: { email: email } });
+          }, 2250);
+          return;
+        }
+        setMessage("Error: " + signInError.message);
       } else {
         setMessage(
           "Check your email for the link! You will be automatically logged in after clicking the link. Make sure to check your spam/junk folder."
