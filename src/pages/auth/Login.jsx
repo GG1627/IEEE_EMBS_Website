@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { supabase } from "../../lib/supabase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,12 +26,36 @@ export default function Login() {
     setMessage("");
 
     try {
-      // Use direct login function that handles member verification and login
-      const { data, error } = await directLogin(email);
+      // First, check if the user exists in the members table
+      const { data: existingMember, error: checkError } = await supabase
+        .from("members")
+        .select("*")
+        .eq("email", email.toLowerCase())
+        .single();
 
-      if (error) {
+      if (checkError && checkError.code !== "PGRST116") {
+        // PGRST116 is "not found"
+        setMessage("Error: " + checkError.message);
+        return;
+      }
+
+      // If user doesn't exist in members table, redirect to registration
+      if (!existingMember) {
+        setMessage(
+          "Email not found in our database. Redirecting to registration..."
+        );
+        setTimeout(() => {
+          navigate("/auth/register", { state: { email: email } });
+        }, 1750);
+        return;
+      }
+
+      // If user exists, proceed with normal login
+      const { data, error: signInError } = await directLogin(email);
+
+      if (signInError) {
         // If user doesn't exist in members table, redirect to registration
-        if (error.message === "Email not found in members database") {
+        if (signInError.message === "Email not found in members database") {
           setMessage(
             "Email not found in our database. Redirecting to registration..."
           );
@@ -39,13 +64,11 @@ export default function Login() {
           }, 2250);
           return;
         }
-        setMessage("Error: " + error.message);
+        setMessage("Error: " + signInError.message);
       } else {
-        setMessage("Login successful! Redirecting...");
-        // Redirect to dashboard or home page after successful login
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
+        setMessage(
+          "Check your email for the link! You will be automatically logged in after clicking the link. Make sure to check your spam/junk folder."
+        );
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -116,7 +139,7 @@ export default function Login() {
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Logging in..." : "Log in"}
+                {loading ? "Checking membership..." : "Send Link"}
               </button>
             </form>
 
