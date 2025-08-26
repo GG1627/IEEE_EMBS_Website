@@ -38,13 +38,20 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
         // Clear any session storage
         sessionStorage.removeItem("welcome_shown");
+        sessionStorage.removeItem("member_table_checked");
       } else if (session?.user) {
         setUser(session.user);
 
-        // Add new users to members table (only on SIGNED_IN with metadata)
-        if (event === "SIGNED_IN" && session.user.user_metadata?.first_name) {
+        // Add new users to members table (only on SIGNED_IN with metadata and if not already checked)
+        if (
+          event === "SIGNED_IN" &&
+          session.user.user_metadata?.first_name &&
+          !sessionStorage.getItem("member_table_checked")
+        ) {
           console.log("👤 New user detected, adding to members table...");
           await addUserToMembersTable(session.user);
+          // Mark that we've checked this session
+          sessionStorage.setItem("member_table_checked", "true");
         }
 
         // Show welcome message for new login
@@ -89,7 +96,52 @@ export const AuthProvider = ({ children }) => {
   // Simple function to add user to members table
   const addUserToMembersTable = async (user) => {
     try {
-      console.log("📝 Adding user to members table:", user.email);
+      console.log("🔍 Checking if user exists in members table:", user.email);
+
+      // First check if user already exists (with timeout)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Member check timeout")), 5000)
+      );
+
+      const queryPromise = supabase
+        .from("members")
+        .select("id")
+        .eq("email", user.email)
+        .single();
+
+      const { data: existingUser, error: checkError } = await Promise.race([
+        queryPromise,
+        timeoutPromise,
+      ]).catch((error) => {
+        if (error.message === "Member check timeout") {
+          console.log("⏰ Member check timed out - RLS is blocking access");
+          return { data: null, error: { code: "TIMEOUT" } };
+        }
+        throw error;
+      });
+
+      if (existingUser) {
+        console.log("✅ User already exists in members table, skipping insert");
+        return;
+      }
+
+      if (
+        checkError &&
+        checkError.code !== "PGRST116" &&
+        checkError.code !== "TIMEOUT"
+      ) {
+        console.error("❌ Error checking for existing user:", checkError);
+        return;
+      }
+
+      if (checkError && checkError.code === "TIMEOUT") {
+        console.log(
+          "⏰ Database check timed out due to RLS - skipping member table operations"
+        );
+        return;
+      }
+
+      console.log("📝 Adding new user to members table:", user.email);
 
       const memberData = {
         email: user.email,
@@ -124,6 +176,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       // Clear session storage
       sessionStorage.removeItem("welcome_shown");
+      sessionStorage.removeItem("member_table_checked");
       console.log("✅ Logout successful!");
       return { error: null };
     } catch (error) {
