@@ -62,5 +62,5 @@
 }
 
 .animate-spin-slow {
-  animation: spin-slow 10s linear infinite; /* 10s per rotation */
+  animation: spin-slow 10s linear infinite;
 }

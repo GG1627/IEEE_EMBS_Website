@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import EMBSLogoInner from "../../assets/logos/EMBS_logo_inner_layer.avif";
-import EMBSLogoOuter from "../../assets/logos/EMBS_logo_outer_layer.avif";
+import EMBSLogoInner from "../../assets/logos/EMBS_logo_inner_layer.svg";
+import EMBSLogoOuter from "../../assets/logos/EMBS_logo_outer_layer.svg";
 import { FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../pages/auth/AuthContext";
 import { supabase } from "../../lib/supabase";
