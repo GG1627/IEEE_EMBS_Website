@@ -654,14 +654,49 @@ export default function MemberDashboard() {
                             Professors
                           </h3>
                           <div className="flex flex-wrap gap-2">
-                            {selectedCareer.professors.map((professor, idx) => (
-                              <span
-                                key={idx}
-                                className="bg-[#e4e6ec] text-[#007377] px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium"
-                              >
-                                {professor}
-                              </span>
-                            ))}
+                            {selectedCareer.professors.map((professor, idx) => {
+                              const isString = typeof professor === "string";
+                              const professorName = isString
+                                ? professor
+                                : professor.name;
+                              const hasLinks =
+                                !isString &&
+                                (professor.linkedin || professor.lab);
+
+                              return (
+                                <div key={idx} className="flex flex-col gap-1">
+                                  <span className="bg-[#e4e6ec] text-[#007377] px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium">
+                                    {professorName}
+                                  </span>
+                                  {hasLinks && (
+                                    <div className="flex gap-1 justify-center">
+                                      {professor.linkedin && (
+                                        <a
+                                          href={professor.linkedin}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-[#007377] hover:text-[#005c60] text-xs"
+                                          title="LinkedIn"
+                                        >
+                                          LinkedIn
+                                        </a>
+                                      )}
+                                      {professor.lab && (
+                                        <a
+                                          href={professor.lab}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-[#007377] hover:text-[#005c60] text-xs"
+                                          title="Lab"
+                                        >
+                                          Lab
+                                        </a>
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
