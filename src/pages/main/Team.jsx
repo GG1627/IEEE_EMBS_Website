@@ -15,7 +15,7 @@ export default function Team() {
     <>
       <div className="min-h-screen flex flex-col pt-16 relative overflow-hidden">
         <GradientMesh />
-        <div className="flex-1 py-12 px-2 md:px-0 relative z-10">
+        <div className="flex-1 pt-12 px-2 md:px-0 relative z-10">
           <div className="container mx-auto max-w-7xl">
             <h1 className="text-4xl font-bold text-center mb-0 mt-0 text-gray-800">
               The Minds and Hearts Behind UF EMBS

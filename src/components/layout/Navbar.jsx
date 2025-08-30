@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import EMBSLogo from "../../assets/logos/EMBS_logo.png";
+import EMBSLogoInner from "../../assets/logos/EMBS_logo_inner_layer.svg";
+import EMBSLogoOuter from "../../assets/logos/EMBS_logo_outer_layer.svg";
 import { FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../pages/auth/AuthContext";
 import { supabase } from "../../lib/supabase";
@@ -116,13 +117,29 @@ export default function Navbar() {
             {/* Logo - Desktop always visible, Mobile only when menu open */}
             <div className="flex-shrink-0 items-center flex-row flex">
               <Link to="/" className="flex items-center">
-                <img
+                <div
+                  className={`relative w-10 h-10 md:w-12 md:h-12 ${
+                    isMobileMenuOpen ? "block md:block" : "hidden md:block"
+                  }`}
+                >
+                  <img
+                    src={EMBSLogoOuter}
+                    alt="EMBS Logo Outer"
+                    className="absolute w-full h-full animate-spin-slow"
+                  />
+                  <img
+                    src={EMBSLogoInner}
+                    alt="EMBS Logo Inner"
+                    className="absolute w-full h-full"
+                  />
+                </div>
+                {/* <img
                   src={EMBSLogo}
                   alt="UF Logo"
                   className={`w-10 h-10 md:w-12 md:h-12 ${
                     isMobileMenuOpen ? "block md:block" : "hidden md:block"
                   }`}
-                />
+                /> */}
               </Link>
               <h1
                 className={`text-2xl font-bold ml-6 transition-all duration-300 ${titleTextColor} hidden md:block`}
@@ -142,8 +159,8 @@ export default function Navbar() {
               <Link to="/events" className={linkClass("/events")}>
                 Events
               </Link>
-              <Link to="/professions" className={linkClass("/professions")}>
-                Professions
+              <Link to="/resources" className={linkClass("/resources")}>
+                Resources
               </Link>
               <Link to="/blog" className={linkClass("/blog")}>
                 Blog
@@ -234,11 +251,11 @@ export default function Navbar() {
                 Events
               </Link>
               <Link
-                to="/professions"
+                to="/resources"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
-                Professions
+                Resources
               </Link>
               <Link
                 to="/blog"

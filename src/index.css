@@ -53,3 +53,14 @@
 .backface-hidden {
   backface-visibility: hidden;
 }
+
+/* spinning logo animation */
+@keyframes spin-slow {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}

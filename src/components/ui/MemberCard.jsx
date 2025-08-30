@@ -12,6 +12,7 @@ export default function MemberCard({ name, position, linkedin, imgURL }) {
               src={imgURL || defaultAvatar}
               alt={`${name} - ${position}`}
               className="w-full h-full object-cover rounded-full ring-1 ring-gray-100"
+              decoding="async"
             />
           </div>
           <div className="text-center">

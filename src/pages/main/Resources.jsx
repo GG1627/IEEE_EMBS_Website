@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import Footer from "../../components/layout/Footer";
 import { IoMdHeart } from "react-icons/io";
 import { IoMdHeartEmpty } from "react-icons/io";
+import { FaLinkedin } from "react-icons/fa";
+import { MdScience } from "react-icons/md";
 import { useAuth } from "../auth/AuthContext";
 import { supabase } from "../../lib/supabase";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { careerFields } from "../../data/careerFields";
 import GradientMesh from "../../components/ui/GradientMesh";
 import { gradientPresets } from "../../styles/ieeeColors";
+import DomeGallery from "../../components/ui/DomeGallery";
 
-export default function Professions() {
-  <GradientMesh colors={gradientPresets.professions} />
+export default function Resources() {
+  <GradientMesh colors={gradientPresets.professions} />;
   const [selectedField, setSelectedField] = useState(null);
   const [favoriteFields, setFavoriteFields] = useState([]);
   const { user } = useAuth();
@@ -74,15 +77,15 @@ export default function Professions() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col bg-white">
-        <div className="flex-1 py-12 px-2 md:px-0">
+      <div className="min-h-screen flex flex-col pt-16 relative overflow-hidden bg-white">
+        <div className="flex-1 pt-12 px-2 md:px-0">
           <div className="container mx-auto max-w-7xl">
-            <h1 className="text-4xl font-bold text-center mb-12 mt-8 text-gray-800">
-              Professions
+            <h1 className="text-4xl font-bold text-center mb-0 mt-0 text-gray-800">
+              Career Fields
             </h1>
-            <h2 className="text-2xl font-bold text-center mb-12 mt-8 text-gray-800">
-              Explore all the wonderful fields of engineering in medicine and
-              biology!
+            <h2 className="text-xl text-gray-600 max-w-2xl mx-auto text-center mt-2 mb-12">
+              Discover exciting career paths in biomedical engineering and
+              connect with professors, companies, and skills in each field!
             </h2>
 
             {/* Fields */}
@@ -103,6 +106,19 @@ export default function Professions() {
                 </div>
               ))}
             </div>
+
+            {/* Dome Gallery */}
+            {selectedField == null && (
+              <div className="mt-6 h-[650px] w-full">
+                <DomeGallery
+                  overlayBlurColor="transparent"
+                  grayscale={false}
+                  autoRotate={true}
+                  autoRotateSpeed={0.1}
+                  disableInteractions={true}
+                />
+              </div>
+            )}
 
             {/* Career Information */}
             {selectedField !== null && careerFields[selectedField] && (
@@ -141,16 +157,48 @@ export default function Professions() {
                       <h3 className="text-xl font-semibold text-gray-800 mb-3">
                         Professors
                       </h3>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-3">
                         {careerFields[selectedField].professors.map(
-                          (professor, index) => (
-                            <span
-                              key={index}
-                              className="bg-[#e4e6ec] text-[#007dae] px-3 py-1 rounded-full text-sm font-medium"
-                            >
-                              {professor}
-                            </span>
-                          )
+                          (professor, index) => {
+                            // Handle both string and object formats for backward compatibility
+                            const professorName =
+                              typeof professor === "string"
+                                ? professor
+                                : professor.name;
+                            const professorData =
+                              typeof professor === "object" ? professor : null;
+
+                            return (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 bg-[#e4e6ec] text-[#007dae] px-4 py-2 rounded-full text-sm font-medium"
+                              >
+                                <span>{professorName}</span>
+                                {professorData && (
+                                  <div className="flex gap-1 ml-2">
+                                    <a
+                                      href={professorData.linkedin}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="bg-[#0077b5] text-white p-1.5 rounded-full hover:bg-[#005885] transition-colors flex items-center justify-center"
+                                      title="LinkedIn Profile"
+                                    >
+                                      <FaLinkedin size={12} />
+                                    </a>
+                                    <a
+                                      href={professorData.lab}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="bg-[#007dae] text-white p-1.5 rounded-full hover:bg-[#005a8a] transition-colors flex items-center justify-center"
+                                      title="Lab Website"
+                                    >
+                                      <MdScience size={12} />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
                         )}
                       </div>
                     </div>
