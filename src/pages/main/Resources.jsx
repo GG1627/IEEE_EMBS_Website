@@ -245,6 +245,52 @@ export default function Resources() {
                       </div>
                     </div>
                   )}
+
+                  {/* Classes Section */}
+                  {careerFields[selectedField].classes &&
+                    careerFields[selectedField].classes.length > 0 && (
+                      <div className="mt-6">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                          Related UF Courses
+                        </h3>
+                        <ul className="list-disc list-inside space-y-1">
+                          {careerFields[selectedField].classes.map(
+                            (classItem, index) => (
+                              <li key={index} className="text-gray-700 text-sm">
+                                {classItem}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
+
+                  {/* Project Ideas Section */}
+                  {careerFields[selectedField].projectIdeas &&
+                    careerFields[selectedField].projectIdeas.length > 0 && (
+                      <div className="mt-6">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                          Project Ideas
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {careerFields[selectedField].projectIdeas.map(
+                            (project, index) => (
+                              <div
+                                key={index}
+                                className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 hover:shadow-md transition-shadow"
+                              >
+                                <div className="flex items-start gap-3">
+                                  <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                  <p className="text-gray-700 text-sm leading-relaxed">
+                                    {project}
+                                  </p>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
                 </div>
               </div>
             )}
