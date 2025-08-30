@@ -57,7 +57,7 @@ export default function Login() {
         setMessage("Error: " + signInError.message);
       } else {
         setMessage(
-          "Check your email for the link! Make sure to check your spam/junk folder."
+          "Check your email for the link! <strong>Make sure to check your spam/junk folder.</strong>"
         );
       }
     } catch (error) {
@@ -88,9 +88,8 @@ export default function Login() {
                     ? "bg-red-50 text-red-700 border border-red-200"
                     : "bg-green-50 text-green-700 border border-green-200"
                 }`}
-              >
-                {message}
-              </div>
+                dangerouslySetInnerHTML={{ __html: message }}
+              />
             )}
 
             <form onSubmit={handleLogin} className="space-y-6 max-w-md mx-auto">

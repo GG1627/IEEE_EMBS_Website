@@ -261,7 +261,6 @@ export default function Home() {
                     src={Image0}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -270,7 +269,6 @@ export default function Home() {
                     src={Image1}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -279,7 +277,6 @@ export default function Home() {
                     src={Image3}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -291,7 +288,6 @@ export default function Home() {
                     src={Image2}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -300,7 +296,6 @@ export default function Home() {
                     src={Image4}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -309,7 +304,6 @@ export default function Home() {
                     src={Image5}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -323,7 +317,6 @@ export default function Home() {
                       src={Image6}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                      loading="lazy"
                       decoding="async"
                     />
                   </div>
@@ -332,7 +325,6 @@ export default function Home() {
                       src={Image7}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                      loading="lazy"
                       decoding="async"
                     />
                   </div>
@@ -345,7 +337,6 @@ export default function Home() {
                         src={Image8}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                        loading="lazy"
                         decoding="async"
                       />
                     </div>
@@ -355,7 +346,6 @@ export default function Home() {
                           src={Image10}
                           alt="Image Grid"
                           className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                          loading="lazy"
                           decoding="async"
                         />
                       </div>
@@ -364,7 +354,6 @@ export default function Home() {
                           src={Image12}
                           alt="Image Grid"
                           className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                          loading="lazy"
                           decoding="async"
                         />
                       </div>
@@ -376,7 +365,6 @@ export default function Home() {
                         src={Image9}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                        loading="lazy"
                         decoding="async"
                       />
                     </div>
@@ -385,7 +373,6 @@ export default function Home() {
                         src={Image11}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                        loading="lazy"
                         decoding="async"
                       />
                     </div>
@@ -459,7 +446,6 @@ export default function Home() {
                   src={Image0}
                   alt="Image Grid"
                   className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -468,7 +454,6 @@ export default function Home() {
                   src={Image1}
                   alt="Image Grid"
                   className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -477,7 +462,6 @@ export default function Home() {
                   src={Image3}
                   alt="Image Grid"
                   className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -489,7 +473,6 @@ export default function Home() {
                   src={Image2}
                   alt="Image Grid"
                   className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -498,7 +481,6 @@ export default function Home() {
                   src={Image4}
                   alt="Image Grid"
                   className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -507,7 +489,6 @@ export default function Home() {
                   src={Image5}
                   alt="Image Grid"
                   className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                  loading="lazy"
                   decoding="async"
                 />
               </div>
@@ -521,7 +502,6 @@ export default function Home() {
                     src={Image6}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -530,7 +510,6 @@ export default function Home() {
                     src={Image7}
                     alt="Image Grid"
                     className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                    loading="lazy"
                     decoding="async"
                   />
                 </div>
@@ -543,7 +522,6 @@ export default function Home() {
                       src={Image8}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                      loading="lazy"
                       decoding="async"
                     />
                   </div>
@@ -553,7 +531,6 @@ export default function Home() {
                         src={Image10}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                        loading="lazy"
                         decoding="async"
                       />
                     </div>
@@ -562,7 +539,6 @@ export default function Home() {
                         src={Image12}
                         alt="Image Grid"
                         className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                        loading="lazy"
                         decoding="async"
                       />
                     </div>
@@ -574,7 +550,6 @@ export default function Home() {
                       src={Image9}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                      loading="lazy"
                       decoding="async"
                     />
                   </div>
@@ -583,7 +558,6 @@ export default function Home() {
                       src={Image11}
                       alt="Image Grid"
                       className="h-full w-full object-cover rounded-lg opacity-60 hover:opacity-100 transition-opacity duration-300"
-                      loading="lazy"
                       decoding="async"
                     />
                   </div>

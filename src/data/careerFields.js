@@ -2,7 +2,18 @@ export const careerFields = [
   {
     name: "Medical Imaging",
     description: "MRI, CT, Image Reconstruction/Enhancement Techniques",
-    professors: ["Dr. Fang", "Dr. Bolch"],
+    professors: [
+      {
+        name: "Dr. Fang",
+        linkedin: "https://www.linkedin.com/in/ruogu-fang-a015bb15/",
+        lab: "https://lab-smile.github.io/",
+      },
+      {
+        name: "Dr. Bolch",
+        linkedin: "https://www.linkedin.com/in/wesley-bolch-68b80618/",
+        lab: "https://medphysics.med.ufl.edu/medical-physics-graduate-program/faculty-facilities/research-labs/advanced-laboratory-for-radiation-dosimetry-studies/",
+      },
+    ],
     companies: ["GE Healthcare", "Nvidia Healthcare", "Siemens Healthineers"],
     skills: [
       "Image Processing",
@@ -16,14 +27,26 @@ export const careerFields = [
   {
     name: "Signal Processing",
     description: "ECG, EEG, Biosignal Analysis/Manipulation",
-    professors: ["Dr. Ding"],
+    professors: [
+      {
+        name: "Dr. Ding",
+        linkedin: "https://www.linkedin.com/in/mingzhou-ding-6a348a88/",
+        lab: "https://bme.ufl.edu/dept-member/ding_mingzhou/",
+      },
+    ],
     companies: ["PLUX", "NASA Human Health and Performance"],
     skills: ["N/A"],
   },
   {
     name: "Medical Devices",
     description: "Pacemakers, Smart Prosthetics, Artificial Pancreas",
-    professors: ["Dr. Mansy"],
+    professors: [
+      {
+        name: "Dr. Mansy",
+        linkedin: "https://www.linkedin.com/in/maymansy/",
+        lab: "https://bme.ufl.edu/dept-member/may-m-mansy-ph-d/",
+      },
+    ],
     companies: [
       "Medtronic",
       "Edward’s Life Sciences",
@@ -45,7 +68,13 @@ export const careerFields = [
     name: "AI & ML",
     description:
       "Digital twins, Precision Medicine, Predictive Analytics/Diagnosis",
-    professors: ["Dr. Bolch"],
+    professors: [
+      {
+        name: "Dr. Bolch",
+        linkedin: "https://www.linkedin.com/in/wesley-bolch-68b80618/",
+        lab: "https://medphysics.med.ufl.edu/medical-physics-graduate-program/faculty-facilities/research-labs/advanced-laboratory-for-radiation-dosimetry-studies/",
+      },
+    ],
     companies: ["Verily", "IBM Digital Health", "Microsoft Research"],
     skills: ["N/A"],
   },
@@ -74,14 +103,20 @@ export const careerFields = [
     name: "Modeling & Simulation",
     description:
       "Computational Modeling of Organs, In-silico clinical trials, Finite Element Analysis",
-    processsors: ["N/A"],
+    professors: ["N/A"],
     companies: ["Dassault Systèmes", "Ansys"],
     skills: ["N/A"],
   },
   {
     name: "Cyber-BioSecurity",
     description: "Human-Body Communication, Biometric Authentication",
-    professors: ["Dr. Chatterjee"],
+    professors: [
+      {
+        name: "Dr. Chatterjee",
+        linkedin: "https://www.linkedin.com/in/baibhabchatterjee/",
+        lab: "https://chatterjee.ece.ufl.edu/",
+      },
+    ],
     companies: ["Ixana"],
     skills: ["N/A"],
   },

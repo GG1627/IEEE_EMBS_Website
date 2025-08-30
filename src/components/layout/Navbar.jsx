@@ -159,8 +159,8 @@ export default function Navbar() {
               <Link to="/events" className={linkClass("/events")}>
                 Events
               </Link>
-              <Link to="/professions" className={linkClass("/professions")}>
-                Professions
+              <Link to="/resources" className={linkClass("/resources")}>
+                Resources
               </Link>
               <Link to="/blog" className={linkClass("/blog")}>
                 Blog
@@ -251,11 +251,11 @@ export default function Navbar() {
                 Events
               </Link>
               <Link
-                to="/professions"
+                to="/resources"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
-                Professions
+                Resources
               </Link>
               <Link
                 to="/blog"

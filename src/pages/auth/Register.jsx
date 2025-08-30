@@ -39,7 +39,7 @@ export default function Register() {
         setMessage("Error: " + error.message);
       } else {
         setMessage(
-          "Registration link sent! Check your email and click the link to complete your registration. Make sure to check your spam/junk folder."
+          "Registration link sent! Check your email and click the link to complete your registration. <strong>Make sure to check your spam/junk folder.</strong>"
         );
       }
     } catch (error) {
@@ -70,9 +70,8 @@ export default function Register() {
                     ? "bg-red-50 text-red-700 border border-red-200"
                     : "bg-green-50 text-green-700 border border-green-200"
                 }`}
-              >
-                {message}
-              </div>
+                dangerouslySetInnerHTML={{ __html: message }}
+              />
             )}
 
             <form
