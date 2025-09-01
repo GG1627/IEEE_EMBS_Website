@@ -651,8 +651,8 @@ export default function Home() {
             <EventCard
               eventName="First GBM 🎉"
               location="TBA"
-              date="September 3"
-              time="7:00 PM - 8:00 PM"
+              date="September 15"
+              time="6:30 PM - 7:30 PM"
               description="Come meet the board, learn about our mission, and hear what we have planned!"
             />
             {/*<EventCard
