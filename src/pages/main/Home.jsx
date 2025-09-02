@@ -678,40 +678,40 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               {
-                name: "research",
+                name: "RESEARCH",
                 icon: ResearchIcon,
                 page: "/research",
                 summary: "Conducting hands-on biomedical investigations.",
               },
               {
-                name: "projects",
+                name: "PROJECTS",
                 icon: ProjectsIcon,
                 page: "/projects",
                 summary:
                   "Collaborative engineering teams solving real-world problems.",
               },
               {
-                name: "outreach",
+                name: "OUTREACH",
                 icon: OutreachIcon,
                 page: "/outreach",
                 summary:
                   "Connecting with the community through STEM initiatives.",
               },
               {
-                name: "workshops",
+                name: "WORKSHOPS",
                 icon: WorkshopsIcon,
                 page: "/workshops",
                 summary:
                   "Skill-building events on hardware, software, and more.",
               },
               {
-                name: "industry",
+                name: "INDUSTRY",
                 icon: IndustryIcon,
                 page: "/industry",
                 summary: "Professional development and career exploration.",
               },
               {
-                name: "networking",
+                name: "NETWORKING",
                 icon: NetworkingIcon,
                 page: "/networking",
                 summary:
@@ -720,7 +720,7 @@ export default function Home() {
             ].map(({ name, icon, page, summary }) => (
               <div key={name} className="flex justify-center">
                 <FlipCard
-                  name={name}
+                  name={name.toUpperCase()}   // ✅ force uppercase
                   imageSrc={icon}
                   summary={summary}
                   onClick={() => navigate(page)}
