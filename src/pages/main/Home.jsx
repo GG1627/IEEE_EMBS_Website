@@ -678,34 +678,40 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               {
+                name: "research",
                 icon: ResearchIcon,
                 page: "/research",
                 summary: "Conducting hands-on biomedical investigations.",
               },
               {
+                name: "projects",
                 icon: ProjectsIcon,
                 page: "/projects",
                 summary:
                   "Collaborative engineering teams solving real-world problems.",
               },
               {
+                name: "outreach",
                 icon: OutreachIcon,
                 page: "/outreach",
                 summary:
                   "Connecting with the community through STEM initiatives.",
               },
               {
+                name: "workshops",
                 icon: WorkshopsIcon,
                 page: "/workshops",
                 summary:
                   "Skill-building events on hardware, software, and more.",
               },
               {
+                name: "industry",
                 icon: IndustryIcon,
                 page: "/industry",
                 summary: "Professional development and career exploration.",
               },
               {
+                name: "networking",
                 icon: NetworkingIcon,
                 page: "/networking",
                 summary:
