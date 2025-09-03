@@ -7,7 +7,7 @@ export default function FlipCard({ imageSrc, name, summary, onClick }) {
       onClick={onClick}
       className="cursor-pointer w-[300px] h-[280px] [perspective:1000px]"
     >
-      <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
+      <div className="relative w-full h-full transition-transform duration-1500 ease-in-out [transform-style:preserve-3d] hover:[transform:rotateY(180deg)]">
         {/* Front Face */}
         <div className="absolute inset-0 backface-hidden bg-white border shadow-md rounded-xl flex flex-col items-center justify-center p-4">
           <img
