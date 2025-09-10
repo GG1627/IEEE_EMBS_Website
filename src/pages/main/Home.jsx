@@ -655,13 +655,13 @@ export default function Home() {
               time="6:30 PM - 7:30 PM"
               description="Come meet the board, learn about our mission, and hear what we have planned!"
             />
-            {/*<EventCard
-              eventName="TBA"
-              location="TBA"
-              date="TBA"
-              time="TBA"
-              description="TBA"
-            />
+            <EventCard
+              eventName="Heartbeat Monitor Workshop"
+              location="CSE E121"
+              date="September 16"
+              time="6:00 - 8:00PM"
+              description="Beginner friendly workshop on building a heartbeat monitor"
+            />{/*}
             <EventCard
               eventName="TBA"
               location="TBA"
