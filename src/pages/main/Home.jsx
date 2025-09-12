@@ -666,7 +666,7 @@ export default function Home() {
               eventName="Heartbeat Monitor Workshop"
               location="TBD"
               date="September 18"
-              time="6:00 - 8:00PM"
+              time="6:00 - 7:00PM"
               description="Beginner friendly workshop on building a heartbeat monitor!"
             />
           </div>
