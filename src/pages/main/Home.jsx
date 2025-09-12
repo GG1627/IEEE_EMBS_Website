@@ -657,14 +657,14 @@ export default function Home() {
             />
             <EventCard
               eventName="IBM Speaker Panel"
-              location="TBD"
+              location="CSE E121"
               date="September 16"
               time="7:00 - 8:00PM"
               description="Join us for our first industry speaker to learn more about BME in the outside world!"
             />
             <EventCard
               eventName="Heartbeat Monitor Workshop"
-              location="CSE E121"
+              location="TBD"
               date="September 18"
               time="6:00 - 8:00PM"
               description="Beginner friendly workshop on building a heartbeat monitor!"
