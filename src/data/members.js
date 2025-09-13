@@ -1,16 +1,16 @@
-import Veronica from "../assets/members/Veronica.jpg";
-import Christian from "../assets/members/Christian2.jpg";
-import Viola from "../assets/members/Viola.png";
-import Krish from "../assets/members/Krish.png";
-import Gael from "../assets/members/Gael.jpg";
-import Clea from "../assets/members/Clea.jpg";
-import Michael from "../assets/members/Michael.jpg";
-import Lincy from "../assets/members/Lincy.jpg";
-import Fabiana from "../assets/members/Fabiana.png";
-import May from "../assets/members/DrMay.jpg";
-import Devin from "../assets/members/Devin.jpg";
-import Matthew from "../assets/members/Matthew.png";
-import Katherine from "../assets/members/Katherine.jpg";
+import Veronica from "../assets/members/Veronica.avif";
+import Christian from "../assets/members/Christian.avif";
+import Viola from "../assets/members/Viola.avif";
+import Krish from "../assets/members/Krish.avif";
+import Gael from "../assets/members/Gael.avif";
+import Clea from "../assets/members/Clea.avif";
+import Michael from "../assets/members/Michael.avif";
+import Lincy from "../assets/members/Lincy.avif";
+import Fabiana from "../assets/members/Fabiana.avif";
+import May from "../assets/members/DrMay.avif";
+import Devin from "../assets/members/Devin.avif";
+import Matthew from "../assets/members/Matthew.avif";
+import Katherine from "../assets/members/Katherine.avif";
 
 export const executiveBoard = [
   {

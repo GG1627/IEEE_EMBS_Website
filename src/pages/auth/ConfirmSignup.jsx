@@ -2,12 +2,20 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { FaCheck } from "react-icons/fa6";
 import { FaXmark } from "react-icons/fa6";
+import {
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormControl,
+} from "@mui/material";
+import { supabase } from "../../lib/supabase";
 
 export default function ConfirmSignup() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [confirmationUrl, setConfirmationUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isNationalIEEEEMBSMember, setIsNationalIEEEEMBSMember] = useState("");
 
   useEffect(() => {
     const url = searchParams.get("confirmation_url");
@@ -22,9 +30,17 @@ export default function ConfirmSignup() {
     setLoading(false);
   }, [searchParams, navigate]);
 
-  const handleConfirmSignup = () => {
+  const handleConfirmSignup = async () => {
+    // Store the national member status for when the user gets added to the members table
+    if (isNationalIEEEEMBSMember) {
+      sessionStorage.setItem(
+        "national_member_status",
+        isNationalIEEEEMBSMember
+      );
+    }
+
+    // Proceed with confirmation
     if (confirmationUrl) {
-      // Redirect to the actual Supabase confirmation URL
       window.location.href = confirmationUrl;
     }
   };
@@ -77,10 +93,68 @@ export default function ConfirmSignup() {
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
             Confirm Your Signup
           </h2>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-600 mb-8">
             Welcome to UF EMBS! Click the button below to complete your account
             setup and log in.
           </p>
+
+          <div className="mb-4">
+            <FormControl component="fieldset">
+              <label className="block text-sm font-medium text-gray-700 mb-0">
+                Are you a national IEEE EMBS member?
+              </label>
+              <RadioGroup
+                value={isNationalIEEEEMBSMember}
+                onChange={(e) => setIsNationalIEEEEMBSMember(e.target.value)}
+                sx={{
+                  "& .MuiFormControlLabel-root": {
+                    marginBottom: "-8px",
+                  },
+                }}
+              >
+                <FormControlLabel
+                  value="yes"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#96529a",
+                        "&.Mui-checked": {
+                          color: "#96529a",
+                        },
+                      }}
+                    />
+                  }
+                  label="Yes, I am a national IEEE EMBS member"
+                  sx={{
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#374151",
+                    },
+                  }}
+                />
+                <FormControlLabel
+                  value="no"
+                  control={
+                    <Radio
+                      sx={{
+                        color: "#96529a",
+                        "&.Mui-checked": {
+                          color: "#96529a",
+                        },
+                      }}
+                    />
+                  }
+                  label="No, I am not a national IEEE EMBS member"
+                  sx={{
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "14px",
+                      color: "#374151",
+                    },
+                  }}
+                />
+              </RadioGroup>
+            </FormControl>
+          </div>
           <button
             onClick={handleConfirmSignup}
             className="w-full bg-[#96529a] hover:bg-[#772583] text-white font-medium py-3 px-4 rounded-md transition-colors mb-4 hover:cursor-pointer"

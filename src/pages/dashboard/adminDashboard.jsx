@@ -14,6 +14,8 @@ export default function AdminDashboard() {
   const [showQRCode, setShowQRCode] = useState(false);
   const [activeEvents, setActiveEvents] = useState([]);
   const [loadingActiveEvents, setLoadingActiveEvents] = useState(true);
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [loadingUpcomingEvents, setLoadingUpcomingEvents] = useState(true);
 
   const { showSnackbar } = useSnackbar();
 
@@ -28,9 +30,10 @@ export default function AdminDashboard() {
     }
   }, [eventCode]);
 
-  // Fetch active events on component mount
+  // Fetch active and upcoming events on component mount
   useEffect(() => {
     fetchActiveEvents();
+    fetchUpcomingEvents();
   }, []);
 
   // Function to fetch active events
@@ -60,6 +63,36 @@ export default function AdminDashboard() {
       setActiveEvents([]);
     } finally {
       setLoadingActiveEvents(false);
+    }
+  };
+
+  // Function to fetch upcoming events
+  const fetchUpcomingEvents = async () => {
+    try {
+      setLoadingUpcomingEvents(true);
+      const currentTime = new Date().toISOString();
+
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .gt("start_time", currentTime)
+        .order("start_time", { ascending: true })
+        .limit(3);
+
+      if (error) {
+        console.error("Error fetching upcoming events:", error);
+        showSnackbar("Error fetching upcoming events", {
+          customColor: "#dc2626",
+        });
+        setUpcomingEvents([]);
+      } else {
+        setUpcomingEvents(data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching upcoming events:", error);
+      setUpcomingEvents([]);
+    } finally {
+      setLoadingUpcomingEvents(false);
     }
   };
 
@@ -99,8 +132,9 @@ export default function AdminDashboard() {
       setEventEndTime("");
       setEventQrcode("");
       setShowQRCode(false);
-      // Refresh active events after adding a new event
+      // Refresh active and upcoming events after adding a new event
       fetchActiveEvents();
+      fetchUpcomingEvents();
     }
   };
 
@@ -114,6 +148,93 @@ export default function AdminDashboard() {
       );
     }
     setEventCode(result);
+  };
+
+  // Function to download QR code as image
+  const downloadQRCode = (eventCode, eventName) => {
+    // Create a temporary canvas to render the QR code
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const size = 300; // Larger size for better quality
+    canvas.width = size;
+    canvas.height = size;
+
+    // Create a temporary SVG element with the QR code
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = `
+      <svg width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="white"/>
+      </svg>
+    `;
+
+    // Use html2canvas alternative - create QR code manually or use the library's canvas method
+    // For now, we'll use a simpler approach with the QRCode library that can generate canvas
+    import("qrcode")
+      .then((QRCode) => {
+        QRCode.toCanvas(
+          canvas,
+          `https://www.ufembs.com/checkin?code=${eventCode}`,
+          {
+            width: size,
+            margin: 2,
+            color: {
+              dark: "#000000",
+              light: "#FFFFFF",
+            },
+          },
+          (error) => {
+            if (error) {
+              console.error("Error generating QR code:", error);
+              showSnackbar("Error generating QR code for download", {
+                customColor: "#dc2626",
+              });
+              return;
+            }
+
+            // Convert canvas to blob and download
+            canvas.toBlob((blob) => {
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.download = `${eventName || eventCode}_QR_Code.png`;
+              link.href = url;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+
+              showSnackbar("QR code downloaded successfully", {
+                customColor: "#007377",
+              });
+            }, "image/png");
+          }
+        );
+      })
+      .catch(() => {
+        // Fallback method using SVG to canvas conversion
+        const svgElement = document.querySelector(
+          `#qr-${eventCode.replace(/[^a-zA-Z0-9]/g, "")}`
+        );
+        if (svgElement) {
+          const svgData = new XMLSerializer().serializeToString(svgElement);
+          const svgBlob = new Blob([svgData], {
+            type: "image/svg+xml;charset=utf-8",
+          });
+          const url = URL.createObjectURL(svgBlob);
+          const link = document.createElement("a");
+          link.download = `${eventName || eventCode}_QR_Code.svg`;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+
+          showSnackbar("QR code downloaded as SVG", { customColor: "#007377" });
+        } else {
+          showSnackbar("Error: Could not find QR code to download", {
+            customColor: "#dc2626",
+          });
+        }
+      });
   };
 
   return (
@@ -133,197 +254,404 @@ export default function AdminDashboard() {
 
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Left Column - Active Events */}
-              <div className="bg-white rounded-xl shadow-lg p-6 h-fit">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-[#007377] flex items-center gap-2">
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Active Events
-                  </h2>
-                  <button
-                    onClick={fetchActiveEvents}
-                    className="text-[#007377] hover:text-[#005c60] transition-colors duration-200 hover:cursor-pointer"
-                    title="Refresh active events"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                      />
-                    </svg>
-                  </button>
-                </div>
-
-                {loadingActiveEvents ? (
-                  <div className="flex items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007377]"></div>
-                    <span className="ml-3 text-gray-600">
-                      Loading active events...
-                    </span>
-                  </div>
-                ) : activeEvents.length > 0 ? (
-                  <div className="space-y-4 max-h-[600px] overflow-y-auto">
-                    {activeEvents.map((event) => (
-                      <div
-                        key={event.id}
-                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
-                      >
-                        <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                          <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                              {event.name}
-                            </h3>
-                            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
-                              <div className="flex items-center gap-1">
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3zM9 5h6"
-                                  />
-                                </svg>
-                                <span>
-                                  {new Date(event.date).toLocaleDateString()}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                                  />
-                                </svg>
-                                <span>{event.points} points</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 8v4l3 3"
-                                  />
-                                </svg>
-                                <span>
-                                  {new Date(
-                                    event.start_time
-                                  ).toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                                </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 8v4l3 3"
-                                  />
-                                </svg>
-                                <span>
-                                  {new Date(event.end_time).toLocaleTimeString(
-                                    [],
-                                    { hour: "2-digit", minute: "2-digit" }
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="bg-gradient-to-r from-[#007377] to-[#008d92] rounded-lg p-4 text-white">
-                              <p className="text-sm font-medium mb-1 opacity-90">
-                                Event Code
-                              </p>
-                              <p className="text-3xl font-mono font-bold tracking-wider">
-                                {event.code}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex-shrink-0 flex flex-col items-center">
-                            <div className="bg-white p-4 rounded-lg border-2 border-gray-200 shadow-sm">
-                              <QRCodeSVG
-                                value={`https://www.ufembs.com/checkin?code=${event.code}`}
-                                size={100}
-                                level="H"
-                                className="block"
-                              />
-                            </div>
-                            <p className="mt-2 text-xs text-gray-500 text-center font-medium">
-                              Scan to check in
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="text-gray-300 mb-4">
+              {/* Left Column - Events */}
+              <div className="space-y-8">
+                {/* Active Events */}
+                <div className="bg-white rounded-xl shadow-lg p-6 h-fit">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-[#007377] flex items-center gap-2">
                       <svg
-                        className="mx-auto h-16 w-16"
+                        className="w-6 h-6"
                         fill="none"
-                        viewBox="0 0 24 24"
                         stroke="currentColor"
+                        viewBox="0 0 24 24"
                       >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth={1.5}
-                          d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3zM9 5h6M9 11h6m-6 4h6"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                    </div>
-                    <p className="text-gray-500 text-xl font-medium mb-2">
-                      No active events
-                    </p>
-                    <p className="text-gray-400">
-                      Create an event to start tracking attendance
-                    </p>
+                      Active Events
+                    </h2>
+                    <button
+                      onClick={() => {
+                        fetchActiveEvents();
+                        fetchUpcomingEvents();
+                      }}
+                      className="text-[#007377] hover:text-[#005c60] transition-colors duration-200 hover:cursor-pointer"
+                      title="Refresh events"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                        />
+                      </svg>
+                    </button>
                   </div>
-                )}
+
+                  {loadingActiveEvents ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007377]"></div>
+                      <span className="ml-3 text-gray-600">
+                        Loading active events...
+                      </span>
+                    </div>
+                  ) : activeEvents.length > 0 ? (
+                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      {activeEvents.map((event) => (
+                        <div
+                          key={event.id}
+                          className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+                        >
+                          <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                                {event.name}
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
+                                <div className="flex items-center gap-1">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3zM9 5h6"
+                                    />
+                                  </svg>
+                                  <span>
+                                    {new Date(event.date).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                    />
+                                  </svg>
+                                  <span>{event.points} points</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 8v4l3 3"
+                                    />
+                                  </svg>
+                                  <span>
+                                    {new Date(
+                                      event.start_time
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 8v4l3 3"
+                                    />
+                                  </svg>
+                                  <span>
+                                    {new Date(
+                                      event.end_time
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="bg-gradient-to-r from-[#007377] to-[#008d92] rounded-lg p-4 text-white">
+                                <p className="text-sm font-medium mb-1 opacity-90">
+                                  Event Code
+                                </p>
+                                <p className="text-3xl font-mono font-bold tracking-wider">
+                                  {event.code}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex-shrink-0 flex flex-col items-center">
+                              <div className="bg-white p-4 rounded-lg border-2 border-gray-200 shadow-sm">
+                                <QRCodeSVG
+                                  id={`qr-${event.code.replace(
+                                    /[^a-zA-Z0-9]/g,
+                                    ""
+                                  )}`}
+                                  value={`https://www.ufembs.com/checkin?code=${event.code}`}
+                                  size={100}
+                                  level="H"
+                                  className="block"
+                                />
+                              </div>
+                              <p className="mt-2 text-xs text-gray-500 text-center font-medium">
+                                Scan to check in
+                              </p>
+                              <button
+                                onClick={() =>
+                                  downloadQRCode(event.code, event.name)
+                                }
+                                className="mt-2 px-3 py-1.5 bg-[#007377] text-white text-xs font-medium rounded-lg hover:bg-[#005c60] focus:outline-none focus:ring-2 focus:ring-[#007377] focus:ring-offset-1 transition-all duration-200 hover:cursor-pointer flex items-center gap-1"
+                                title="Download QR code"
+                              >
+                                <svg
+                                  className="w-3 h-3"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                                  />
+                                </svg>
+                                Download
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="text-gray-300 mb-4">
+                        <svg
+                          className="mx-auto h-16 w-16"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3zM9 5h6M9 11h6m-6 4h6"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-gray-500 text-xl font-medium mb-2">
+                        No active events
+                      </p>
+                      <p className="text-gray-400">
+                        Create an event to start tracking attendance
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Upcoming Events */}
+                <div className="bg-white rounded-xl shadow-lg p-6 h-fit">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-[#007377] flex items-center gap-2">
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      Upcoming Events
+                    </h2>
+                  </div>
+
+                  {loadingUpcomingEvents ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#007377]"></div>
+                      <span className="ml-3 text-gray-600">
+                        Loading upcoming events...
+                      </span>
+                    </div>
+                  ) : upcomingEvents.length > 0 ? (
+                    <div className="space-y-4 max-h-[600px] overflow-y-auto">
+                      {upcomingEvents.map((event) => (
+                        <div
+                          key={event.id}
+                          className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+                        >
+                          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                            {event.name}
+                          </h3>
+                          <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
+                            <div className="flex items-center gap-1">
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3zM9 5h6"
+                                />
+                              </svg>
+                              <span>
+                                {new Date(event.date).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                                />
+                              </svg>
+                              <span>{event.points} points</span>
+                            </div>
+                            <div className="flex items-center gap-1 col-span-2">
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 8v4l3 3"
+                                />
+                              </svg>
+                              <span>
+                                {new Date(event.start_time).toLocaleTimeString(
+                                  [],
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  }
+                                )}{" "}
+                                -{" "}
+                                {new Date(event.end_time).toLocaleTimeString(
+                                  [],
+                                  {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  }
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-3 text-white">
+                            <p className="text-sm font-medium mb-1 opacity-90">
+                              Event Code
+                            </p>
+                            <p className="text-2xl font-mono font-bold tracking-wider">
+                              {event.code}
+                            </p>
+                          </div>
+                          <div className="mt-3 text-center">
+                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 text-sm font-medium rounded-full">
+                              <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                              Starts in{" "}
+                              {Math.ceil(
+                                (new Date(event.start_time) - new Date()) /
+                                  (1000 * 60 * 60 * 24)
+                              )}{" "}
+                              day
+                              {Math.ceil(
+                                (new Date(event.start_time) - new Date()) /
+                                  (1000 * 60 * 60 * 24)
+                              ) !== 1
+                                ? "s"
+                                : ""}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="text-gray-300 mb-4">
+                        <svg
+                          className="mx-auto h-16 w-16"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-gray-500 text-xl font-medium mb-2">
+                        No upcoming events
+                      </p>
+                      <p className="text-gray-400">
+                        Create an event to see it here
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Right Column - Add Event Form */}
@@ -471,6 +799,10 @@ export default function AdminDashboard() {
                       <div className="bg-gray-50 rounded-lg p-6 flex flex-col items-center">
                         <div className="bg-white p-4 rounded-lg border-2 border-gray-200 shadow-sm">
                           <QRCodeSVG
+                            id={`qr-preview-${eventQrcode.replace(
+                              /[^a-zA-Z0-9]/g,
+                              ""
+                            )}`}
                             value={`https://www.ufembs.com/checkin?code=${eventQrcode}`}
                             size={120}
                             level="H"
@@ -482,9 +814,30 @@ export default function AdminDashboard() {
                             {eventQrcode}
                           </span>
                         </p>
-                        <p className="mt-1 text-xs text-gray-500 text-center">
+                        <p className="mt-1 text-xs text-gray-500 text-center mb-3">
                           Students will scan this to check in
                         </p>
+                        <button
+                          type="button"
+                          onClick={() => downloadQRCode(eventQrcode, eventName)}
+                          className="px-4 py-2 bg-[#007377] text-white text-sm font-medium rounded-lg hover:bg-[#005c60] focus:outline-none focus:ring-2 focus:ring-[#007377] focus:ring-offset-2 transition-all duration-200 hover:cursor-pointer flex items-center gap-2"
+                          title="Download QR code"
+                        >
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                            />
+                          </svg>
+                          Download QR Code
+                        </button>
                       </div>
                     ) : (
                       <div className="bg-gray-50 rounded-lg p-8 flex flex-col items-center">
