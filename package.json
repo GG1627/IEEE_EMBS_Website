@@ -22,6 +22,7 @@
     "@yudiel/react-qr-scanner": "^2.3.1",
     "framer-motion": "^12.23.9",
     "gsap": "^3.13.0",
+    "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
