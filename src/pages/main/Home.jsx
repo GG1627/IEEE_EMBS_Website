@@ -137,7 +137,7 @@ export default function Home() {
           console.log("👤 Fetching user role for:", user.email);
           const { data, error } = await supabase
             .from("members")
-            .select("role")
+            .select("role, national_member")
             .eq("user_id", user.id)
             .single();
 
@@ -146,7 +146,24 @@ export default function Home() {
             setUserRole("member"); // Default to member on error
           } else {
             console.log("✅ User role fetched:", data?.role || "member");
+            console.log(
+              "✅ User national member status fetched:",
+              data?.national_member
+            );
             setUserRole(data?.role || "member");
+
+            // Only show snackbar if national_member is specifically null (not set) AND user is a member (not admin)
+            if (
+              data?.national_member === null &&
+              (data?.role === "member" || !data?.role)
+            ) {
+              showSnackbar(
+                "Please update your National Member status in the Dashboard",
+                {
+                  customColor: "#ff9800",
+                }
+              );
+            }
           }
         } catch (error) {
           console.error("❌ Exception fetching user role:", error);
@@ -160,7 +177,7 @@ export default function Home() {
     fetchUserRole();
   }, [user]);
 
-  // No hero CTA buttons for now per new design
+  //
 
   return (
     <>
@@ -720,7 +737,7 @@ export default function Home() {
             ].map(({ name, icon, page, summary }) => (
               <div key={name} className="flex justify-center">
                 <FlipCard
-                  name={name.toUpperCase()}   // ✅ force uppercase
+                  name={name.toUpperCase()} // ✅ force uppercase
                   imageSrc={icon}
                   summary={summary}
                   onClick={() => navigate(page)}

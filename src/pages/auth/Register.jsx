@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { supabase } from "../../lib/supabase";
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
@@ -11,13 +12,6 @@ export default function Register() {
   const navigate = useNavigate();
   const location = useLocation();
   const { signUp } = useAuth();
-
-  // auto fill the email input field
-  useEffect(() => {
-    if (location.state?.email) {
-      setEmail(location.state.email);
-    }
-  }, [location.state]);
 
   async function handleSignUp(e) {
     e.preventDefault();
@@ -32,7 +26,30 @@ export default function Register() {
     setLoading(true);
     setMessage("");
 
+    // if user exists in members table, redirect to login
     try {
+      // First, check if the user exists in the members table
+      const { data: existingMember, error: checkError } = await supabase
+        .from("members")
+        .select("*")
+        .eq("email", email.toLowerCase())
+        .single();
+
+      if (checkError && checkError.code !== "PGRST116") {
+        // PGRST116 is "not found"
+        setMessage("Error: " + checkError.message);
+        return;
+      }
+
+      // If user already exists in members table, redirect to login
+      if (existingMember) {
+        setMessage("You already have an account. Redirecting to login...");
+        setTimeout(() => {
+          navigate("/auth/login", { state: { email: email } });
+        }, 1750);
+        return;
+      }
+
       const { data, error } = await signUp(email, firstName, lastName);
 
       if (error) {

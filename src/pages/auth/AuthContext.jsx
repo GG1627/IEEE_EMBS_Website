@@ -143,6 +143,11 @@ export const AuthProvider = ({ children }) => {
 
       console.log("📝 Adding new user to members table:", user.email);
 
+      // Get the national member status from sessionStorage if available
+      const nationalMemberStatus = sessionStorage.getItem(
+        "national_member_status"
+      );
+
       const memberData = {
         email: user.email,
         first_name: user.user_metadata?.first_name || "",
@@ -151,7 +156,13 @@ export const AuthProvider = ({ children }) => {
         events_attended: 0,
         user_id: user.id,
         role: "member",
+        national_member: nationalMemberStatus || null,
       };
+
+      // Clear the stored status after using it
+      if (nationalMemberStatus) {
+        sessionStorage.removeItem("national_member_status");
+      }
 
       const { data, error } = await supabase
         .from("members")

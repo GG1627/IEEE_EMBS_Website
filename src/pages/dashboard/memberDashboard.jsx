@@ -2,11 +2,17 @@ import { useAuth } from "../auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { IoMdHeart } from "react-icons/io";
-import { FaQrcode, FaCamera } from "react-icons/fa";
+import { FaQrcode, FaCamera, FaExclamationTriangle } from "react-icons/fa";
 import { careerFields } from "../../data/careerFields";
 import { supabase } from "../../lib/supabase";
 import { useEffect, useState } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
+import {
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormControl,
+} from "@mui/material";
 
 const sampleEvents = [
   "Workshop",
@@ -29,12 +35,17 @@ export default function MemberDashboard() {
   const [eventCode, setEventCode] = useState("");
   const [eventId, setEventId] = useState("");
   const [showQRScanner, setShowQRScanner] = useState(false);
+  const [nationalMemberStatus, setNationalMemberStatus] = useState(null);
+  const [showNationalMemberUpdate, setShowNationalMemberUpdate] =
+    useState(false);
+  const [selectedNationalStatus, setSelectedNationalStatus] = useState("");
 
   useEffect(() => {
     if (user) {
       console.log("🎯 Dashboard useEffect triggered with user:", user);
       fetchUserStats();
       fetchFavoriteFields();
+      checkNationalMemberStatus();
     } else {
       console.log("⚠️ Dashboard useEffect triggered but no user found");
     }
@@ -53,7 +64,9 @@ export default function MemberDashboard() {
       // Try to get real user stats from members table
       const { data, error } = await supabase
         .from("members")
-        .select("points, events_attended, first_name, last_name, email")
+        .select(
+          "points, events_attended, first_name, last_name, email, national_member"
+        )
         .eq("user_id", user.id)
         .single();
 
@@ -79,9 +92,12 @@ export default function MemberDashboard() {
           points: data.points || 0,
           events_attended: data.events_attended || 0,
         });
+        // Also set the national member status
+        setNationalMemberStatus(data.national_member);
         console.log("🎯 Set user stats:", {
           points: data.points || 0,
           events_attended: data.events_attended || 0,
+          national_member: data.national_member,
         });
       } else {
         console.log("⚠️ No user data found in members table");
@@ -100,6 +116,74 @@ export default function MemberDashboard() {
         events_attended: 0,
       });
       showSnackbar("Error fetching user stats: " + error.message, {
+        customColor: "#b00000",
+      });
+    }
+  };
+
+  const checkNationalMemberStatus = async () => {
+    try {
+      console.log("🏛️ Checking national member status for user:", user.id);
+
+      const { data, error } = await supabase
+        .from("members")
+        .select("national_member")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) {
+        console.error("❌ Error checking national member status:", error);
+        return;
+      }
+
+      if (data) {
+        setNationalMemberStatus(data.national_member);
+        setShowNationalMemberUpdate(data.national_member === null);
+        console.log("🏛️ National member status:", data.national_member);
+      }
+    } catch (error) {
+      console.error("❌ Exception checking national member status:", error);
+    }
+  };
+
+  const updateNationalMemberStatus = async () => {
+    if (!selectedNationalStatus) {
+      showSnackbar("Please select your national membership status", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from("members")
+        .update({ national_member: selectedNationalStatus })
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error("❌ Error updating national member status:", error);
+        showSnackbar("Error updating status: " + error.message, {
+          customColor: "#b00000",
+        });
+        return;
+      }
+
+      // Update local state
+      setNationalMemberStatus(selectedNationalStatus);
+      setShowNationalMemberUpdate(false);
+      setSelectedNationalStatus("");
+
+      showSnackbar("National membership status updated successfully!", {
+        customColor: "#007377",
+      });
+
+      console.log(
+        "✅ Successfully updated national member status:",
+        selectedNationalStatus
+      );
+    } catch (error) {
+      console.error("❌ Exception updating national member status:", error);
+      showSnackbar("Error updating status", {
         customColor: "#b00000",
       });
     }
@@ -417,6 +501,99 @@ export default function MemberDashboard() {
               Track your points and progress with UF EMBS!
             </p>
           </div>
+
+          {/* National Member Status Update Section */}
+          {showNationalMemberUpdate && (
+            <div className="w-full max-w-7xl px-2 sm:px-4 md:px-0 mb-6">
+              <div className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200 p-4 sm:p-6 rounded-xl shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                      <FaExclamationTriangle className="text-red-500 text-lg" />
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-red-800 text-xl sm:text-2xl font-bold mb-2">
+                      Update Your Membership Status
+                    </h2>
+                    <p className="text-red-700 text-base sm:text-lg mb-4">
+                      Please let us know if you are a national IEEE EMBS member
+                      to help us provide you with the best experience.
+                    </p>
+
+                    <div className="space-y-3">
+                      <FormControl component="fieldset">
+                        <RadioGroup
+                          value={selectedNationalStatus}
+                          onChange={(e) =>
+                            setSelectedNationalStatus(e.target.value)
+                          }
+                          sx={{
+                            "& .MuiFormControlLabel-root": {
+                              marginBottom: "4px",
+                            },
+                          }}
+                        >
+                          <FormControlLabel
+                            value="yes"
+                            control={
+                              <Radio
+                                sx={{
+                                  color: "#dc2626",
+                                  "&.Mui-checked": {
+                                    color: "#dc2626",
+                                  },
+                                }}
+                              />
+                            }
+                            label="Yes, I am a national IEEE EMBS member"
+                            sx={{
+                              "& .MuiFormControlLabel-label": {
+                                fontSize: "16px",
+                                color: "#7f1d1d",
+                                fontWeight: "500",
+                              },
+                            }}
+                          />
+                          <FormControlLabel
+                            value="no"
+                            control={
+                              <Radio
+                                sx={{
+                                  color: "#dc2626",
+                                  "&.Mui-checked": {
+                                    color: "#dc2626",
+                                  },
+                                }}
+                              />
+                            }
+                            label="No, I am not a national IEEE EMBS member"
+                            sx={{
+                              "& .MuiFormControlLabel-label": {
+                                fontSize: "16px",
+                                color: "#7f1d1d",
+                                fontWeight: "500",
+                              },
+                            }}
+                          />
+                        </RadioGroup>
+                      </FormControl>
+
+                      <div className="pt-2">
+                        <button
+                          onClick={updateNationalMemberStatus}
+                          className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        >
+                          Update Status
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex flex-col gap-4 w-full max-w-7xl px-2 sm:px-4 md:px-0 mb-6">
             <div className="flex flex-col gap-4 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-xl w-full shadow-sm items-start">
               <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase">
@@ -545,7 +722,7 @@ export default function MemberDashboard() {
             <div className="flex flex-col gap-4 w-full md:w-2/3">
               {/* Top row - 2 boxes */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex flex-col gap-3 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
+                <div className="flex flex-col gap-2 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
                   <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase text-center sm:text-left">
                     Points
                   </h1>
@@ -554,7 +731,7 @@ export default function MemberDashboard() {
                   </h1>
                   <div className="w-full h-1 bg-[#007377] rounded"></div>
                 </div>
-                <div className="flex flex-col gap-3 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
+                <div className="flex flex-col gap-2 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
                   <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase text-center sm:text-left leading-tight">
                     Events Attended
                   </h1>

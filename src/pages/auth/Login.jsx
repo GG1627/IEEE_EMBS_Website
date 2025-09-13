@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { supabase } from "../../lib/supabase";
 
@@ -8,7 +8,15 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn } = useAuth();
+
+  // Auto-fill email if coming from register page
+  useEffect(() => {
+    if (location.state?.email) {
+      setEmail(location.state.email);
+    }
+  }, [location.state]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -39,7 +47,7 @@ export default function Login() {
         return;
       }
 
-      // If user doesn't exist in members table, redirect to registration
+      // AUTO-FILL EMAIL: If user doesn't exist in members table, redirect to registration with email
       if (!existingMember) {
         setMessage(
           "Email not found in our database. Redirecting to registration..."
