@@ -962,7 +962,7 @@ export default function MemberDashboard() {
                       </div>
                     ))
                   ) : (
-                    <div className="col-span-full text-center py-12">
+                    <div className="col-span-full text-center py-2">
                       <div className="relative mx-auto mb-6">
                         <div className="w-20 h-20 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm border border-white/40 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
                           <svg
@@ -979,9 +979,6 @@ export default function MemberDashboard() {
                             />
                           </svg>
                         </div>
-                        {/* Decorative dots */}
-                        <div className="absolute -top-2 -right-2 w-3 h-3 bg-[#009ca6] rounded-full opacity-60"></div>
-                        <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#007377] rounded-full opacity-40"></div>
                       </div>
 
                       <div className="space-y-2">
