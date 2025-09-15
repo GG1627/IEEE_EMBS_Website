@@ -513,115 +513,156 @@ export default function AdminDashboard() {
                       {upcomingEvents.map((event) => (
                         <div
                           key={event.id}
-                          className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200"
+                          className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200"
                         >
-                          <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                            {event.name}
-                          </h3>
-                          <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-4">
-                            <div className="flex items-center gap-1">
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a1 1 0 011 1v9a1 1 0 01-1 1H5a1 1 0 01-1-1V8a1 1 0 011-1h3zM9 5h6"
-                                />
-                              </svg>
-                              <span>
-                                {new Date(event.date).toLocaleDateString()}
-                              </span>
+                          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                            {/* Left Column - Event Details */}
+                            <div className="flex-1 space-y-4">
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                {event.name}
+                              </h3>
+
+                              <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
+                                <div className="flex items-center gap-2">
+                                  <svg
+                                    className="w-4 h-4 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                  </svg>
+                                  <span>
+                                    {new Date(event.date).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <svg
+                                    className="w-4 h-4 text-yellow-500"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                  </svg>
+                                  <span>{event.points} points</span>
+                                </div>
+                                <div className="flex items-center gap-2 col-span-2">
+                                  <svg
+                                    className="w-4 h-4 text-gray-400"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                  </svg>
+                                  <span>
+                                    {new Date(
+                                      event.start_time
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}{" "}
+                                    -{" "}
+                                    {new Date(
+                                      event.end_time
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-4 text-white">
+                                <p className="text-sm font-medium mb-1 opacity-90">
+                                  Event Code
+                                </p>
+                                <p className="text-2xl font-mono font-bold tracking-wider">
+                                  {event.code}
+                                </p>
+                              </div>
+
+                              <div className="flex justify-center lg:justify-start">
+                                <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 text-sm font-medium rounded-full">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                  </svg>
+                                  Starts in{" "}
+                                  {Math.ceil(
+                                    (new Date(event.start_time) - new Date()) /
+                                      (1000 * 60 * 60 * 24)
+                                  )}{" "}
+                                  day
+                                  {Math.ceil(
+                                    (new Date(event.start_time) - new Date()) /
+                                      (1000 * 60 * 60 * 24)
+                                  ) !== 1
+                                    ? "s"
+                                    : ""}
+                                </span>
+                              </div>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+
+                            {/* Right Column - QR Code */}
+                            <div className="flex-shrink-0 flex flex-col items-center space-y-3">
+                              <div className="bg-white p-3 rounded-lg border-2 border-gray-200 shadow-sm">
+                                <QRCodeSVG
+                                  id={`qr-upcoming-${event.code.replace(
+                                    /[^a-zA-Z0-9]/g,
+                                    ""
+                                  )}`}
+                                  value={`https://www.ufembs.com/checkin?code=${event.code}`}
+                                  size={80}
+                                  level="H"
+                                  className="block"
                                 />
-                              </svg>
-                              <span>{event.points} points</span>
+                              </div>
+                              <p className="text-xs text-gray-500 text-center font-medium">
+                                QR Code
+                              </p>
+                              <button
+                                onClick={() =>
+                                  downloadQRCode(event.code, event.name)
+                                }
+                                className="px-3 py-1.5 bg-[#007377] text-white text-xs font-medium rounded-lg hover:bg-[#005c60] focus:outline-none focus:ring-2 focus:ring-[#007377] focus:ring-offset-1 transition-all duration-200 hover:cursor-pointer flex items-center gap-1.5"
+                                title="Download QR code"
+                              >
+                                <svg
+                                  className="w-3 h-3"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                                  />
+                                </svg>
+                                Download
+                              </button>
                             </div>
-                            <div className="flex items-center gap-1 col-span-2">
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M12 8v4l3 3"
-                                />
-                              </svg>
-                              <span>
-                                {new Date(event.start_time).toLocaleTimeString(
-                                  [],
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  }
-                                )}{" "}
-                                -{" "}
-                                {new Date(event.end_time).toLocaleTimeString(
-                                  [],
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  }
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-3 text-white">
-                            <p className="text-sm font-medium mb-1 opacity-90">
-                              Event Code
-                            </p>
-                            <p className="text-2xl font-mono font-bold tracking-wider">
-                              {event.code}
-                            </p>
-                          </div>
-                          <div className="mt-3 text-center">
-                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-50 text-blue-700 text-sm font-medium rounded-full">
-                              <svg
-                                className="w-4 h-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                              </svg>
-                              Starts in{" "}
-                              {Math.ceil(
-                                (new Date(event.start_time) - new Date()) /
-                                  (1000 * 60 * 60 * 24)
-                              )}{" "}
-                              day
-                              {Math.ceil(
-                                (new Date(event.start_time) - new Date()) /
-                                  (1000 * 60 * 60 * 24)
-                              ) !== 1
-                                ? "s"
-                                : ""}
-                            </span>
                           </div>
                         </div>
                       ))}

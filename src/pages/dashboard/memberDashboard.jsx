@@ -14,17 +14,6 @@ import {
   FormControl,
 } from "@mui/material";
 
-const sampleEvents = [
-  "Workshop",
-  "Conference",
-  "Networking Session",
-  "Skill-Building Event",
-  "Career Fair Prep",
-  "Webinar",
-  "Hackathon",
-  "Industry Talk",
-];
-
 export default function MemberDashboard() {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
@@ -39,12 +28,17 @@ export default function MemberDashboard() {
   const [showNationalMemberUpdate, setShowNationalMemberUpdate] =
     useState(false);
   const [selectedNationalStatus, setSelectedNationalStatus] = useState("");
+  const [eventsAttended, setEventsAttended] = useState([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [favoritesLoading, setFavoritesLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
       console.log("🎯 Dashboard useEffect triggered with user:", user);
       fetchUserStats();
       fetchFavoriteFields();
+      fetchEventsAttended();
       checkNationalMemberStatus();
     } else {
       console.log("⚠️ Dashboard useEffect triggered but no user found");
@@ -53,6 +47,7 @@ export default function MemberDashboard() {
 
   const fetchUserStats = async () => {
     try {
+      setStatsLoading(true);
       console.log("🔍 Fetching user stats for user:", {
         userId: user.id,
         userEmail: user.email,
@@ -83,6 +78,7 @@ export default function MemberDashboard() {
         showSnackbar("Using default stats - database query failed", {
           customColor: "#ff9800",
         });
+        setStatsLoading(false);
         return;
       }
 
@@ -108,6 +104,7 @@ export default function MemberDashboard() {
         showSnackbar("User not found in database", {
           customColor: "#ff9800",
         });
+        setStatsLoading(false);
       }
     } catch (error) {
       console.error("❌ Exception in fetchUserStats:", error);
@@ -118,6 +115,8 @@ export default function MemberDashboard() {
       showSnackbar("Error fetching user stats: " + error.message, {
         customColor: "#b00000",
       });
+    } finally {
+      setStatsLoading(false);
     }
   };
 
@@ -189,8 +188,63 @@ export default function MemberDashboard() {
     }
   };
 
+  const fetchEventsAttended = async () => {
+    try {
+      setEventsLoading(true);
+      const { data, error } = await supabase
+        .from("event_attendance")
+        .select(
+          `
+          event_id,
+          events (
+            id,
+            name,
+            start_time,
+            points
+          )
+        `
+        )
+        .eq("member_id", user.id)
+        .order("events(start_time)", { ascending: false });
+
+      console.log("🔍 Events attended query result:", { data, error });
+
+      if (error) {
+        console.error("❌ Error fetching events attended:", error);
+        setEventsAttended([]);
+        showSnackbar("Error fetching events attended", {
+          customColor: "#b00000",
+        });
+        setEventsLoading(false);
+        return;
+      }
+
+      if (data) {
+        // Filter out any null events and extract the event details
+        const validEvents = data
+          .filter((item) => item.events !== null)
+          .map((item) => item.events);
+
+        console.log("✅ Successfully fetched events attended:", validEvents);
+        setEventsAttended(validEvents);
+      } else {
+        console.log("📝 No events attended found for user");
+        setEventsAttended([]);
+      }
+    } catch (error) {
+      console.error("❌ Exception fetching events attended:", error);
+      setEventsAttended([]);
+      showSnackbar("Error fetching events: " + error.message, {
+        customColor: "#b00000",
+      });
+    } finally {
+      setEventsLoading(false);
+    }
+  };
+
   const fetchFavoriteFields = async () => {
     try {
+      setFavoritesLoading(true);
       console.log("❤️ Fetching favorite careers for user:", user.email);
       console.log(
         "🔍 Attempting to fetch real favorite careers from database..."
@@ -211,6 +265,7 @@ export default function MemberDashboard() {
         showSnackbar("Using empty favorites - database query failed", {
           customColor: "#ff9800",
         });
+        setFavoritesLoading(false);
         return;
       }
 
@@ -249,6 +304,8 @@ export default function MemberDashboard() {
       showSnackbar("Error fetching favorite careers: " + error.message, {
         customColor: "#b00000",
       });
+    } finally {
+      setFavoritesLoading(false);
     }
   };
 
@@ -464,8 +521,9 @@ export default function MemberDashboard() {
             }
           );
           setEventCode(""); // Clear the input after successful check-in
-          // Refresh user stats
+          // Refresh user stats and events attended
           fetchUserStats();
+          fetchEventsAttended();
         } else {
           // Function returned an error message
           showSnackbar(data || "Check-in failed", {
@@ -726,18 +784,74 @@ export default function MemberDashboard() {
                   <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase text-center sm:text-left">
                     Points
                   </h1>
-                  <h1 className="text-[#009ca6] text-3xl sm:text-5xl md:text-8xl font-bold leading-none">
-                    {userStats.points.toLocaleString()}
-                  </h1>
+                  {statsLoading ? (
+                    <div className="flex items-center justify-center flex-1">
+                      <div className="relative">
+                        <div className="w-16 h-16 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm border border-white/40 rounded-2xl flex items-center justify-center shadow-lg">
+                          <svg
+                            className="w-8 h-8 text-[#007377] animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <h1 className="text-[#009ca6] text-3xl sm:text-5xl md:text-8xl font-bold leading-none">
+                      {userStats.points.toLocaleString()}
+                    </h1>
+                  )}
                   <div className="w-full h-1 bg-[#007377] rounded"></div>
                 </div>
                 <div className="flex flex-col gap-2 bg-[#c5ebec] border-2 border-[#87d7db] p-4 sm:p-6 rounded-lg w-full sm:w-1/2 min-h-[120px] sm:h-52 items-center sm:items-start justify-center">
                   <h1 className="text-[#009ca6] text-xl sm:text-2xl md:text-3xl font-bold uppercase text-center sm:text-left leading-tight">
                     Events Attended
                   </h1>
-                  <h1 className="text-[#009ca6] text-3xl sm:text-5xl md:text-8xl font-bold leading-none">
-                    {userStats.events_attended}
-                  </h1>
+                  {statsLoading ? (
+                    <div className="flex items-center justify-center flex-1">
+                      <div className="relative">
+                        <div className="w-16 h-16 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm border border-white/40 rounded-2xl flex items-center justify-center shadow-lg">
+                          <svg
+                            className="w-8 h-8 text-[#007377] animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <h1 className="text-[#009ca6] text-3xl sm:text-5xl md:text-8xl font-bold leading-none">
+                      {userStats.events_attended}
+                    </h1>
+                  )}
                   <div className="w-full h-1 bg-[#007377] rounded"></div>
                 </div>
               </div>
@@ -748,17 +862,160 @@ export default function MemberDashboard() {
                 </h1>
                 {/* Events in a responsive grid format */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-3 w-full">
-                  {sampleEvents.map((event, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center p-2 bg-white/30 rounded-lg hover:bg-white/50 transition-colors duration-200"
-                    >
-                      <div className="w-2 h-2 bg-[#007377] rounded-full mr-3 flex-shrink-0"></div>
-                      <h1 className="text-[#009ca6] text-lg sm:text-xl font-semibold leading-tight">
-                        {event}
-                      </h1>
+                  {eventsLoading ? (
+                    // Loading state
+                    <div className="col-span-full text-center py-12">
+                      <div className="relative mx-auto mb-6">
+                        <div className="w-20 h-20 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm border border-white/40 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                          <svg
+                            className="w-10 h-10 text-[#007377] animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        </div>
+                        {/* Animated decorative dots */}
+                        <div className="absolute -top-2 -right-2 w-3 h-3 bg-[#009ca6] rounded-full opacity-60 animate-pulse"></div>
+                        <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#007377] rounded-full opacity-40 animate-pulse delay-300"></div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h3 className="text-[#009ca6] text-xl font-bold">
+                          Loading Events
+                        </h3>
+                        <p className="text-gray-600 text-base leading-relaxed">
+                          Fetching your attended events...
+                        </p>
+                      </div>
                     </div>
-                  ))}
+                  ) : eventsAttended.length > 0 ? (
+                    eventsAttended.map((event, index) => (
+                      <div
+                        key={event.id || index}
+                        className="group relative bg-gradient-to-br from-white/40 to-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-4 hover:from-white/60 hover:to-white/40 hover:border-white/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+                      >
+                        {/* Main content */}
+                        <div className="flex flex-col gap-3">
+                          {/* Event name */}
+                          <div className="flex items-start justify-between gap-2">
+                            <h3 className="text-[#009ca6] text-lg sm:text-xl font-bold leading-tight group-hover:text-[#007377] transition-colors duration-200">
+                              {event.name}
+                            </h3>
+                            {event.points && (
+                              <div className="flex-shrink-0 bg-gradient-to-r from-[#009ca6] to-[#007377] text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                                +{event.points} pts
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Event details */}
+                          <div className="flex flex-col gap-2">
+                            {event.start_time && (
+                              <div className="flex items-center gap-2">
+                                <svg
+                                  className="w-4 h-4 text-[#007377] flex-shrink-0"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                  />
+                                </svg>
+                                <span className="text-gray-700 text-sm font-medium">
+                                  {new Date(
+                                    event.start_time
+                                  ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                  })}
+                                </span>
+                                <span className="text-gray-500 text-sm">
+                                  {new Date(
+                                    event.start_time
+                                  ).toLocaleTimeString("en-US", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-full text-center py-12">
+                      <div className="relative mx-auto mb-6">
+                        <div className="w-20 h-20 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm border border-white/40 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                          <svg
+                            className="w-10 h-10 text-[#007377]"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                        </div>
+                        {/* Decorative dots */}
+                        <div className="absolute -top-2 -right-2 w-3 h-3 bg-[#009ca6] rounded-full opacity-60"></div>
+                        <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-[#007377] rounded-full opacity-40"></div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h3 className="text-[#009ca6] text-xl font-bold">
+                          No Events Yet
+                        </h3>
+                        <p className="text-gray-600 text-base leading-relaxed max-w-md mx-auto">
+                          Check in to your first event to see it here! Each
+                          event you attend will appear with details and points
+                          earned.
+                        </p>
+                      </div>
+
+                      {/* Call to action hint */}
+                      <div className="mt-6 inline-flex items-center gap-2 bg-white/30 backdrop-blur-sm border border-white/40 rounded-lg px-4 py-2">
+                        <svg
+                          className="w-4 h-4 text-[#007377]"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                          />
+                        </svg>
+                        <span className="text-[#007377] text-sm font-medium">
+                          Use the check-in section above to get started
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -781,7 +1038,36 @@ export default function MemberDashboard() {
                       : ""
                   }`}
                 >
-                  {favoriteFields.length > 0 ? (
+                  {favoritesLoading ? (
+                    <div className="text-center py-8">
+                      <div className="relative mx-auto mb-4">
+                        <div className="w-16 h-16 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm border border-white/40 rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                          <svg
+                            className="w-8 h-8 text-[#007377] animate-spin"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <p className="text-gray-600 text-base leading-relaxed">
+                        Loading favorite careers...
+                      </p>
+                    </div>
+                  ) : favoriteFields.length > 0 ? (
                     favoriteFields.map((career, index) => (
                       <div
                         key={index}
