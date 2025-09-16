@@ -669,7 +669,7 @@ export default function Home() {
               eventName="First GBM 🎉"
               location="WEIL 0270"
               date="September 15"
-              time="6:30 PM - 7:30 PM"
+              time="6:30 - 7:30 PM"
               description="Come meet the board, learn about our mission, and hear what we have planned!"
             />
             <EventCard
@@ -681,9 +681,9 @@ export default function Home() {
             />
             <EventCard
               eventName="Heartbeat Monitor Workshop"
-              location="TBD"
-              date="September 18"
-              time="6:00 - 7:00PM"
+              location="NPB 1002"
+              date="September 19"
+              time="6:45 - 8:45PM"
               description="Beginner friendly workshop on building a heartbeat monitor!"
             />
           </div>
