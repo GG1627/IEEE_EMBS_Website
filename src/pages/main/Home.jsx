@@ -674,7 +674,7 @@ export default function Home() {
             />
             <EventCard
               eventName="IBM Speaker Panel"
-              location="CSEA101"
+              location="CSE A101"
               date="September 16"
               time="7:00 - 8:00PM"
               description="Join us for our first industry speaker to learn more about BME in the outside world!"
