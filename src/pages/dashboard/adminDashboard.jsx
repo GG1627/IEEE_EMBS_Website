@@ -590,17 +590,29 @@ export default function AdminDashboard() {
                                     />
                                   </svg>
                                   Starts in{" "}
-                                  {Math.ceil(
-                                    (new Date(event.start_time) - new Date()) /
-                                      (1000 * 60 * 60 * 24)
-                                  )}{" "}
-                                  day
-                                  {Math.ceil(
-                                    (new Date(event.start_time) - new Date()) /
-                                      (1000 * 60 * 60 * 24)
-                                  ) !== 1
-                                    ? "s"
-                                    : ""}
+                                  {(() => {
+                                    const now = new Date();
+                                    const startTime = new Date(
+                                      event.start_time
+                                    );
+                                    const diffMs = startTime - now;
+                                    const diffHours = Math.ceil(
+                                      diffMs / (1000 * 60 * 60)
+                                    );
+                                    const diffDays = Math.ceil(
+                                      diffMs / (1000 * 60 * 60 * 24)
+                                    );
+
+                                    if (diffHours <= 24) {
+                                      return `${diffHours} hour${
+                                        diffHours !== 1 ? "s" : ""
+                                      }`;
+                                    } else {
+                                      return `${diffDays} day${
+                                        diffDays !== 1 ? "s" : ""
+                                      }`;
+                                    }
+                                  })()}
                                 </span>
                               </div>
                             </div>
