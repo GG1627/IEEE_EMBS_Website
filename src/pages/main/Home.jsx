@@ -676,7 +676,7 @@ export default function Home() {
               eventName="Heartbeat Monitor Workshop"
               location="MAT 0002"
               date="September 26"
-              time="6:30 - 7:30PM"
+              time="6:30 - 8:30PM"
               description="Beginner friendly workshop on building a heartbeat monitor!"
             />
             {/* <EventCard
