@@ -666,26 +666,26 @@ export default function Home() {
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <EventCard
-              eventName="First GBM 🎉"
-              location="WEIL 0270"
-              date="September 15"
-              time="6:30 - 7:30 PM"
-              description="Come meet the board, learn about our mission, and hear what we have planned!"
+              eventName="Pie-A-Chair"
+              location="Turlington Plaza"
+              date="September 24"
+              time="10:40 AM - 3:00 PM"
+              description="Pie a board member and learn more about what we do!"
             />
             <EventCard
-              eventName="IBM Speaker Panel"
-              location="CSE A101"
-              date="September 16"
-              time="7:00 - 8:00PM"
-              description="Join us for our first industry speaker to learn more about BME in the outside world!"
+              eventName="Heartbeat Monitor Workshop"
+              location="TBD"
+              date="September 26"
+              time="6:30 - 7:30PM"
+              description="Beginner friendly workshop on building a heartbeat monitor!"
             />
-            <EventCard
+            {/* <EventCard
               eventName="Heartbeat Monitor Workshop"
               location="NPB 1002"
               date="September 19"
               time="6:45 - 8:45PM"
               description="Beginner friendly workshop on building a heartbeat monitor!"
-            />
+            /> */}
           </div>
         </div>
 
