@@ -665,7 +665,7 @@ export default function Home() {
             Upcoming Events
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <EventCard
+            {/* <EventCard
               eventName="Pie-A-Chair"
               location="Turlington Plaza"
               date="September 24"
@@ -676,7 +676,7 @@ export default function Home() {
                   <br />1 Pie: $3
                 </>
               }
-            />
+            /> */}
             <EventCard
               eventName="Resume Workshop"
               location="MAT 0012"
