@@ -679,7 +679,7 @@ export default function Home() {
             />
             <EventCard
               eventName="Resume Workshop"
-              location="TBA"
+              location="MAT 0012"
               date="September 25"
               time="5:30 PM - 6:30 PM"
               description="Learn how to write a resume that stands out and get yours reviewed!"
