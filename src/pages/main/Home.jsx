@@ -670,7 +670,19 @@ export default function Home() {
               location="Turlington Plaza"
               date="September 24"
               time="10:40 AM - 3:00 PM"
-              description="Pie a board member and learn more about what we do!"
+              description={
+                <>
+                  Pie a board member and learn more about what we do!
+                  <br />1 Pie: $3
+                </>
+              }
+            />
+            <EventCard
+              eventName="Resume Workshop"
+              location="TBA"
+              date="September 25"
+              time="5:30 PM - 6:30 PM"
+              description="Learn how to write a resume that stands out and get yours reviewed!"
             />
             <EventCard
               eventName="Heartbeat Monitor Workshop"
@@ -679,13 +691,6 @@ export default function Home() {
               time="6:30 - 8:30PM"
               description="Beginner friendly workshop on building a heartbeat monitor!"
             />
-            {/* <EventCard
-              eventName="Heartbeat Monitor Workshop"
-              location="NPB 1002"
-              date="September 19"
-              time="6:45 - 8:45PM"
-              description="Beginner friendly workshop on building a heartbeat monitor!"
-            /> */}
           </div>
         </div>
 

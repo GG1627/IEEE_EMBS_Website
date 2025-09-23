@@ -13,7 +13,6 @@ import { gradientPresets } from "../../styles/ieeeColors";
 import DomeGallery from "../../components/ui/DomeGallery";
 
 export default function Resources() {
-  <GradientMesh colors={gradientPresets.professions} />;
   const [selectedField, setSelectedField] = useState(null);
   const [favoriteFields, setFavoriteFields] = useState([]);
   const { user } = useAuth();
@@ -80,23 +79,25 @@ export default function Resources() {
       <div className="min-h-screen flex flex-col pt-16 relative overflow-hidden bg-white">
         <div className="flex-1 pt-12 px-2 md:px-0">
           <div className="container mx-auto max-w-7xl">
-            <h1 className="text-4xl font-bold text-center mb-0 mt-0 text-gray-800">
-              Career Fields
-            </h1>
-            <h2 className="text-xl text-gray-600 max-w-2xl mx-auto text-center mt-2 mb-12">
-              Discover exciting career paths in biomedical engineering and
-              connect with professors, companies, and skills in each field!
-            </h2>
+            <div className="text-center mb-16">
+              <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-[#00629b] to-[#009ca6] bg-clip-text text-transparent">
+                Career Fields
+              </h1>
+              <h2 className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Discover exciting career paths in biomedical engineering and
+                connect with professors, companies, and skills in each field!
+              </h2>
+            </div>
 
             {/* Fields */}
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center mb-8">
               {careerFields.map((field, index) => (
                 <div
                   key={index}
-                  className={`border px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:cursor-pointer hover:scale-105 transition-all duration-300 ${
+                  className={`px-6 py-3 rounded-full shadow-sm hover:shadow-lg hover:cursor-pointer hover:scale-105 transition-all duration-300 border-2 ${
                     selectedField === index
-                      ? "bg-[#007dae] border-[#007dae] text-white"
-                      : "bg-[#e4e6ec] border-[#97bdd7] text-[#007dae]"
+                      ? "bg-gradient-to-r from-[#00629b] to-[#009ca6] border-transparent text-white shadow-lg"
+                      : "bg-white border-[#e0e7ff] text-[#00629b] hover:border-[#009ca6] hover:bg-gradient-to-r hover:from-[#f0f9ff] hover:to-[#ecfeff]"
                   }`}
                   onClick={() => handleFieldClick(index)}
                 >
@@ -122,8 +123,8 @@ export default function Resources() {
 
             {/* Career Information */}
             {selectedField !== null && careerFields[selectedField] && (
-              <div className="mt-12 max-w-4xl mx-auto">
-                <div className="bg-white rounded-xl shadow-lg p-8 border border-gray-200 relative">
+              <div className="mt-8 max-w-5xl mx-auto">
+                <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative backdrop-blur-sm">
                   {/* heart icon */}
                   <button
                     onClick={() =>
@@ -140,25 +141,125 @@ export default function Resources() {
                     )}
                   </button>
                   {/* Header */}
-                  <div className="mb-8">
-                    <h2 className="text-3xl font-bold text-[#007dae] mb-3">
+                  <div className="mb-10">
+                    <h2 className="text-4xl font-bold bg-gradient-to-r from-[#00629b] to-[#009ca6] bg-clip-text text-transparent mb-4">
                       {careerFields[selectedField].name}
                     </h2>
                     {careerFields[selectedField].description && (
-                      <p className="text-gray-600 text-lg">
+                      <p className="text-gray-600 text-lg leading-relaxed max-w-3xl">
                         {careerFields[selectedField].description}
                       </p>
                     )}
                   </div>
 
-                  {/* Professors Section */}
-                  {careerFields[selectedField].professors && (
-                    <div className="mb-6">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-3">
-                        Professors
+                  {/* UF Research Professors Section */}
+                  {careerFields[selectedField].uf_research_professors && (
+                    <div className="mb-8">
+                      <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                        <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
+                        UF Research Professors
                       </h3>
                       <div className="flex flex-wrap gap-3">
-                        {careerFields[selectedField].professors.map(
+                        {careerFields[selectedField].uf_research_professors.map(
+                          (professor, index) => {
+                            // Handle both string and object formats for backward compatibility
+                            const professorName =
+                              typeof professor === "string"
+                                ? professor
+                                : professor.name;
+                            const professorData =
+                              typeof professor === "object" ? professor : null;
+
+                            return (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 bg-gradient-to-r from-[#f0f9ff] to-[#ecfeff] text-[#00629b] px-5 py-3 rounded-full text-sm font-medium border border-[#e0f2fe] hover:shadow-md transition-all duration-200"
+                              >
+                                <span>{professorName}</span>
+                                {professorData && (
+                                  <div className="flex gap-1 ml-2">
+                                    <a
+                                      href={professorData.linkedin}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="bg-[#0077b5] text-white p-1.5 rounded-full hover:bg-[#005885] transition-colors flex items-center justify-center"
+                                      title="LinkedIn Profile"
+                                    >
+                                      <FaLinkedin size={12} />
+                                    </a>
+                                    <a
+                                      href={professorData.lab}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="bg-gradient-to-r from-[#00629b] to-[#009ca6] text-white p-1.5 rounded-full hover:shadow-md transition-all duration-200 flex items-center justify-center"
+                                      title="Lab Website"
+                                    >
+                                      <MdScience size={12} />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* UF Teaching Professors Section */}
+                  {careerFields[selectedField].uf_teaching_professors && (
+                    <div className="mb-8">
+                      <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                        <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
+                        UF Teaching Professors
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                        {careerFields[selectedField].uf_teaching_professors.map(
+                          (professor, index) => {
+                            // Handle both string and object formats for backward compatibility
+                            const professorName =
+                              typeof professor === "string"
+                                ? professor
+                                : professor.name;
+                            const professorData =
+                              typeof professor === "object" ? professor : null;
+
+                            return (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2 bg-gradient-to-r from-[#f0f9ff] to-[#ecfeff] text-[#00629b] px-5 py-3 rounded-full text-sm font-medium border border-[#e0f2fe] hover:shadow-md transition-all duration-200"
+                              >
+                                <span>{professorName}</span>
+                                {professorData && (
+                                  <div className="flex gap-1 ml-2">
+                                    <a
+                                      href={professorData.linkedin}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="bg-[#0077b5] text-white p-1.5 rounded-full hover:bg-[#005885] transition-colors flex items-center justify-center"
+                                      title="LinkedIn Profile"
+                                    >
+                                      <FaLinkedin size={12} />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* External Professors Section */}
+                  {careerFields[selectedField].external_professors && (
+                    <div className="mb-8">
+                      <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                        <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
+                        External Professors
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                        {careerFields[selectedField].external_professors.map(
                           (professor, index) => {
                             // Handle both string and object formats for backward compatibility
                             const professorName =
@@ -206,8 +307,9 @@ export default function Resources() {
 
                   {/* Companies Section */}
                   {careerFields[selectedField].companies && (
-                    <div className="mb-6">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                    <div className="mb-8">
+                      <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                        <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
                         Companies
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -215,9 +317,11 @@ export default function Resources() {
                           (company, index) => (
                             <div
                               key={index}
-                              className="bg-[#f8f9fa] p-3 rounded-lg border border-gray-200"
+                              className="bg-gradient-to-r from-[#f0f9ff] to-[#ecfeff] p-4 rounded-xl border border-[#e0f2fe] hover:shadow-md transition-all duration-200"
                             >
-                              {company}
+                              <span className="text-[#00629b] font-medium">
+                                {company}
+                              </span>
                             </div>
                           )
                         )}
@@ -227,8 +331,9 @@ export default function Resources() {
 
                   {/* Skills Section */}
                   {careerFields[selectedField].skills && (
-                    <div>
-                      <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                    <div className="mb-8">
+                      <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                        <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
                         Relevant Skills
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -236,7 +341,7 @@ export default function Resources() {
                           (skill, index) => (
                             <span
                               key={index}
-                              className="bg-[#007dae] text-white px-3 py-1 rounded-full text-sm font-medium"
+                              className="bg-gradient-to-r from-[#00629b] to-[#009ca6] text-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:shadow-md transition-all duration-200"
                             >
                               {skill}
                             </span>
@@ -249,27 +354,34 @@ export default function Resources() {
                   {/* Classes Section */}
                   {careerFields[selectedField].classes &&
                     careerFields[selectedField].classes.length > 0 && (
-                      <div className="mt-6">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                      <div className="mb-8">
+                        <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                          <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
                           Related UF Courses
                         </h3>
-                        <ul className="list-disc list-inside space-y-1">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {careerFields[selectedField].classes.map(
                             (classItem, index) => (
-                              <li key={index} className="text-gray-700 text-sm">
-                                {classItem}
-                              </li>
+                              <div
+                                key={index}
+                                className="bg-gradient-to-r from-[#f0f9ff] to-[#ecfeff] p-3 rounded-lg border border-[#e0f2fe] hover:shadow-md transition-all duration-200"
+                              >
+                                <span className="text-[#00629b] font-medium text-sm">
+                                  {classItem}
+                                </span>
+                              </div>
                             )
                           )}
-                        </ul>
+                        </div>
                       </div>
                     )}
 
                   {/* Project Ideas Section */}
                   {careerFields[selectedField].projectIdeas &&
                     careerFields[selectedField].projectIdeas.length > 0 && (
-                      <div className="mt-6">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                      <div className="mb-8">
+                        <h3 className="text-2xl font-bold text-[#00629b] mb-4 flex items-center gap-2">
+                          <div className="w-1 h-6 bg-gradient-to-b from-[#00629b] to-[#009ca6] rounded-full"></div>
                           Project Ideas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -277,11 +389,11 @@ export default function Resources() {
                             (project, index) => (
                               <div
                                 key={index}
-                                className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200 hover:shadow-md transition-shadow"
+                                className="bg-gradient-to-br from-[#f0f9ff] to-[#ecfeff] p-5 rounded-xl border border-[#e0f2fe] hover:shadow-lg transition-all duration-200"
                               >
                                 <div className="flex items-start gap-3">
-                                  <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                                  <p className="text-gray-700 text-sm leading-relaxed">
+                                  <div className="flex-shrink-0 w-2 h-2 bg-gradient-to-r from-[#00629b] to-[#009ca6] rounded-full mt-2"></div>
+                                  <p className="text-[#00629b] text-sm leading-relaxed font-medium">
                                     {project}
                                   </p>
                                 </div>
