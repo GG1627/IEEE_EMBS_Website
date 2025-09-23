@@ -1,27 +1,61 @@
 export const careerFields = [
   {
-    name: "Medical Imaging",
+    name: "Medical Imaging", //! MEDICAL IMAGING
     description: "MRI, CT, Image Reconstruction/Enhancement Techniques",
-    professors: [
+    uf_research_professors: [
       {
-        name: "Dr. Fang",
+        name: "Dr. Ruogo Fang (BME)",
         linkedin: "https://www.linkedin.com/in/ruogu-fang-a015bb15/",
         lab: "https://lab-smile.github.io/",
       },
       {
-        name: "Dr. Bolch",
+        name: "Dr. Wesley Bolch (BME)",
         linkedin: "https://www.linkedin.com/in/wesley-bolch-68b80618/",
         lab: "https://medphysics.med.ufl.edu/medical-physics-graduate-program/faculty-facilities/research-labs/advanced-laboratory-for-radiation-dosimetry-studies/",
       },
+      {
+        name: "Dr. Kuang Gong (BME)",
+        linkedin: "https://www.linkedin.com/in/kuang-gong-49501223/",
+        lab: "https://gong-lab.com/",
+      },
+      {
+        name: "Dr. Pinaki Sarder (ECE)",
+        linkedin: "https://www.linkedin.com/in/pinaki-sarder-94a9b99/",
+        lab: "https://cmilab.nephrology.medicine.ufl.edu/",
+      },
+      {
+        name: "Dr. Baba C. Vemuri (CISE)",
+        linkedin: "https://www.linkedin.com/in/baba-vemuri-22955545/",
+        lab: "https://www.cise.ufl.edu/~vemuri/",
+      },
     ],
-    companies: ["GE Healthcare", "Nvidia Healthcare", "Siemens Healthineers"],
+    // uf_teaching_professors: [],
+    external_professors: [
+      {
+        name: "Dr. Peirong Liu (Johns Hopkins)",
+        linkedin: "https://www.linkedin.com/in/peirongliu/",
+        lab: "https://peirong26.github.io/",
+      },
+    ],
+    companies: [
+      "GE Healthcare",
+      "NVIDIA Healthcare",
+      "Siemens Healthineers",
+      "Johnson & Johnson MedTech",
+      "Philips Healthcare",
+    ],
     skills: [
       "Image Processing",
-      "Python/MATLAB",
+      "Python",
+      "MATLAB",
       "Signal Processing",
       "Machine Learning",
       "Medical Physics",
       "3D Visualization",
+      "MONAI",
+      "PyTorch",
+      "TensorFlow",
+      "Keras",
     ],
     classes: [
       "BME4531 - Medical Imaging",
@@ -38,17 +72,30 @@ export const careerFields = [
     ],
   },
   {
-    name: "Signal Processing",
+    name: "Signal Processing", //! SIGNAL PROCESSING
     description: "ECG, EEG, Biosignal Analysis/Manipulation",
-    professors: [
+    uf_research_professors: [
       {
-        name: "Dr. Ding",
+        name: "Dr. Mingzhou Ding (BME)",
         linkedin: "https://www.linkedin.com/in/mingzhou-ding-6a348a88/",
         lab: "https://bme.ufl.edu/dept-member/ding_mingzhou/",
       },
+      {
+        name: "Dr. Nicholas Napoli (ECE)",
+        linkedin:
+          "https://www.linkedin.com/in/nicholas-joseph-napoli-phd-26238b24/",
+        lab: "https://hippo.ece.ufl.edu/",
+      },
     ],
-    companies: ["PLUX", "NASA Human Health and Performance"],
-    skills: ["N/A"],
+    // uf_teaching_professors: [],
+    // external_professors: [],
+    companies: [
+      "Texas Instruments",
+      "Analog Devices",
+      "PLUX",
+      "NASA Human Health and Performance",
+    ],
+    skills: ["Python", "MATLAB", "Signal Processing", "Linear Algebra"],
     classes: [
       "EEL3135 - Introduction to Signals and Systems",
       "EEL4750/EEE5502 - Foundations of Digital Signal Processing",
@@ -69,30 +116,37 @@ export const careerFields = [
     ],
   },
   {
-    name: "Medical Devices",
+    name: "Medical Devices", //! MEDICAL DEVICES
     description: "Pacemakers, Smart Prosthetics, Artificial Pancreas",
-    professors: [
+    // uf_research_professors: [],
+    uf_teaching_professors: [
       {
         name: "Dr. Mansy",
         linkedin: "https://www.linkedin.com/in/maymansy/",
-        lab: "https://bme.ufl.edu/dept-member/may-m-mansy-ph-d/",
       },
     ],
+    // external_professors: [],
     companies: [
+      "Johnson & Johnson MedTech",
       "Medtronic",
-      "Edward’s Life Sciences",
-      "J&J MedTech",
       "Arthrex",
+      "Edwards Lifesciences",
       "Texas Instruments",
       "Boston Scientific",
     ],
-    skills: ["N/A"],
-    classes: [
-      "BME3053C - Computer Applications for BME",
-      "BME4503 - Biomedical Instrumentation",
-      "BME3012 - Clinically-Inspired Engineering Design",
-      "EEL5934 - Special Topics in Electrical Engineering: Future of Micro/Nano Systems",
+    skills: [
+      "PCB Design",
+      "Circuit Design",
+      "KiCAD",
+      "LTspice",
+      "Oscilloscope",
+      "SolidWorks",
+      "AutoCAD",
+      "3D Printing",
+      "Prototyping",
+      "Microprocessors",
     ],
+    classes: ["BME4503 - Biomedical Instrumentation"],
     projectIdeas: [
       "Prototype a smart insulin pump with continuous glucose monitoring integration.",
       "Develop a low-cost, 3D-printed prosthetic limb with myoelectric control.",
@@ -102,12 +156,73 @@ export const careerFields = [
     ],
   },
   {
-    name: "Neuroengineering",
+    name: "Neuroengineering", //! NEUROENGINEERING
     description: "Neuromodulation, Computational Neuroscience",
-    professors: ["N/A"],
-    companies: ["Paradronics", "NeuroLink", "Precision Neuroscience"],
-    skills: ["N/A"],
-    classes: ["BME4409 - Quantitative Physiology"],
+    uf_research_professors: [
+      {
+        name: "Dr. Aprinda I. Queen (Public Health)",
+        linkedin: "https://www.linkedin.com/in/aprinda/",
+        lab: "https://mbi.ufl.edu/tag/aprinda-i-queen/",
+      },
+      {
+        name: "Dr. Jack Judy (ECE)",
+        linkedin: "https://www.linkedin.com/in/jack-judy/",
+        lab: "https://judylab.ece.ufl.edu/",
+      },
+      {
+        name: "Dr. Karim Oweiss (ECE)",
+        linkedin: "https://www.linkedin.com/in/karim-oweiss-49221314/",
+        lab: "https://oweisslab.ece.ufl.edu/",
+      },
+      {
+        name: "Dr. Adam Khalifa (ECE)",
+        linkedin: "https://www.linkedin.com/in/adam-khalifa-bb62b6138/",
+        lab: "https://www.khalifaadam.com/",
+      },
+      {
+        name: "Dr. Erin Patrick (ECE)",
+        linkedin: "https://www.linkedin.com/in/erin-patrick-6921a913/",
+        lab: "https://epatrick.ece.ufl.edu/home/",
+      },
+    ],
+    // uf_teaching_professors: [],
+    external_professors: [
+      {
+        name: "Dr. Krishna Jayant (Purdue)",
+        linkedin: "https://www.linkedin.com/in/krishna-jayant/",
+        lab: "https://nanoneurotech.com/",
+      },
+      {
+        name: "Dr. George Malliaras (Cambridge)",
+        linkedin:
+          "https://www.linkedin.com/in/georgemalliaras/?originalSubdomain=uk",
+        lab: "https://bioelectronics.eng.cam.ac.uk/",
+      },
+      {
+        name: "Dr. Sergey Stavisky (UC Davis)",
+        linkedin: "https://www.linkedin.com/in/sergey-stavisky-2aab924/",
+        lab: "https://neuroprosthetics.science/",
+      },
+      {
+        name: "Dr. David Brandman (UC Davis)",
+        linkedin: "https://www.linkedin.com/in/david-brandman-md-phd-4172b973/",
+        lab: "https://neuroprosthetics.science/",
+      },
+      {
+        name: "Dr. Tomasz M. Rutkowski (Tokyo)",
+        linkedin:
+          "https://www.linkedin.com/in/tomasz-maciej-rutkowski/?originalSubdomain=jp",
+        lab: "https://tomek.bci-lab.info/",
+      },
+    ],
+    companies: [
+      "Blackrock Neurotech",
+      "Precision Neuroscience",
+      "Neurolink",
+      "Paradronics",
+    ],
+    skills: ["Signal Processing", "Python", "Machine Learning"],
+    classes: ["EEE4260 - Bioelectrical Systems"],
     projectIdeas: [
       "Build a non-invasive neurostimulation device for migraine relief.",
       "Implement neural network models to predict neural firing patterns from recorded data.",
@@ -117,18 +232,28 @@ export const careerFields = [
     ],
   },
   {
-    name: "AI & ML",
+    name: "AI & ML", //! AI & ML
     description:
       "Digital twins, Precision Medicine, Predictive Analytics/Diagnosis",
-    professors: [
+    // uf_research_professors: []
+    uf_teaching_professors: [
       {
-        name: "Dr. Bolch",
-        linkedin: "https://www.linkedin.com/in/wesley-bolch-68b80618/",
-        lab: "https://medphysics.med.ufl.edu/medical-physics-graduate-program/faculty-facilities/research-labs/advanced-laboratory-for-radiation-dosimetry-studies/",
+        name: "Dr. Catia Silva (ECE)",
+        linkedin: "https://www.linkedin.com/in/c%C3%A1tia-silva-a9215430/",
       },
     ],
-    companies: ["Verily", "IBM Digital Health", "Microsoft Research"],
-    skills: ["N/A"],
+    // external_professors: [],
+    companies: ["IBM Digital Health", "Microsoft Research", "Verily"],
+    skills: [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "Keras",
+      "Machine Learning",
+      "Computer Vision",
+      "Deep Learning",
+      "Natural Language Processing",
+    ],
     classes: [
       "EEL3872 - Artificial Intelligence Fundamentals",
       "EEE3773 - Introduction to Machine Learning",
@@ -139,7 +264,7 @@ export const careerFields = [
       "CAP5416 - Computer Vision",
       "EEL4403/5406 - Computational Photography",
       "EEE6512 - Image Processing and Computer Vision",
-      "EGN6217 - Applied	Deep	Learning",
+      "EGN6217 - Applied Deep Learning",
     ],
     projectIdeas: [
       "Develop a predictive model for hospital readmission using patient EHR data.",
@@ -150,10 +275,34 @@ export const careerFields = [
     ],
   },
   {
-    name: "Bioinformatics & Genomics",
+    name: "Bioinformatics & Genomics", //! BIOINFORMATICS & GENOMICS
     description: "Computational Genomics, Multi-omics data, Synthetic Biology",
-    professors: ["N/A"],
-    companies: ["The DNA Company"],
+    uf_research_professors: [
+      {
+        name: "Dr. Xiao Fan (BME)",
+        linkedin: "https://www.linkedin.com/in/xiao-fan-26520625/",
+        lab: "https://xiaofan-lab.github.io/",
+      },
+      {
+        name: "Dr. Tamer Kahveci (CISE)",
+        linkedin: "https://www.linkedin.com/in/tamer-kahveci-3a210111/",
+        lab: "https://www.cise.ufl.edu/~tamer/",
+      },
+      {
+        name: "Dr. Kiley Graim (BME)",
+        linkedin: "https://www.linkedin.com/in/kiley-graim-5a8510b/",
+        lab: "https://graimlab.org/",
+      },
+    ],
+    // uf_teaching_professors: [],
+    external_professors: [
+      {
+        name: "Dr. Ernest Fraenkel (MIT)",
+        linkein: "https://www.linkedin.com/in/ernest-fraenkel-22982b162/",
+        lab: "https://fraenkel.mit.edu/",
+      },
+    ],
+    companies: ["IBM Digital Health", "The DNA Company"],
     skills: ["N/A"],
     classes: [
       "BSC2891 - Python Programming for Biologists",
@@ -175,11 +324,20 @@ export const careerFields = [
     ],
   },
   {
-    name: "Digital Health & Wearables",
+    name: "Digital Health & Wearables", //! DIGITAL HEALTH & WEARABLES
     description: "Smartwatches, Telehealth",
-    professors: ["N/A"],
-    companies: ["Samsung", "Apple", "FitBit/Google"],
-    skills: ["N/A"],
+    // uf_research_professors: [],
+    // uf_teaching_professors: [],
+    // external_professors: [],
+    companies: [
+      "Apple",
+      "Samsung",
+      "FitBit",
+      "Google",
+      "Magic Leap",
+      "Microsoft (HoloLens)",
+    ],
+    skills: ["Signal Processing"],
     classes: [
       "HSC4064 - Wearable Technology, Robotics, and Artificial Intelligence for Health",
       "DIG4634 - Wearable and Mobile App Development",
@@ -194,11 +352,13 @@ export const careerFields = [
     ],
   },
   {
-    name: "Healthcare Robotics",
+    name: "Healthcare Robotics", //! HEALTHCARE ROBOTICS
     description: "Surgical Robotics, Autonomous Labs",
-    professors: ["N/A"],
-    companies: ["Intuitive", "Disney"],
-    skills: ["N/A"],
+    // uf_research_professors: [],
+    // uf_teaching_professors: [],
+    // external_professors: [],
+    companies: ["Intuitive", "Disney Research", "Figure", "Humanoid"],
+    skills: ["FPGA", "Microprocessors", "Circuitry"],
     classes: [
       "HSC4064 - Wearable Technology, Robotics, and Artificial Intelligence for Health",
     ],
@@ -211,12 +371,25 @@ export const careerFields = [
     ],
   },
   {
-    name: "Modeling & Simulation",
+    name: "Modeling & Simulation", //! MODELING & SIMULATION
     description:
       "Computational Modeling of Organs, In-silico clinical trials, Finite Element Analysis",
-    professors: ["N/A"],
-    companies: ["Dassault Systèmes", "Ansys"],
-    skills: ["N/A"],
+    uf_research_professors: [
+      {
+        name: "Dr. Markus Santoso (DAS)",
+        linkedin: "https://www.linkedin.com/in/markus-santoso-779172354/",
+        lab: "https://ufblockchain.org/markus-santoso/",
+      },
+      {
+        name: "Dr. Angelos Barmpoutis (DAS)",
+        linkedin: "https://www.linkedin.com/in/angelos-barmpoutis-147b19a/",
+        lab: "https://codingplusfun.com/",
+      },
+    ],
+    // uf_teaching_professors: [],
+    // external_professors: [],
+    companies: ["Relevate Health", "Dassault Systèmes", "Ansys"],
+    skills: ["Unity", "Virtual Reality", "Augmented Reality"],
     classes: [
       "EGM4585 - Modeling and Control of Biomolecular Machines",
       "EGM4590 - Biodynamics",
@@ -233,15 +406,22 @@ export const careerFields = [
     ],
   },
   {
-    name: "Cyber-BioSecurity",
+    name: "Cyber-BioSecurity", //! CYBER-BIOSECURITY
     description: "Human-Body Communication, Biometric Authentication",
-    professors: [
+    uf_research_professors: [
       {
-        name: "Dr. Chatterjee",
+        name: "Dr. Chatterjee (ECE)",
         linkedin: "https://www.linkedin.com/in/baibhabchatterjee/",
         lab: "https://chatterjee.ece.ufl.edu/",
       },
+      {
+        name: "Dr. Swarup Bhunia (ECE)",
+        linkedin: "https://www.linkedin.com/in/swarup-bhunia-1281825/",
+        lab: "https://swarup.ece.ufl.edu/",
+      },
     ],
+    // uf_teaching_professors: [],
+    // external_professors: [],
     companies: ["Ixana"],
     skills: ["N/A"],
     classes: ["CIS4930 - Special Topics in CISE: Adversarial Cyber Tradecraft"],
@@ -254,11 +434,31 @@ export const careerFields = [
     ],
   },
   {
-    name: "Nano & Microtech",
+    name: "Nano & Microtech", //! NANO & MICROTECH
     description: "Bio-MEMS, Lab-on-a-Chip, Biological VLSI",
-    professors: ["N/A"],
-    companies: ["That one guy"],
-    skills: ["N/A"],
+    uf_research_professors: [
+      {
+        name: "Dr. Hugh Fan (MAE)",
+        linkedin: "https://www.linkedin.com/in/hughfan/",
+        lab: "https://web.mae.ufl.edu/hfan/",
+      },
+      {
+        name: "Dr. Domenic Forte (ECE)",
+        linkedin: "https://www.linkedin.com/in/domenic-forte-13233153/",
+        lab: "https://scannlab.psych.ufl.edu/",
+      },
+    ],
+    // uf_teaching_professors: [],
+    external_professors: [
+      {
+        name: "Dr. Rahul Sarpeshkar (Dartmouth)",
+        linkedin:
+          "https://engineering.dartmouth.edu/community/faculty/rahul-sarpeshkar",
+        lab: "https://physics.dartmouth.edu/people/rahul-sarpeshkar",
+      },
+    ],
+    companies: ["N/A"],
+    skills: ["VLSI", "Digital Logic"],
     classes: [
       "EEE4420 - Introduction to Nanodevices",
       "EEL5934 - Special Topics in Electrical Engineering: Future of Micro/Nano Sys",

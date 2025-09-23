@@ -670,14 +670,19 @@ export default function Home() {
               location="Turlington Plaza"
               date="September 24"
               time="10:40 AM - 3:00 PM"
-              description="Pie a board member and learn more about what we do!"
+              description={
+                <>
+                  Pie a board member and learn more about what we do!
+                  <br />1 Pie: $3
+                </>
+              }
             />
             <EventCard
               eventName="Resume Workshop"
               location="TBA"
               date="September 25"
-              time="TBA"
-              description="Learn how to write a resume that stands out!"
+              time="5:30 PM - 6:30 PM"
+              description="Learn how to write a resume that stands out and get yours reviewed!"
             />
             <EventCard
               eventName="Heartbeat Monitor Workshop"
