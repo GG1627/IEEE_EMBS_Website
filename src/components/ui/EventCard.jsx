@@ -67,7 +67,8 @@ export default function EventCard({
         </p>
         {description &&
           description.trim() &&
-          description !== "No description available" && (
+          description !== "No description available" &&
+          !description.trim().startsWith("<a") && (
             <p className="mt-3 text-sm text-gray-500 italic">{description}</p>
           )}
       </div>
