@@ -260,7 +260,7 @@ export default function DesignAthonRsvp() {
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#772583] rounded-full"></span>
                 <span>
-                  <strong>Date:</strong> November 11th
+                  <strong>Date:</strong> October 11th
                 </span>
               </div>
               <div className="flex items-center gap-2">
