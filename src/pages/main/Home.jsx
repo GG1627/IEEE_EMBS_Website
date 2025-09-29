@@ -38,6 +38,8 @@ import { slidingText } from "../../data/slidingText";
 import ParticlesBg from "../../components/ui/ParticlesBG";
 import { LuDna } from "react-icons/lu";
 
+import useGoogleCalendar from "../../lib/useGoogleCalendar";
+
 export default function Home() {
   const iconRef = useRef(null);
   const navigate = useNavigate();
@@ -46,6 +48,24 @@ export default function Home() {
   const [userRole, setUserRole] = useState("member");
 
   const itemsTwice = [...slidingText, ...slidingText]; // duplicate for seamless loop
+
+  // Fetch calendar events
+  const { events, loading, error } = useGoogleCalendar();
+
+  // calendar helper functions
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+  const formatTime = (dateTime) => {
+    return new Date(dateTime).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   // Preload critical hero images and warm the cache ASAP
   useEffect(() => {
@@ -262,6 +282,20 @@ export default function Home() {
                     </Link>
                   </button>
                 )}
+              </div>
+
+              {/* RSVP Button */}
+              <div className="mt-0 pl-20">
+                <Link to="/design-a-thon-rsvp">
+                  <button className="relative bg-[#772583] hover:bg-[#9C1E96] text-white px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_20px_rgba(119,37,131,0.6)] hover:shadow-[0_0_40px_rgba(119,37,131,0.8)] hover:cursor-pointer transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 min-w-[200px] text-center overflow-hidden">
+                    {/* Glowing border animation */}
+                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse opacity-80"></div>
+                    <div className="absolute inset-0 rounded-3xl border-2 border-white/50 hover:border-white/90 transition-colors duration-300 shadow-[0_0_15px_rgba(255,255,255,0.3)]"></div>
+                    <span className="relative z-10">
+                      RSVP for Design-a-thon!
+                    </span>
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -626,6 +660,18 @@ export default function Home() {
                 </button>
               )}
             </div>
+
+            {/* Mobile RSVP Button */}
+            <div className="mt-4 flex justify-center">
+              <Link to="/design-a-thon-rsvp">
+                <button className="relative bg-[#772583] hover:bg-[#9C1E96] text-white px-6 py-2.5 rounded-3xl text-[clamp(0.75rem,3.5vw,0.9rem)] shadow-[0_0_20px_rgba(119,37,131,0.6)] hover:shadow-[0_0_40px_rgba(119,37,131,0.8)] hover:cursor-pointer transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-300 overflow-hidden">
+                  {/* Glowing border animation */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse opacity-80"></div>
+                  <div className="absolute inset-0 rounded-3xl border-2 border-white/50 hover:border-white/90 transition-colors duration-300 shadow-[0_0_15px_rgba(255,255,255,0.3)]"></div>
+                  <span className="relative z-10">RSVP for Design-a-thon!</span>
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-4">
@@ -665,32 +711,17 @@ export default function Home() {
             Upcoming Events
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* <EventCard
-              eventName="Pie-A-Chair"
-              location="Turlington Plaza"
-              date="September 24"
-              time="10:40 AM - 3:00 PM"
-              description={
-                <>
-                  Pie a board member and learn more about what we do!
-                  <br />1 Pie: $3
-                </>
-              }
-            /> */}
-            <EventCard
-              eventName="Resume Workshop"
-              location="MAT 0012"
-              date="September 25"
-              time="5:30 PM - 6:30 PM"
-              description="Learn how to write a resume that stands out and get yours reviewed!"
-            />
-            <EventCard
-              eventName="Heartbeat Monitor Workshop"
-              location="MAT 0002"
-              date="September 26"
-              time="6:30 - 8:30PM"
-              description="Beginner friendly workshop on building a heartbeat monitor!"
-            />
+            {/* Event Cards */}
+            {events.slice(0, 3).map((event, index) => (
+              <EventCard
+                key={event.id}
+                eventName={event.summary}
+                location={event.location || "TBD"}
+                date={formatDate(event.start?.dateTime || event.start?.date)}
+                time={formatTime(event.start?.dateTime)}
+                description={event.description || "No description available"}
+              />
+            ))}
           </div>
         </div>
 
@@ -752,6 +783,7 @@ export default function Home() {
           </div>
         </div>
 
+        <div className="mb-10"></div>
         {/* Footer */}
         <Footer />
       </div>

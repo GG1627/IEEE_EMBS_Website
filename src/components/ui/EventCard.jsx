@@ -47,7 +47,7 @@ export default function EventCard({
         onClick={() => {
           window.open(generateCalendarUrl(), "_blank");
         }}
-        className="bg-white rounded-2xl shadow-md p-6 border-l-8 border-[#772583] inline-block text-left hover:scale-105 transition-all duration-300 hover:cursor-pointer"
+        className="bg-white rounded-2xl shadow-md p-6 border-l-8 border-[#772583] inline-block text-left hover:scale-105 transition-all duration-300 hover:cursor-pointer overflow-hidden"
       >
         <span className="text-sm font-semibold uppercase tracking-wide text-[#772583]">
           {eventName}
@@ -65,7 +65,12 @@ export default function EventCard({
           </strong>
           {date}: {time}
         </p>
-        <p className="mt-3 text-sm text-gray-500 italic">{description}</p>
+        {description &&
+          description.trim() &&
+          description !== "No description available" &&
+          !description.trim().startsWith("<a") && (
+            <p className="mt-3 text-sm text-gray-500 italic">{description}</p>
+          )}
       </div>
     </>
   );
