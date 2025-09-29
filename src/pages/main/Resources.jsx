@@ -123,7 +123,7 @@ export default function Resources() {
 
             {/* Career Information */}
             {selectedField !== null && careerFields[selectedField] && (
-              <div className="mt-8 max-w-5xl mx-auto">
+              <div className="mt-8 mb-10 max-w-5xl mx-auto">
                 <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative backdrop-blur-sm">
                   {/* heart icon */}
                   <button

@@ -3,7 +3,7 @@ import { FaInstagram, FaDiscord, FaLinkedin } from "react-icons/fa";
 export default function Footer() {
   return (
     <>
-      <div className="w-full h-12 md:h-16 bg-[#f2f0ef] mt-10 border border-t-1 border-black">
+      <div className="w-full h-12 md:h-16 bg-[#f2f0ef] border border-t-1 border-black">
         <div className="max-w-[1600px] h-full mx-auto flex items-center justify-between px-4">
           <h1 className="text-black text-lg font-bold md:text-2xl">UF EMBS</h1>
           {/* Icons */}

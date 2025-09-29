@@ -112,6 +112,8 @@ export default function Team() {
             </div>
           </div>
         </div>
+
+        <div className="mb-10"></div>
         <Footer />
       </div>
     </>

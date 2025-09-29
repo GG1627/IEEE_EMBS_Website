@@ -4,6 +4,7 @@ import Home from "./pages/main/Home";
 import Team from "./pages/main/Team";
 import About from "./pages/main/About";
 import Events from "./pages/main/Events";
+import DesignAthonRsvp from "./pages/main/DesignAthonRsvp";
 import Resources from "./pages/main/Resources";
 import Blog from "./pages/main/Blog";
 import Research from "./pages/branches/Research";
@@ -36,6 +37,7 @@ function App() {
               <Route path="/team" element={<Team />} />
               <Route path="/about" element={<About />} />
               <Route path="/events" element={<Events />} />
+              <Route path="/design-a-thon-rsvp" element={<DesignAthonRsvp />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/blog" element={<Blog />} />
 
