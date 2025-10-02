@@ -1,56 +1,53 @@
+<div align="center">
+
 # UF EMBS Website
 
-This is the official website for the University of Florida Engineering in Medicine and Biology Society (EMBS) chapter.
+<img src="public/EMBS_logo.svg" alt="IEEE EMBS Logo" width="200" height="200">
 
-## Getting Started
+**The official website for the University of Florida Engineering in Medicine and Biology Society (EMBS) chapter**
 
-### Prerequisites
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-7.0.4-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.11-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![ESLint](https://img.shields.io/badge/ESLint-9.30.1-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-2.53.0-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.23.9-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
-- Node.js (version 18 or higher)
-- npm or yarn
+</div>
 
-### Installation
+---
 
-1. Clone the repository:
+## 🏛️ About IEEE EMBS
 
-```bash
-git clone https://github.com/GG1627/IEEE_EMBS_Website.git
-```
+<div align="center">
 
-2. Navigate to the project directory:
+> **The IEEE Engineering in Medicine and Biology Society (EMBS)** is the world's largest international society of biomedical engineers. Our UF chapter promotes the application of engineering sciences and technology to medicine and biology.
 
-```bash
-cd ieee-embs-website
-```
+</div>
 
-3. Install dependencies:
+### 🎯 Our Mission
 
-```bash
-npm install
-```
+- Foster innovation in biomedical engineering
+- Connect students with industry professionals
+- Promote research and development in medical technology
+- Build a community of future biomedical engineers
 
-4. Start the development server:
+### 🌟 Contributors
 
-```bash
-npm run dev
-```
+- **Gael Garcia (Webmaster)**
+- **Lincy Phipps (Webmaster)**
 
-5. Open your browser and visit `http://localhost:5173`
+## 🔗 Links
 
-## Available Scripts
+- [IEEE EMBS Official Website](https://www.embs.org/)
+- [UF EMBS Chapter](https://www.ufembs.com/)
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview the production build
-- `npm run lint` - Run ESLint
+---
 
-## Tech Stack
+<div align="center">
 
-- React 19
-- Vite
-- Tailwind CSS v4
-- ESLint
+**Built with ❤️ by the UF EMBS Team**
 
-## About IEEE EMBS
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/ieee-embs-uf/posts/?feedView=all)
 
-The IEEE Engineering in Medicine and Biology Society (EMBS) is the world's largest international society of biomedical engineers. Our UF chapter promotes the application of engineering sciences and technology to medicine and biology.
+</div>
