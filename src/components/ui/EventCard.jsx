@@ -7,46 +7,12 @@ export default function EventCard({
   date,
   time,
   description,
+  onCardClick,
 }) {
-  // Function to generate Google Calendar URL for the specific date
-  const generateCalendarUrl = () => {
-    // Parse the date to create a proper calendar URL
-    const currentYear = new Date().getFullYear();
-    let calendarDate;
-
-    try {
-      // Try to parse the date string (e.g., "September 3")
-      const parsedDate = new Date(`${date}, ${currentYear}`);
-      if (!isNaN(parsedDate.getTime())) {
-        // Format as YYYYMMDD for Google Calendar
-        const year = parsedDate.getFullYear();
-        const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
-        const day = String(parsedDate.getDate()).padStart(2, "0");
-        calendarDate = `${year}${month}${day}`;
-      }
-    } catch (error) {
-      console.error("Error parsing date:", error);
-    }
-
-    // Base calendar URL
-    const baseUrl =
-      "https://calendar.google.com/calendar/embed?src=41f1ab6a263431af2451ca9507cd60a97d9eefed70ea92a3b22a6fa305346931%40group.calendar.google.com&ctz=America%2FNew_York";
-
-    // If we have a valid date, add it to the URL to navigate to that specific date
-    if (calendarDate) {
-      return `${baseUrl}&dates=${calendarDate}/${calendarDate}`;
-    }
-
-    // Fallback to the basic calendar view
-    return baseUrl;
-  };
-
   return (
     <>
       <div
-        onClick={() => {
-          window.open(generateCalendarUrl(), "_blank");
-        }}
+        onClick={onCardClick}
         className="bg-white rounded-2xl shadow-md p-6 border-l-8 border-[#772583] inline-block text-left hover:scale-105 transition-all duration-300 hover:cursor-pointer overflow-hidden"
       >
         <span className="text-sm font-semibold uppercase tracking-wide text-[#772583]">
@@ -69,7 +35,26 @@ export default function EventCard({
           description.trim() &&
           description !== "No description available" &&
           !description.trim().startsWith("<a") && (
-            <p className="mt-3 text-sm text-gray-500 italic">{description}</p>
+            <div className="mt-3">
+              <p
+                className="text-sm text-gray-500 italic"
+                style={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                  lineHeight: "1.4",
+                  maxHeight: "2.8em",
+                }}
+              >
+                {description}
+              </p>
+              {description.length > 100 && (
+                <p className="text-xs text-[#772583] font-medium mt-1 hover:text-[#9C1E96] transition-colors duration-200">
+                  ...see more
+                </p>
+              )}
+            </div>
           )}
       </div>
     </>
