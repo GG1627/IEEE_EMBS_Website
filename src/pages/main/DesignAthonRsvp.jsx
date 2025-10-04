@@ -7,6 +7,87 @@ import Footer from "../../components/layout/Footer";
 import { gradientPresets } from "../../styles/ieeeColors";
 import GradientMesh from "../../components/ui/GradientMesh";
 
+// Import designathon images
+import img1 from "../../assets/designathon/img1.png";
+import img2 from "../../assets/designathon/img2.png";
+import img3 from "../../assets/designathon/img3.png";
+import img4 from "../../assets/designathon/img4.png";
+import img5 from "../../assets/designathon/img5.png";
+import img6 from "../../assets/designathon/img6.png";
+import img7 from "../../assets/designathon/img7.png";
+import img8 from "../../assets/designathon/img8.png";
+import img9 from "../../assets/designathon/img9.png";
+import img10 from "../../assets/designathon/img10.png";
+
+// Floating Designathon Images Component
+function FloatingDesignathonImages() {
+  const images = [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10];
+
+  return (
+    <>
+      {/* Add CSS animations to the page */}
+      <style>{`
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes float-medium {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
+        }
+        @keyframes float-fast {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+        }
+        .float-slow {
+          animation: float-slow 6s ease-in-out infinite;
+        }
+        .float-medium {
+          animation: float-medium 4s ease-in-out infinite;
+        }
+        .float-fast {
+          animation: float-fast 3s ease-in-out infinite;
+        }
+      `}</style>
+
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {images.map((image, index) => {
+          // Create different floating positions and animations for each image
+          const positions = [
+            { top: "10%", left: "5%", animation: "float-slow" },
+            { top: "20%", right: "10%", animation: "float-medium" },
+            { top: "35%", left: "2%", animation: "float-slow" },
+            { top: "60%", right: "5%", animation: "float-fast" },
+            { top: "75%", left: "8%", animation: "float-medium" },
+            { top: "15%", left: "15%", animation: "float-slow" },
+            { top: "45%", right: "15%", animation: "float-fast" },
+            { top: "80%", right: "8%", animation: "float-medium" },
+            { top: "5%", right: "25%", animation: "float-slow" },
+            { top: "50%", left: "20%", animation: "float-fast" },
+          ];
+
+          const position = positions[index];
+
+          return (
+            <img
+              key={index}
+              src={image}
+              alt={`Designathon element ${index + 1}`}
+              className={`absolute w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 opacity-20 hover:opacity-30 transition-opacity duration-300 ${position.animation}`}
+              style={{
+                top: position.top,
+                left: position.left,
+                right: position.right,
+                transform: `rotate(${index === 1 ? 45 : index * 36}deg)`, // Special angle for img2, others rotate differently
+              }}
+            />
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
 export default function DesignAthonRsvp() {
   const { user } = useAuth();
   const [formData, setFormData] = useState({
@@ -14,7 +95,8 @@ export default function DesignAthonRsvp() {
     email: "",
     major: "",
     allergies: "",
-    friends: "",
+    teamStatus: "",
+    teamSize: "",
     skills: "",
     attendanceStatus: "",
   });
@@ -67,11 +149,11 @@ export default function DesignAthonRsvp() {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // Handle positive numbers only for friends field
-    if (name === "friends" && value !== "") {
+    // Handle team size validation
+    if (name === "teamSize" && value !== "") {
       const numValue = parseInt(value);
-      if (numValue < 0 || isNaN(numValue)) {
-        return; // Don't update if negative or not a number
+      if (numValue < 2 || numValue > 3 || isNaN(numValue)) {
+        return; // Don't update if not between 2-3
       }
     }
 
@@ -92,13 +174,19 @@ export default function DesignAthonRsvp() {
     setSubmitMessage("");
 
     try {
+      // Prepare team information for database
+      let teamInfo = formData.teamStatus;
+      if (formData.teamStatus === "yes" && formData.teamSize) {
+        teamInfo = formData.teamSize;
+      }
+
       const { data, error } = await supabase.from("hackathon_interest").insert([
         {
           user_id: user.id,
           email: formData.email,
           major: formData.major,
           allergies: formData.allergies,
-          friends: parseInt(formData.friends) || 0,
+          teamsize: teamInfo, // Store as string: "no", "2", or "3"
           skills: formData.skills,
           attendance_status: formData.attendanceStatus,
         },
@@ -119,7 +207,8 @@ export default function DesignAthonRsvp() {
         email: formData.email, // Keep auto-filled data
         major: "",
         allergies: "",
-        friends: "",
+        teamStatus: "",
+        teamSize: "",
         skills: "",
         attendanceStatus: "",
       });
@@ -168,9 +257,19 @@ export default function DesignAthonRsvp() {
   // Show thank you message if already submitted
   if (hasSubmitted) {
     return (
-      <div className="min-h-screen bg-white flex flex-col">
+      <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 z-0">
+          <GradientMesh colors={gradientPresets.designathon} />
+        </div>
+
+        {/* Floating Designathon Images */}
+        <div className="absolute inset-0 z-1">
+          <FloatingDesignathonImages />
+        </div>
+
         {/* Back Button */}
-        <div className="pt-4 pl-4">
+        <div className="pt-4 pl-4 relative z-10">
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-[#772583] hover:text-[#9C1E96] transition-colors duration-300 font-medium"
@@ -181,9 +280,9 @@ export default function DesignAthonRsvp() {
         </div>
 
         {/* Thank You Message */}
-        <div className="flex-1 flex items-center justify-center px-4">
+        <div className="flex-1 flex items-center justify-center px-4 relative z-10">
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-white border border-gray-200 rounded-xl p-12 shadow-sm">
+            <div className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-12 shadow-lg">
               <div className="w-12 h-12 bg-[#772583] rounded-full mx-auto mb-6 flex items-center justify-center">
                 <span className="text-white text-xl">✓</span>
               </div>
@@ -239,6 +338,11 @@ export default function DesignAthonRsvp() {
         <GradientMesh colors={gradientPresets.designathon} />
       </div>
 
+      {/* Floating Designathon Images */}
+      <div className="absolute inset-0 z-1">
+        <FloatingDesignathonImages />
+      </div>
+
       {/* Back Button */}
       <div className="pt-4 pl-4 relative z-10">
         <Link
@@ -258,8 +362,18 @@ export default function DesignAthonRsvp() {
               Design-a-thon RSVP
             </h1>
             <p className="text-gray-600 text-lg mb-4">
-              Join us for an exciting 12-hour design challenge! Please fill out
-              the form below to reserve your spot.
+              Join us for an exciting 12-hour design challenge! This event is
+              open to
+              <span className="font-semibold text-[#772583]">
+                {" "}
+                ALL MAJORS
+              </span>{" "}
+              and teams are
+              <span className="font-semibold text-[#772583]">
+                {" "}
+                capped at 3 members
+              </span>
+              . Please fill out the form below to reserve your spot.
             </p>
 
             {/* Event Details - Minimal */}
@@ -372,24 +486,77 @@ export default function DesignAthonRsvp() {
                 />
               </div>
 
-              {/* Friends */}
+              {/* Team Information */}
               <div>
-                <label
-                  htmlFor="friends"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Number of Friends Attending (Optional)
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Do you have a team? If so, how many members are in your team?
+                  <span className="text-[#007dae]">*</span>
                 </label>
-                <input
-                  type="number"
-                  id="friends"
-                  name="friends"
-                  value={formData.friends}
-                  onChange={handleInputChange}
-                  min="0"
-                  placeholder="e.g., 2"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#772583] focus:border-transparent"
-                />
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      id="teamNo"
+                      name="teamStatus"
+                      value="no"
+                      checked={formData.teamStatus === "no"}
+                      onChange={handleInputChange}
+                      required
+                      className="h-4 w-4 text-[#772583] focus:ring-[#772583] border-gray-300 accent-[#772583]"
+                    />
+                    <label
+                      htmlFor="teamNo"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      No, I don't have a team yet
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      id="teamYes"
+                      name="teamStatus"
+                      value="yes"
+                      checked={formData.teamStatus === "yes"}
+                      onChange={handleInputChange}
+                      required
+                      className="h-4 w-4 text-[#772583] focus:ring-[#772583] border-gray-300 accent-[#772583]"
+                    />
+                    <label
+                      htmlFor="teamYes"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Yes, I have a team
+                    </label>
+                  </div>
+                </div>
+
+                {/* Team size input - only show if they selected "yes" */}
+                {formData.teamStatus === "yes" && (
+                  <div className="mt-4">
+                    <label
+                      htmlFor="teamSize"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
+                      How many members are in your team? (Including yourself)
+                    </label>
+                    <input
+                      type="number"
+                      id="teamSize"
+                      name="teamSize"
+                      value={formData.teamSize || ""}
+                      onChange={handleInputChange}
+                      min="2"
+                      max="3"
+                      required
+                      placeholder="e.g., 2 or 3"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#772583] focus:border-transparent"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Teams are capped at 3 members maximum
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Skills */}
@@ -429,7 +596,7 @@ export default function DesignAthonRsvp() {
                       checked={formData.attendanceStatus === "yes"}
                       onChange={handleInputChange}
                       required
-                      className="h-4 w-4 text-[#772583] focus:ring-[#772583] border-gray-300"
+                      className="h-4 w-4 text-[#772583] focus:ring-[#772583] border-gray-300 accent-[#772583]"
                     />
                     <label
                       htmlFor="attendanceYes"
@@ -447,7 +614,7 @@ export default function DesignAthonRsvp() {
                       checked={formData.attendanceStatus === "questionable"}
                       onChange={handleInputChange}
                       required
-                      className="h-4 w-4 text-[#772583] focus:ring-[#772583] border-gray-300"
+                      className="h-4 w-4 text-[#772583] focus:ring-[#772583] border-gray-300 accent-[#772583]"
                     />
                     <label
                       htmlFor="attendanceQuestionable"
