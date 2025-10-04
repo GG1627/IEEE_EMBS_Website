@@ -65,7 +65,7 @@ export default function Login() {
         setMessage("Error: " + signInError.message);
       } else {
         setMessage(
-          "Check your email for the link! <strong>Make sure to check your spam/junk folder.</strong>"
+          "Check your email for the link! <strong>Make sure to check your spam/junk folder.</strong> Email may take up to 3 minutes to arrive."
         );
       }
     } catch (error) {
