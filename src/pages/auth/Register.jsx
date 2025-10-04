@@ -56,7 +56,7 @@ export default function Register() {
         setMessage("Error: " + error.message);
       } else {
         setMessage(
-          "Registration link sent! Check your email and click the link to complete your registration. <strong>Make sure to check your spam/junk folder.</strong>"
+          "Registration link sent! Check your email and click the link to complete your registration. <strong>Make sure to check your spam/junk folder.</strong> Email may take up to 3 minutes to arrive."
         );
       }
     } catch (error) {

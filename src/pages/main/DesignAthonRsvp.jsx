@@ -4,6 +4,8 @@ import { IoArrowBack } from "react-icons/io5";
 import { useAuth } from "../auth/AuthContext";
 import { supabase } from "../../lib/supabase";
 import Footer from "../../components/layout/Footer";
+import { gradientPresets } from "../../styles/ieeeColors";
+import GradientMesh from "../../components/ui/GradientMesh";
 
 export default function DesignAthonRsvp() {
   const { user } = useAuth();
@@ -231,9 +233,14 @@ export default function DesignAthonRsvp() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 z-0">
+        <GradientMesh colors={gradientPresets.designathon} />
+      </div>
+
       {/* Back Button */}
-      <div className="pt-4 pl-4">
+      <div className="pt-4 pl-4 relative z-10">
         <Link
           to="/"
           className="inline-flex items-center gap-2 text-[#772583] hover:text-[#9C1E96] transition-colors duration-300 font-medium"
@@ -244,7 +251,7 @@ export default function DesignAthonRsvp() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 py-8 px-4">
+      <div className="flex-1 py-8 px-4 relative z-10">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-[#772583] mb-4">
@@ -272,7 +279,7 @@ export default function DesignAthonRsvp() {
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-[#772583] rounded-full"></span>
                 <span>
-                  <strong>Location:</strong> TBD
+                  <strong>Location:</strong> TUR L011
                 </span>
               </div>
             </div>
@@ -281,7 +288,7 @@ export default function DesignAthonRsvp() {
           {/* RSVP Form */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white border border-gray-200 rounded-xl p-8 shadow-sm"
+            className="bg-white/90 backdrop-blur-sm border border-gray-200 rounded-xl p-8 shadow-lg"
           >
             <div className="space-y-6">
               {/* Name - Auto-filled (Read-only) */}
