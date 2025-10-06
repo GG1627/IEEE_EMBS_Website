@@ -379,8 +379,10 @@ export default function DesignAthonRsvp() {
               </span>{" "}
               and access to{" "}
               <span className="font-semibold text-[#772583]">3D printers</span>{" "}
-              for prototyping! Please fill out the form below to reserve your
-              spot.
+              for prototyping! We'll provide materials and hardware, but we
+              encourage you to bring your own if you have specific tools you'd
+              like to use. The design prompt will be released on the day of the
+              event. Please fill out the form below to reserve your spot.
             </p>
 
             {/* Event Details - Minimal */}
