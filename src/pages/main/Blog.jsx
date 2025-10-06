@@ -75,7 +75,7 @@ export default function Blog() {
         const { data, error } = await supabase
           .from("blog_posts")
           .select("*")
-          .order("created_at", { ascending: false });
+          .order("event_date", { ascending: false });
 
         if (error) {
           console.error("Error fetching blog posts:", error);
@@ -286,7 +286,7 @@ export default function Blog() {
       const { data: updatedPosts, error: fetchError } = await supabase
         .from("blog_posts")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("event_date", { ascending: false });
 
       if (!fetchError) {
         setPosts(updatedPosts || []);
@@ -374,7 +374,7 @@ export default function Blog() {
       const { data: updatedPosts, error: fetchError } = await supabase
         .from("blog_posts")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("event_date", { ascending: false });
 
       if (!fetchError) {
         setPosts(updatedPosts || []);
