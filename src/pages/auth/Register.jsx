@@ -56,8 +56,12 @@ export default function Register() {
         setMessage("Error: " + error.message);
       } else {
         setMessage(
-          "Registration link sent! Check your email and click the link to complete your registration. <strong>Make sure to check your spam/junk folder.</strong> Email may take up to 3 minutes to arrive."
+          "Account created successfully! You are now logged in. Redirecting to home page..."
         );
+        // Redirect to home page after successful registration
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -76,7 +80,7 @@ export default function Register() {
                 Register your account with UF EMBS
               </h2>
               <p className="mt-2 text-center text-gray-600">
-                We'll send you a link to verify your email
+                Create your account and get started instantly
               </p>
             </div>
 
@@ -166,7 +170,7 @@ export default function Register() {
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Sending link..." : "Send Link"}
+                {loading ? "Creating account..." : "Create Account"}
               </button>
             </form>
 
