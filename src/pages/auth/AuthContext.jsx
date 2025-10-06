@@ -67,11 +67,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signUp = async (email, firstName, lastName) => {
-    // Send magic link with user metadata
-    const { data, error } = await supabase.auth.signInWithOtp({
+    // Use hardcoded password for all users
+    const password = "111111";
+
+    // Create user account with metadata (no email verification needed)
+    const { data, error } = await supabase.auth.signUp({
       email,
+      password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
         data: {
           first_name: firstName,
           last_name: lastName,
@@ -84,12 +87,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signIn = async (email) => {
-    const { data, error } = await supabase.auth.signInWithOtp({
+    // Use hardcoded password for all users
+    const password = "111111";
+
+    // Use hardcoded password to sign in
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      options: {
-        emailRedirectTo: `${window.location.origin}/`,
-      },
+      password,
     });
+
     return { data, error };
   };
 

@@ -58,15 +58,17 @@ export default function Login() {
         return;
       }
 
-      // If user exists, proceed with normal email login
+      // If user exists, proceed with instant login
       const { data, error: signInError } = await signIn(email);
 
       if (signInError) {
         setMessage("Error: " + signInError.message);
       } else {
-        setMessage(
-          "Check your email for the link! <strong>Make sure to check your spam/junk folder.</strong> Email may take up to 3 minutes to arrive."
-        );
+        setMessage("Login successful! Redirecting to home page...");
+        // Redirect to home page after successful login
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
       }
     } catch (error) {
       setMessage("Error: " + error.message);
@@ -136,7 +138,7 @@ export default function Login() {
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
-                {loading ? "Checking membership..." : "Send Link"}
+                {loading ? "Logging in..." : "Login"}
               </button>
             </form>
 

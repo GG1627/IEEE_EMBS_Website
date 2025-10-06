@@ -373,7 +373,14 @@ export default function DesignAthonRsvp() {
                 {" "}
                 capped at 3 members
               </span>
-              . Please fill out the form below to reserve your spot.
+              . Compete for{" "}
+              <span className="font-semibold text-[#772583]">
+                $150+ in prizes
+              </span>{" "}
+              and access to{" "}
+              <span className="font-semibold text-[#772583]">3D printers</span>{" "}
+              for prototyping! Please fill out the form below to reserve your
+              spot.
             </p>
 
             {/* Event Details - Minimal */}
