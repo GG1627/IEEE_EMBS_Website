@@ -375,14 +375,15 @@ export default function DesignAthonRsvp() {
               </span>
               . Compete for{" "}
               <span className="font-semibold text-[#772583]">
-                $150+ in prizes
+                $50 max per person in prizes
               </span>{" "}
               and access to{" "}
               <span className="font-semibold text-[#772583]">3D printers</span>{" "}
               for prototyping! We'll provide materials and hardware, but we
               encourage you to bring your own if you have specific tools you'd
               like to use. The design prompt will be released on the day of the
-              event. Please fill out the form below to reserve your spot.
+              event. Please fill out the form below so we can see how many
+              people are interested in attending.
             </p>
 
             {/* Event Details - Minimal */}
