@@ -229,7 +229,7 @@ export default function Resources() {
                 {/* Left Column - Image */}
                 {careerFields[selectedField].image && (
                   <div className="lg:col-span-1">
-                    <div className="sticky top-8">
+                    <div className="sticky top-8 flex justify-center">
                       <div className="overflow-hidden rounded-2xl shadow-lg">
                         <img
                           src={careerFields[selectedField].image}
