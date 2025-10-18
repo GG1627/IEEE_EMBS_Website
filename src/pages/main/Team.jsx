@@ -18,7 +18,7 @@ export default function Team() {
       <div className="absolute inset-0 overflow-hidden">
         <GradientMesh
           colors={gradientPresets.designathon}
-          baseGradient="linear-gradient(to bottom, #faf9fb, #ffffff, #f9fafb)"
+          baseGradient="linear-gradient(to bottom, #ebd6ff, #ffffff, #f9fafb)"
         />
       </div>
 
