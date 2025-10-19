@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { supabase } from "../../lib/supabase";
+import { adminEmails } from "../../data/adminEmails";
 
 export default function Login() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,6 +20,18 @@ export default function Login() {
       setEmail(location.state.email);
     }
   }, [location.state]);
+
+  // check if email is an admin email
+  useEffect(() => {
+    if (adminEmails.includes(email)) {
+      setMessage("Admin login detected. Enter the password to continue.");
+      setShowPasswordInput(true);
+      setPassword(""); // Reset password when switching to admin email
+    } else {
+      setShowPasswordInput(false);
+      setPassword(""); // Reset password when switching away from admin email
+    }
+  }, [email]);
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -34,6 +49,22 @@ export default function Login() {
     setMessage("");
 
     try {
+      // Check if this is an admin email and validate password
+      if (adminEmails.includes(email)) {
+        if (!password || password.trim() === "") {
+          setMessage("Error: Admin password is required");
+          return;
+        }
+
+        // Here you would validate the admin password
+        // For now, I'll use a simple hardcoded password - you should replace this with your actual admin password logic
+        const adminPassword = "embs2025!"; // Replace with your actual admin password
+        if (password !== adminPassword) {
+          setMessage("Error: Invalid admin password");
+          return;
+        }
+      }
+
       // First, check if the user exists in the members table
       const { data: existingMember, error: checkError } = await supabase
         .from("members")
@@ -130,11 +161,37 @@ export default function Login() {
                 )}
               </div>
 
+              {showPasswordInput && (
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    AdminPassword
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter your admin password"
+                  />
+                  {password && !password.trim() && (
+                    <p className="mt-1 text-sm text-red-600">
+                      Please enter your admin password
+                    </p>
+                  )}
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={
                   loading ||
-                  (email && !email.toLowerCase().endsWith("@ufl.edu"))
+                  (email && !email.toLowerCase().endsWith("@ufl.edu")) ||
+                  (showPasswordInput && (!password || password.trim() === ""))
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >
