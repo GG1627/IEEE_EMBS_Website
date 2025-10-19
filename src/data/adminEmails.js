@@ -6,12 +6,9 @@ export const adminEmails = [
   "f.mastantuono@ufl.edu",
   "gael.garcia@ufl.edu",
   "c.judilla@ufl.edu",
+  "rphipps@ufl.edu",
+  "kpatel13@ufl.edu",
+  "devinwylde@ufl.edu",
+  "k.phy@ufl.edu",
+  "matthew.valenti@ufl.edu",
 ];
-
-// NEED TO ADD THESE PEOPLE:
-// - Krish
-// - Matthew
-// - Devin
-// - Lincy
-// - Katherine
-// - May
