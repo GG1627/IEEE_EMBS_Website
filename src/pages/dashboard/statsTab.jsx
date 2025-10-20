@@ -96,7 +96,7 @@ const membersColumns = [
     headerAlign: "left",
     editable: true,
     renderCell: (params) => {
-      return params.value ? "Yes" : "No";
+      return params.value === "yes" ? "Yes" : "No";
     },
   },
 ];
@@ -492,6 +492,38 @@ export default function StatsTab() {
                   >
                     EXCEL
                   </button>
+                </div>
+              </div>
+            )}
+
+            {/* Extra Stats Section - Only show for Members */}
+            {category === "members" && (
+              <div>
+                <h2 className="text-xl font-bold text-white mb-2">
+                  Extra Stats
+                </h2>
+                <div className="w-full h-px bg-white mb-4"></div>
+                <div className="space-y-4">
+                  <div className="bg-[#121212]/50 rounded-lg p-3">
+                    <div className="text-sm text-gray-300 mb-1">
+                      Total Members
+                    </div>
+                    <div className="text-2xl font-bold text-white">
+                      {membersData.length}
+                    </div>
+                  </div>
+                  <div className="bg-[#121212]/50 rounded-lg p-3">
+                    <div className="text-sm text-gray-300 mb-1">
+                      National Members
+                    </div>
+                    <div className="text-2xl font-bold text-white">
+                      {
+                        membersData.filter(
+                          (member) => member.national_member === "yes"
+                        ).length
+                      }
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
