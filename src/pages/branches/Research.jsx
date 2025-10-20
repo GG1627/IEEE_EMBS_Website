@@ -11,8 +11,11 @@ export default function Research() {
         <p className="text-lg text-gray-700 leading-relaxed mb-4">
           We will create <strong>research connection opportunities</strong> for students to meet professors who are seeking new undergraduate researchers. These sessions will help members learn about ongoing projects, available roles, and how to get started in a lab.
         </p>
-        <p className="text-lg text-gray-700 leading-relaxed">
+        <p className="text-lg text-gray-700 leading-relaxed mb-4">
           As details are confirmed, we will publish <strong>interest forms</strong> and <strong>matchmaking info</strong> so members can indicate areas of interest and be connected with relevant faculty.
+        </p>
+        <p className="text-lg text-gray-700 leading-relaxed">
+          For more details, visit the Resources tab to explore different paths within BME, see related UF professors, and discover external faculty opportunities.
         </p>
       </div>
     </div>
