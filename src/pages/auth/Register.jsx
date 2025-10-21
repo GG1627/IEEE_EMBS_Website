@@ -8,10 +8,25 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [major, setMajor] = useState("");
+  const [customMajor, setCustomMajor] = useState("");
+  const [nationalMember, setNationalMember] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { signUp } = useAuth();
+
+  // Major options
+  const majorOptions = [
+    "Biomedical Engineering",
+    "Electrical Engineering", 
+    "Computer Science",
+    "Computer Engineering",
+    "Biology",
+    "Biochemistry",
+    "Mechanical Engineering",
+    "Other"
+  ];
 
   async function handleSignUp(e) {
     e.preventDefault();
@@ -50,7 +65,10 @@ export default function Register() {
         return;
       }
 
-      const { data, error } = await signUp(email, firstName, lastName);
+      // Determine the final major value
+      const finalMajor = major === "Other" ? customMajor : major;
+      
+      const { data, error } = await signUp(email, firstName, lastName, finalMajor, nationalMember);
 
       if (error) {
         setMessage("Error: " + error.message);
@@ -162,11 +180,87 @@ export default function Register() {
                 />
               </div>
 
+              <div>
+                <label
+                  htmlFor="major"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Major
+                </label>
+                <select
+                  id="major"
+                  required
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">Select your major</option>
+                  {majorOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {major === "Other" && (
+                <div>
+                  <label
+                    htmlFor="customMajor"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Please specify your major
+                  </label>
+                  <input
+                    id="customMajor"
+                    type="text"
+                    required
+                    value={customMajor}
+                    onChange={(e) => setCustomMajor(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter your major"
+                  />
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Are you a national IEEE EMBS member?
+                </label>
+                <div className="space-y-2">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="nationalMember"
+                      value="yes"
+                      checked={nationalMember === "yes"}
+                      onChange={(e) => setNationalMember(e.target.value)}
+                      className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span className="text-sm text-gray-700">Yes, I am a national IEEE EMBS member</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="nationalMember"
+                      value="no"
+                      checked={nationalMember === "no"}
+                      onChange={(e) => setNationalMember(e.target.value)}
+                      className="mr-2 text-indigo-600 focus:ring-indigo-500"
+                    />
+                    <span className="text-sm text-gray-700">No, I am not a national IEEE EMBS member</span>
+                  </label>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={
                   loading ||
-                  (email && !email.toLowerCase().endsWith("@ufl.edu"))
+                  (email && !email.toLowerCase().endsWith("@ufl.edu")) ||
+                  !major ||
+                  (major === "Other" && !customMajor) ||
+                  !nationalMember
                 }
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#96529a] hover:bg-[#772583] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 hover:cursor-pointer"
               >

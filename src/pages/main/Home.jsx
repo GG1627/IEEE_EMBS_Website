@@ -169,11 +169,11 @@ export default function Home() {
       if (user) {
         try {
           console.log("👤 Fetching user role for:", user.email);
-          const { data, error } = await supabase
-            .from("members")
-            .select("role, national_member")
-            .eq("user_id", user.id)
-            .single();
+      const { data, error } = await supabase
+        .from("members")
+        .select("role, national_member, major")
+        .eq("user_id", user.id)
+        .single();
 
           if (error) {
             console.error("❌ Error fetching user role:", error);
@@ -184,19 +184,37 @@ export default function Home() {
               "✅ User national member status fetched:",
               data?.national_member
             );
+            console.log("✅ User major fetched:", data?.major);
             setUserRole(data?.role || "member");
 
-            // Only show snackbar if national_member is specifically null (not set) AND user is a member (not admin)
-            if (
-              data?.national_member === null &&
-              (data?.role === "member" || !data?.role)
-            ) {
-              showSnackbar(
-                "Please update your National Member status in the Dashboard",
-                {
-                  customColor: "#ff9800",
-                }
-              );
+            // Check for missing profile information and show appropriate message
+            // Only show snackbar if user is a member (not admin)
+            if (data?.role === "member" || !data?.role) {
+              const isNationalMemberNull = data?.national_member === null;
+              const isMajorNull = data?.major === null;
+              
+              if (isNationalMemberNull && isMajorNull) {
+                showSnackbar(
+                  "Please update your National Member status and Major in the Dashboard",
+                  {
+                    customColor: "#ff9800",
+                  }
+                );
+              } else if (isNationalMemberNull) {
+                showSnackbar(
+                  "Please update your National Member status in the Dashboard",
+                  {
+                    customColor: "#ff9800",
+                  }
+                );
+              } else if (isMajorNull) {
+                showSnackbar(
+                  "Please update your Major in the Dashboard",
+                  {
+                    customColor: "#ff9800",
+                  }
+                );
+              }
             }
           }
         } catch (error) {

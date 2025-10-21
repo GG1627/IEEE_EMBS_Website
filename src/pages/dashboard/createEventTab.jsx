@@ -12,12 +12,24 @@ export default function CreateEventTab() {
   const [eventEndTime, setEventEndTime] = useState("");
   const [eventQrcode, setEventQrcode] = useState("");
   const [showQRCode, setShowQRCode] = useState(false);
+  const [eventType, setEventType] = useState("");
+  const [foodPresent, setFoodPresent] = useState("");
   const [activeEvents, setActiveEvents] = useState([]);
   const [loadingActiveEvents, setLoadingActiveEvents] = useState(true);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loadingUpcomingEvents, setLoadingUpcomingEvents] = useState(true);
 
   const { showSnackbar } = useSnackbar();
+
+  // Event type options with points mapping
+  const eventTypeOptions = [
+    { value: "gbm", label: "GBM", points: 1 },
+    { value: "industry_speaker", label: "Industry Speaker", points: 2 },
+    { value: "academia_speaker", label: "Academia Speaker", points: 3 },
+    { value: "workshop", label: "Workshop", points: 3 },
+    { value: "competition", label: "Competitions", points: 4 },
+    { value: "fundraising", label: "Fundraising", points: null }, // Variable points
+  ];
 
   // Auto-update QR code when event code changes
   useEffect(() => {
@@ -29,6 +41,18 @@ export default function CreateEventTab() {
       setShowQRCode(false);
     }
   }, [eventCode]);
+
+  // Auto-fill points when event type changes
+  useEffect(() => {
+    if (eventType) {
+      const selectedType = eventTypeOptions.find(option => option.value === eventType);
+      if (selectedType && selectedType.points !== null) {
+        setEventPoints(selectedType.points.toString());
+      } else if (eventType === "fundraising") {
+        setEventPoints(""); // Clear for fundraising to allow manual input
+      }
+    }
+  }, [eventType]);
 
   // Fetch active and upcoming events on component mount
   useEffect(() => {
@@ -116,6 +140,8 @@ export default function CreateEventTab() {
       code: eventCode,
       start_time: startDateTime,
       end_time: endDateTime,
+      event_type: eventType,
+      food_present: foodPresent === "yes",
     });
 
     if (error) {
@@ -132,6 +158,8 @@ export default function CreateEventTab() {
       setEventEndTime("");
       setEventQrcode("");
       setShowQRCode(false);
+      setEventType("");
+      setFoodPresent("");
       // Refresh active and upcoming events after adding a new event
       fetchActiveEvents();
       fetchUpcomingEvents();
@@ -726,6 +754,49 @@ export default function CreateEventTab() {
 
                 <div>
                   <label
+                    htmlFor="event-type"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Event Type
+                  </label>
+                  <select
+                    id="event-type"
+                    required
+                    value={eventType}
+                    onChange={(e) => setEventType(e.target.value)}
+                    className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200"
+                  >
+                    <option value="">Select event type</option>
+                    {eventTypeOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="food-present"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Food Provided
+                  </label>
+                  <select
+                    id="food-present"
+                    required
+                    value={foodPresent}
+                    onChange={(e) => setFoodPresent(e.target.value)}
+                    className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200"
+                  >
+                    <option value="">Select option</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
                     htmlFor="event-date"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
@@ -747,6 +818,16 @@ export default function CreateEventTab() {
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
                     Event Points
+                    {eventType && eventType !== "fundraising" && (
+                      <span className="text-xs text-gray-500 ml-2">
+                        (Auto-filled based on event type)
+                      </span>
+                    )}
+                    {eventType === "fundraising" && (
+                      <span className="text-xs text-gray-500 ml-2">
+                        (Variable - enter custom amount)
+                      </span>
+                    )}
                   </label>
                   <input
                     id="event-points"
@@ -754,8 +835,13 @@ export default function CreateEventTab() {
                     required
                     value={eventPoints}
                     onChange={(e) => setEventPoints(e.target.value)}
-                    className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200"
-                    placeholder="Points"
+                    disabled={eventType && eventType !== "fundraising"}
+                    className={`block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200 ${
+                      eventType && eventType !== "fundraising" 
+                        ? "bg-gray-100 cursor-not-allowed" 
+                        : ""
+                    }`}
+                    placeholder={eventType === "fundraising" ? "Enter points" : "Points"}
                   />
                 </div>
 

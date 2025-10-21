@@ -28,10 +28,26 @@ export default function MemberDashboard() {
   const [showNationalMemberUpdate, setShowNationalMemberUpdate] =
     useState(false);
   const [selectedNationalStatus, setSelectedNationalStatus] = useState("");
+  const [userMajor, setUserMajor] = useState(null);
+  const [showMajorUpdate, setShowMajorUpdate] = useState(false);
+  const [selectedMajor, setSelectedMajor] = useState("");
+  const [customMajor, setCustomMajor] = useState("");
   const [eventsAttended, setEventsAttended] = useState([]);
   const [eventsLoading, setEventsLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
   const [favoritesLoading, setFavoritesLoading] = useState(true);
+
+  // Major options
+  const majorOptions = [
+    "Biomedical Engineering",
+    "Electrical Engineering", 
+    "Computer Science",
+    "Computer Engineering",
+    "Biology",
+    "Biochemistry",
+    "Mechanical Engineering",
+    "Other"
+  ];
 
   useEffect(() => {
     if (user) {
@@ -40,6 +56,7 @@ export default function MemberDashboard() {
       fetchFavoriteFields();
       fetchEventsAttended();
       checkNationalMemberStatus();
+      checkMajorStatus();
     } else {
       console.log("⚠️ Dashboard useEffect triggered but no user found");
     }
@@ -60,7 +77,7 @@ export default function MemberDashboard() {
       const { data, error } = await supabase
         .from("members")
         .select(
-          "points, events_attended, first_name, last_name, email, national_member"
+          "points, events_attended, first_name, last_name, email, national_member, major"
         )
         .eq("user_id", user.id)
         .single();
@@ -88,12 +105,14 @@ export default function MemberDashboard() {
           points: data.points || 0,
           events_attended: data.events_attended || 0,
         });
-        // Also set the national member status
+        // Also set the national member status and major
         setNationalMemberStatus(data.national_member);
+        setUserMajor(data.major);
         console.log("🎯 Set user stats:", {
           points: data.points || 0,
           events_attended: data.events_attended || 0,
           national_member: data.national_member,
+          major: data.major,
         });
       } else {
         console.log("⚠️ No user data found in members table");
@@ -145,6 +164,31 @@ export default function MemberDashboard() {
     }
   };
 
+  const checkMajorStatus = async () => {
+    try {
+      console.log("🎓 Checking major status for user:", user.id);
+
+      const { data, error } = await supabase
+        .from("members")
+        .select("major")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error) {
+        console.error("❌ Error checking major status:", error);
+        return;
+      }
+
+      if (data) {
+        setUserMajor(data.major);
+        setShowMajorUpdate(data.major === null);
+        console.log("🎓 Major status:", data.major);
+      }
+    } catch (error) {
+      console.error("❌ Exception checking major status:", error);
+    }
+  };
+
   const updateNationalMemberStatus = async () => {
     if (!selectedNationalStatus) {
       showSnackbar("Please select your national membership status", {
@@ -183,6 +227,57 @@ export default function MemberDashboard() {
     } catch (error) {
       console.error("❌ Exception updating national member status:", error);
       showSnackbar("Error updating status", {
+        customColor: "#b00000",
+      });
+    }
+  };
+
+  const updateMajor = async () => {
+    if (!selectedMajor) {
+      showSnackbar("Please select your major", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    // Determine the final major value
+    const finalMajor = selectedMajor === "Other" ? customMajor : selectedMajor;
+    
+    if (!finalMajor || !finalMajor.trim()) {
+      showSnackbar("Please enter your major", {
+        customColor: "#b00000",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from("members")
+        .update({ major: finalMajor })
+        .eq("user_id", user.id);
+
+      if (error) {
+        console.error("❌ Error updating major:", error);
+        showSnackbar("Error updating major: " + error.message, {
+          customColor: "#b00000",
+        });
+        return;
+      }
+
+      // Update local state
+      setUserMajor(finalMajor);
+      setShowMajorUpdate(false);
+      setSelectedMajor("");
+      setCustomMajor("");
+
+      showSnackbar("Major updated successfully!", {
+        customColor: "#007377",
+      });
+
+      console.log("✅ Successfully updated major:", finalMajor);
+    } catch (error) {
+      console.error("❌ Exception updating major:", error);
+      showSnackbar("Error updating major", {
         customColor: "#b00000",
       });
     }
@@ -643,6 +738,85 @@ export default function MemberDashboard() {
                           className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                         >
                           Update Status
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Major Update Section */}
+          {showMajorUpdate && (
+            <div className="w-full max-w-7xl px-2 sm:px-4 md:px-0 mb-6">
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 p-4 sm:p-6 rounded-xl shadow-sm">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 text-blue-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-blue-800 text-xl sm:text-2xl font-bold mb-2">
+                      Update Your Major
+                    </h2>
+                    <p className="text-blue-700 text-base sm:text-lg mb-4">
+                      Please let us know your major to help us provide you with relevant information and opportunities.
+                    </p>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-blue-700 mb-2">
+                          Select your major
+                        </label>
+                        <select
+                          value={selectedMajor}
+                          onChange={(e) => setSelectedMajor(e.target.value)}
+                          className="block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                        >
+                          <option value="">Select your major</option>
+                          {majorOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {selectedMajor === "Other" && (
+                        <div>
+                          <label className="block text-sm font-medium text-blue-700 mb-2">
+                            Please specify your major
+                          </label>
+                          <input
+                            type="text"
+                            value={customMajor}
+                            onChange={(e) => setCustomMajor(e.target.value)}
+                            className="block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Enter your major"
+                          />
+                        </div>
+                      )}
+
+                      <div className="pt-2">
+                        <button
+                          onClick={updateMajor}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        >
+                          Update Major
                         </button>
                       </div>
                     </div>

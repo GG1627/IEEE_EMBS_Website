@@ -66,9 +66,17 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email, firstName, lastName) => {
+  const signUp = async (email, firstName, lastName, major, nationalMember) => {
     // Use hardcoded password for all users
     const password = "111111";
+
+    // Store additional data in sessionStorage for later use
+    if (major) {
+      sessionStorage.setItem("user_major", major);
+    }
+    if (nationalMember) {
+      sessionStorage.setItem("national_member_status", nationalMember);
+    }
 
     // Create user account with metadata (no email verification needed)
     const { data, error } = await supabase.auth.signUp({
@@ -149,15 +157,17 @@ export const AuthProvider = ({ children }) => {
 
       console.log("📝 Adding new user to members table:", user.email);
 
-      // Get the national member status from sessionStorage if available
+      // Get the national member status and major from sessionStorage if available
       const nationalMemberStatus = sessionStorage.getItem(
         "national_member_status"
       );
+      const userMajor = sessionStorage.getItem("user_major");
 
       const memberData = {
         email: user.email,
         first_name: user.user_metadata?.first_name || "",
         last_name: user.user_metadata?.last_name || "",
+        major: userMajor || null,
         points: 0,
         events_attended: 0,
         user_id: user.id,
@@ -165,9 +175,12 @@ export const AuthProvider = ({ children }) => {
         national_member: nationalMemberStatus || null,
       };
 
-      // Clear the stored status after using it
+      // Clear the stored data after using it
       if (nationalMemberStatus) {
         sessionStorage.removeItem("national_member_status");
+      }
+      if (userMajor) {
+        sessionStorage.removeItem("user_major");
       }
 
       const { data, error } = await supabase
