@@ -1187,7 +1187,7 @@ export default function Blog() {
                             (url) => url && url.trim() !== ""
                           ) ? (
                           <div
-                            className="relative h-80 lg:h-full min-h-[400px] bg-gradient-to-br from-[#1c1c1c] to-[#2a2a2a] overflow-hidden group"
+                            className="relative h-80 lg:h-full min-h-[400px] bg-gradient-to-br from-[#772583]/60 to-[#00629b]/60 overflow-hidden group"
                             onMouseEnter={() => stopCarousel(post.id)}
                             onMouseLeave={() => {
                               if (post.image_urls.length > 1) {
