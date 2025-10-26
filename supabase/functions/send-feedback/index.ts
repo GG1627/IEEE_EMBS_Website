@@ -7,14 +7,21 @@ type Payload = {
   anonymous?: boolean;
 };
 
-const cors = {
-  // ⬇️ replace with your deployed site origin, e.g., https://embs.ufl.edu
-  "Access-Control-Allow-Origin": "https://www.ufembs.com",
+const allowedOrigins = [
+  "https://www.ufembs.com",
+  "http://localhost:5173",
+];
+
+const getCorsHeaders = (origin: string) => ({
+  "Access-Control-Allow-Origin": allowedOrigins.includes(origin) ? origin : allowedOrigins[0],
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+});
 
 Deno.serve(async (req) => {
+  const origin = req.headers.get("origin") || "";
+  const cors = getCorsHeaders(origin);
+  
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return new Response("Method Not Allowed", { status: 405, headers: cors });
 
@@ -34,8 +41,9 @@ Deno.serve(async (req) => {
     }
 
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    const MAIL_FROM = Deno.env.get("MAIL_FROM"); // e.g., "EMBS UF <noreply@yourdomain.org>"
+    const MAIL_FROM = "EMBS UF <noreply@auth.ufembs.com>"; // Using verified domain
     const MAIL_TO = Deno.env.get("MAIL_TO");     // club inbox
+    
     if (!RESEND_API_KEY || !MAIL_FROM || !MAIL_TO) {
       throw new Error("Missing mail env vars");
     }
