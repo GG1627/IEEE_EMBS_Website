@@ -7,6 +7,7 @@ import Events from "./pages/main/Events";
 import DesignAthonRsvp from "./pages/main/DesignAthonRsvp";
 import Resources from "./pages/main/Resources";
 import Blog from "./pages/main/Blog";
+import Contact from "./pages/main/Contact";
 import Research from "./pages/branches/Research";
 import Projects from "./pages/branches/Projects";
 import Outreach from "./pages/branches/Outreach";
@@ -40,6 +41,7 @@ function App() {
               <Route path="/design-a-thon-rsvp" element={<DesignAthonRsvp />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/contact" element={<Contact />} />
 
               <Route path="/research" element={<Research />} />
               <Route path="/projects" element={<Projects />} />

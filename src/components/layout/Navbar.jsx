@@ -168,6 +168,9 @@ export default function Navbar() {
               <Link to="/team" className={linkClass("/team")}>
                 Team
               </Link>
+              <Link to="/contact" className={linkClass("/contact")}>
+                Contact Us
+              </Link>
               {user ? (
                 <div
                   className="w-7 h-7 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
@@ -270,6 +273,13 @@ export default function Navbar() {
                 className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
               >
                 Team
+              </Link>
+              <Link
+                to="/contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-black hover:text-[#772583] block px-3 py-2 font-medium transition-colors duration-300"
+              >
+                Contact Us
               </Link>
 
               {/* Mobile User Profile Section */}
