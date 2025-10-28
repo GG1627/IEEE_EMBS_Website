@@ -621,10 +621,7 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
-      {/* Gradient background */}
-      <div className="absolute inset-0 z-0">
-        <GradientMesh colors={gradientPresets.outreach} />
-      </div>
+      
       {/* Fixed admin button - absolutely positioned */}
       {role === "admin" && (
         <button
