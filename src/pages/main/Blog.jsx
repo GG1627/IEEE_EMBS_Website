@@ -12,6 +12,7 @@ export default function Blog() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState("member");
+  const [canManageBlog, setCanManageBlog] = useState(false);
   const [showAdminForm, setShowAdminForm] = useState(false);
 
   // Admin form states
@@ -58,22 +59,26 @@ export default function Blog() {
         try {
           const { data, error } = await supabase
             .from("members")
-            .select("role")
+            .select("role, can_manage_blog")
             .eq("user_id", user.id)
             .single();
 
           if (error) {
-            console.error("Error fetching user role:", error);
+            console.error("Error fetching user permissions:", error);
             setRole("member");
+            setCanManageBlog(false);
           } else {
             setRole(data?.role || "member");
+            setCanManageBlog(data?.can_manage_blog || false);
           }
         } catch (error) {
-          console.error("Exception fetching user role:", error);
+          console.error("Exception fetching user permissions:", error);
           setRole("member");
+          setCanManageBlog(false);
         }
       } else {
         setRole("member");
+        setCanManageBlog(false);
       }
     };
 
@@ -623,7 +628,7 @@ export default function Blog() {
     <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
       
       {/* Fixed admin button - absolutely positioned */}
-      {role === "admin" && (
+      {canManageBlog && (
         <button
           onClick={() => setShowAdminForm(!showAdminForm)}
           className="fixed top-18 right-2 z-20 w-12 h-12 bg-pink-500/20 backdrop-blur-md border border-pink-300/30 rounded-full hover:bg-pink-500/30 hover:border-pink-400/50 transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:scale-105 group hover:cursor-pointer"
@@ -664,7 +669,7 @@ export default function Blog() {
       <div className="flex-1 pt-20 pb-12 relative z-10">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           {/* Admin Form */}
-          {role === "admin" && showAdminForm && (
+          {canManageBlog && showAdminForm && (
             <div className="mb-8 bg-white rounded-xl border border-gray-200 shadow-lg p-6">
               <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
                 <div className="w-6 h-6 bg-[#007377] rounded flex items-center justify-center">
@@ -932,7 +937,7 @@ export default function Blog() {
           )}
 
           {/* Edit Form */}
-          {role === "admin" && editingPost && (
+          {canManageBlog && editingPost && (
             <div className="mb-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200 shadow-xl backdrop-blur-sm">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
@@ -1352,7 +1357,7 @@ export default function Blog() {
                             <h2 className="text-5xl font-light text-gray-900 leading-tight flex-1 group-hover:text-[#007377] transition-colors">
                               {post.title}
                             </h2>
-                            {role === "admin" && (
+                            {canManageBlog && (
                               <button
                                 onClick={() => startEditingPost(post)}
                                 className="flex-shrink-0 w-8 h-8 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-300/30 hover:border-blue-400/50 rounded-lg transition-all duration-200 flex items-center justify-center group"
