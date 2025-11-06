@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../../lib/supabase";
 import { useSnackbar } from "../../components/ui/Snackbar";
+import SponsorshipPacketBook from "../../components/ui/SponsorshipPacketBook";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -56,21 +57,26 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pt-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions or feedback? We'd love to hear from you!
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-light text-gray-900 tracking-tight mb-2">Get In Touch</h1>
+          <p className="text-xl md:text-2xl text-gray-600 font-light leading-relaxed mb-2 max-w-3xl mx-auto">
+            Have questions, feedback, or interested in partnering with us? We're here to connect and collaborate!
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="flex flex-row gap-12 items-stretch">
           {/* Feedback Form */}
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Have Feedback for Us?</h2>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="w-1/2 bg-white rounded-2xl shadow-xl p-8 flex flex-col">
+            <div className="mb-6">
+              <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-4">Share Your Feedback</h2>
+              <p className="text-gray-600 font-light leading-relaxed">
+                Your thoughts help us improve and grow. Whether it's suggestions, bug reports, or general feedback, we appreciate hearing from you.
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 space-y-6">
               {/* Name Field */}
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -144,7 +150,7 @@ export default function Contact() {
               </div>
 
               {/* Message Field */}
-              <div>
+              <div className="flex flex-col flex-1">
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
                   Message
                 </label>
@@ -153,8 +159,7 @@ export default function Contact() {
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#772583] focus:border-transparent transition-all duration-200 bg-white resize-none"
+                  className="flex-1 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#772583] focus:border-transparent transition-all duration-200 bg-white resize-none min-h-[120px]"
                   placeholder="Tell us what's on your mind..."
                   required
                 />
@@ -172,55 +177,53 @@ export default function Contact() {
           </div>
 
           {/* Sponsorship Packet Section */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col justify-center items-center text-center">
-            <div className="w-full h-64 border-2 border-dashed border-gray-300 rounded-lg flex flex-col justify-center items-center bg-gray-50">
-              <div className="text-gray-600 mb-4">
-                <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Sponsorship Packet</h3>
-              <p className="text-gray-600 mb-6">
-                Interested in partnering with us? Download our sponsorship packet to learn about opportunities to support IEEE EMBS at UF.
+          <div className="w-1/2 bg-white rounded-2xl shadow-xl p-8 flex flex-col">
+            <div className="text-center mb-0">
+              <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-4">
+                Interested in Partnering?
+              </h2>
+              <p className="text-gray-600 font-light leading-relaxed mb-8 max-w-md mx-auto">
+                Check out our sponsorship packet to learn about partnership opportunities with IEEE EMBS at UF.
               </p>
-              <button className="bg-[#772583] text-white py-3 px-8 rounded-lg font-semibold hover:bg-[#5a1c62] focus:ring-2 focus:ring-[#772583] focus:ring-offset-2 transition-all duration-200">
-                Download Packet
-              </button>
+            </div>
+
+            <div className="flex-1 flex flex-col items-center justify-center">
+              <SponsorshipPacketBook />
             </div>
           </div>
         </div>
 
         {/* Additional Contact Information */}
         <div className="mt-16 bg-white rounded-2xl shadow-xl p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Other Ways to Connect</h2>
+          <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-2 text-center">Other Ways to Connect</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#772583] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#772583] rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Email</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Email</h3>
               <p className="text-gray-600">ieeeembsuf@gmail.com</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#772583] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#772583] rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Location</h3>
-              <p className="text-gray-600">University of Florida<br />Gainesville, FL</p>
+              <h3 className="text-lg font-semibold text-gray-900">Location</h3>
+              <p className="text-gray-600 leading-5.5">University of Florida<br />Gainesville, FL</p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-[#772583] rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-[#772583] rounded-full flex items-center justify-center mx-auto mb-2">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Meetings</h3>
-              <p className="text-gray-600">General Body Meetings<br />Check our events page!</p>
+              <h3 className="text-lg font-semibold text-gray-900">Meetings</h3>
+              <p className="text-gray-600 leading-5.5">General Body Meetings<br />Check our events page!</p>
             </div>
           </div>
         </div>

@@ -17,17 +17,27 @@ export default function Navbar() {
   const { user } = useAuth();
 
   const isHomePage = location.pathname === "/";
+  const isDarkNavbar = isHomePage && !isScrolled && !isMobileMenuOpen;
 
   // helper function to check active path for link styling
   const linkClass = (path) => {
-    if (path === "/") {
-      return location.pathname === "/"
-        ? "text-[#772583] text-xl underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
-        : "text-black text-xl hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
+    const isActive = path === "/" 
+      ? location.pathname === "/"
+      : location.pathname.startsWith(path);
+    
+    const baseClasses = "text-xl underline-offset-4 decoration-2 font-medium transition-all duration-300";
+    
+    if (isDarkNavbar) {
+      // Dark navbar state: white links, active link is #5d9cc3
+      return isActive
+        ? `text-[#5d9cc3] ${baseClasses} underline`
+        : `text-white ${baseClasses} hover:text-white/80 hover:underline`;
+    } else {
+      // Light navbar state: black links, active link is #772583
+      return isActive
+        ? `text-[#772583] ${baseClasses} underline`
+        : `text-black ${baseClasses} hover:text-[#772583] hover:underline`;
     }
-    return location.pathname.startsWith(path)
-      ? "text-[#772583] text-xl underline underline-offset-4 decoration-2 font-medium transition-all duration-300"
-      : "text-black text-xl hover:text-[#772583] hover:underline underline-offset-4 decoration-2 font-medium transition-all duration-300";
   };
 
   // scroll detection effect
@@ -62,8 +72,8 @@ export default function Navbar() {
   // determine navbar styling based on page, scroll position, and mobile menu state
   const navbarBgClass =
     isHomePage && !isScrolled && !isMobileMenuOpen
-      ? "bg-transparent"
-      : "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)]";
+      ? "bg-[#1A1A1A]/90 backdrop-blur-lg"
+      : "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] backdrop-blur-sm";
 
   // determine transition class - no transition during menu toggle, smooth for scroll
   const transitionClass = isMenuTransitioning
@@ -173,7 +183,11 @@ export default function Navbar() {
               </Link>
               {user ? (
                 <div
-                  className="w-7 h-7 bg-[#772583] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#5a1c62] transition-colors duration-300"
+                  className={`w-7 h-7 rounded-full flex items-center justify-center cursor-pointer transition-colors duration-300 ${
+                    isDarkNavbar
+                      ? "bg-[#5d9cc3] hover:bg-[#4a8ba8]"
+                      : "bg-[#772583] hover:bg-[#5a1c62]"
+                  }`}
                   onClick={() =>
                     navigate(
                       role === "admin" ? "/admin-dashboard" : "/dashboard"
@@ -190,7 +204,11 @@ export default function Navbar() {
               ) : (
                 <FaUserCircle
                   onClick={() => navigate("/auth/login")}
-                  className="w-5 h-5 cursor-pointer hover:text-[#772583] transition-colors duration-300"
+                  className={`w-5 h-5 cursor-pointer transition-colors duration-300 ${
+                    isDarkNavbar
+                      ? "text-white hover:text-white/80"
+                      : "text-black hover:text-[#772583]"
+                  }`}
                 />
               )}
             </div>
@@ -204,7 +222,11 @@ export default function Navbar() {
                   // Reset transition state after a brief moment
                   setTimeout(() => setIsMenuTransitioning(false), 50);
                 }}
-                className="text-black hover:text-[#772583] transition-colors duration-300 p-2"
+                className={`transition-colors duration-300 p-2 ${
+                  isDarkNavbar
+                    ? "text-white hover:text-white/80"
+                    : "text-black hover:text-[#772583]"
+                }`}
               >
                 <svg
                   className="w-6 h-6"
