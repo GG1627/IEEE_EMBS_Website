@@ -36,7 +36,7 @@ export default function Contact() {
       }
 
       if (data?.ok) {
-        showSnackbar("Thank you for your feedback! We'll get back to you soon.", { severity: "success" });
+        showSnackbar("Thank you for your feedback! We'll get back to you soon.", { severity: "success", customColor: "#772583" });
         // Reset form
         setFormData({
           name: "",
@@ -50,7 +50,7 @@ export default function Contact() {
       }
     } catch (error) {
       console.error("Error sending feedback:", error);
-      showSnackbar("Failed to send feedback. Please try again later.", { severity: "error" });
+      showSnackbar("Failed to send feedback. Please try again later.", { severity: "error", customColor: "#b00000" });
     } finally {
       setIsSubmitting(false);
     }
