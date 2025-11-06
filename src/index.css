@@ -64,3 +64,11 @@
 .animate-spin-slow {
   animation: spin-slow 10s linear infinite;
 }
+
+.page-shadow, .html-flip-book-shadow, .book-shadow, .page-shadow-bottom {
+  display: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
+}
+
