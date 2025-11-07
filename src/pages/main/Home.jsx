@@ -42,7 +42,8 @@ import { LuDna } from "react-icons/lu";
 import useGoogleCalendar from "../../lib/useGoogleCalendar";
 
 export default function Home() {
-  const iconRef = useRef(null);
+  const iconRefDesktop = useRef(null);
+  const iconRefMobile = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
@@ -110,13 +111,27 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    gsap.to(iconRef.current, {
-      y: 10,
-      repeat: -1,
-      yoyo: true,
-      ease: "power1.inOut",
-      duration: 1,
-    });
+    // Desktop animation
+    if (iconRefDesktop.current) {
+      gsap.to(iconRefDesktop.current, {
+        y: 10,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+        duration: 1,
+      });
+    }
+
+    // Mobile animation
+    if (iconRefMobile.current) {
+      gsap.to(iconRefMobile.current, {
+        y: 10,
+        repeat: -1,
+        yoyo: true,
+        ease: "power1.inOut",
+        duration: 1,
+      });
+    }
   }, []);
 
   // Simplified authentication result handling
@@ -452,7 +467,7 @@ export default function Home() {
           </div>
           {/* Scroll Down Icon */}
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-2">
-            <IoIosArrowDown ref={iconRef} className="text-white text-4xl" />
+            <IoIosArrowDown ref={iconRefDesktop} className="text-white text-4xl" />
           </div>
         </div>
       </div>
@@ -681,7 +696,7 @@ export default function Home() {
           </div>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full justify-center flex mt-0 flex-col items-center mb-4">
-          <IoIosArrowDown ref={iconRef} className="text-white text-4xl" />
+          <IoIosArrowDown ref={iconRefMobile} className="text-white text-4xl" />
         </div>
       </div>
 

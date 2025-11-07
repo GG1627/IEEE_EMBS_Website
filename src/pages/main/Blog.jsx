@@ -47,6 +47,7 @@ export default function Blog() {
   // Modal states
   const [selectedPost, setSelectedPost] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Image carousel states
   const [currentImageIndex, setCurrentImageIndex] = useState({});
@@ -363,7 +364,7 @@ export default function Blog() {
             title: postTitle.trim(),
             content: postContent.trim(),
             image_urls: imageUrls,
-            event_date: new Date(eventDate).toISOString(),
+            event_date: new Date(`${eventDate}T12:00:00.000Z`).toISOString(),
             author_id: user.id,
             created_at: new Date().toISOString(),
             post_type: postType,
@@ -428,6 +429,7 @@ export default function Blog() {
     setEditVideoThumbnail(null);
     setEditVideoThumbnailPreview(post.video_thumbnail || "");
     setShowAdminForm(false);
+    setShowEditModal(true);
   };
 
   // Cancel editing
@@ -442,6 +444,7 @@ export default function Blog() {
     setEditVideoLink("");
     setEditVideoThumbnail(null);
     setEditVideoThumbnailPreview("");
+    setShowEditModal(false);
   };
 
   // Handle edit post submission
@@ -486,7 +489,7 @@ export default function Blog() {
           title: editTitle.trim(),
           content: editContent.trim(),
           image_urls: imageUrls,
-          event_date: new Date(editEventDate).toISOString(),
+          event_date: new Date(`${editEventDate}T12:00:00.000Z`).toISOString(),
           updated_at: new Date().toISOString(),
           post_type: editPostType,
           video_link: editPostType === "video" ? editVideoLink.trim() : null,
@@ -504,7 +507,7 @@ export default function Blog() {
         customColor: "#007377",
       });
 
-      // Reset edit form
+      // Reset edit form and close modal
       cancelEditing();
 
       // Refresh posts
@@ -936,198 +939,6 @@ export default function Blog() {
             </div>
           )}
 
-          {/* Edit Form */}
-          {canManageBlog && editingPost && (
-            <div className="mb-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200 shadow-xl backdrop-blur-sm">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  Edit Blog Post
-                </h2>
-              </div>
-
-              <form onSubmit={handleEditPost} className="space-y-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div className="group">
-                      <label
-                        htmlFor="edit-title"
-                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
-                      >
-                        Post Title *
-                      </label>
-                      <input
-                        id="edit-title"
-                        type="text"
-                        required
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                        className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 placeholder-gray-400"
-                        placeholder="Enter an engaging title..."
-                      />
-                    </div>
-
-                    <div className="group">
-                      <label
-                        htmlFor="edit-content"
-                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
-                      >
-                        Post Content *
-                      </label>
-                      <textarea
-                        id="edit-content"
-                        required
-                        rows={8}
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                        className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 resize-vertical bg-white/80 backdrop-blur-sm text-gray-800 placeholder-gray-400"
-                        placeholder="Share your story, insights, or event recap..."
-                      />
-                    </div>
-
-                    <div className="group">
-                      <label
-                        htmlFor="edit-event-date"
-                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
-                      >
-                        Event Date *
-                      </label>
-                      <input
-                        id="edit-event-date"
-                        type="date"
-                        required
-                        value={editEventDate}
-                        onChange={(e) => setEditEventDate(e.target.value)}
-                        className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="group">
-                      <label
-                        htmlFor="edit-image"
-                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
-                      >
-                        Featured Image (Optional)
-                      </label>
-                      <div className="relative">
-                        <input
-                          id="edit-image"
-                          type="file"
-                          accept="image/*"
-                          multiple
-                          onChange={handleEditImageUpload}
-                          className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:transition-colors file:duration-200"
-                        />
-                      </div>
-                      {editImagePreviews.length > 0 && (
-                        <div className="mt-4 p-4 bg-white/60 rounded-xl border-2 border-gray-200">
-                          <div className="grid grid-cols-2 gap-3">
-                            {editImagePreviews.map((preview, index) => (
-                              <div key={index} className="relative">
-                                <img
-                                  src={preview}
-                                  alt={`Preview ${index + 1}`}
-                                  className="w-full h-32 object-cover rounded-lg shadow-md"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setEditImagePreviews((prev) =>
-                                      prev.filter((_, i) => i !== index)
-                                    );
-                                    if (!preview.startsWith("http")) {
-                                      setEditImages((prev) =>
-                                        prev.filter((_, i) => i !== index)
-                                      );
-                                    }
-                                  }}
-                                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
-                                >
-                                  ×
-                                </button>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      <p className="text-sm text-gray-500 mt-2 flex items-center gap-1">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        Maximum file size: 5MB per image. Select multiple files
-                        to add more.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 pt-6 border-t border-gray-200">
-                  <button
-                    type="submit"
-                    disabled={isEditing}
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-600/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-semibold"
-                  >
-                    {isEditing ? (
-                      <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                        Updating...
-                      </>
-                    ) : (
-                      <>
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                          />
-                        </svg>
-                        Update Post
-                      </>
-                    )}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={cancelEditing}
-                    className="bg-gray-500 text-white px-8 py-4 rounded-xl hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-500/30 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-semibold"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
 
           {/* Blog Posts */}
           {loading ? (
@@ -1553,6 +1364,313 @@ export default function Blog() {
                   )
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {showEditModal && editingPost && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Edit Blog Post
+                </h2>
+              </div>
+              <button
+                onClick={cancelEditing}
+                className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors"
+              >
+                <svg
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <form onSubmit={handleEditPost} className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <div className="group">
+                      <label
+                        htmlFor="edit-title"
+                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
+                      >
+                        Post Title *
+                      </label>
+                      <input
+                        id="edit-title"
+                        type="text"
+                        required
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 placeholder-gray-400"
+                        placeholder="Enter an engaging title..."
+                      />
+                    </div>
+
+                    <div className="group">
+                      <label
+                        htmlFor="edit-content"
+                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
+                      >
+                        Post Content *
+                      </label>
+                      <textarea
+                        id="edit-content"
+                        required
+                        rows={8}
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 resize-vertical bg-white/80 backdrop-blur-sm text-gray-800 placeholder-gray-400"
+                        placeholder="Share your story, insights, or event recap..."
+                      />
+                    </div>
+
+                    <div className="group">
+                      <label
+                        htmlFor="edit-event-date"
+                        className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
+                      >
+                        Event Date *
+                      </label>
+                      <input
+                        id="edit-event-date"
+                        type="date"
+                        required
+                        value={editEventDate}
+                        onChange={(e) => setEditEventDate(e.target.value)}
+                        className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200">
+                        Post Type
+                      </label>
+                      <div className="flex gap-4">
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="editPostType"
+                            value="image"
+                            checked={editPostType === "image"}
+                            onChange={(e) => setEditPostType(e.target.value)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">Image Post</span>
+                        </label>
+                        <label className="flex items-center">
+                          <input
+                            type="radio"
+                            name="editPostType"
+                            value="video"
+                            checked={editPostType === "video"}
+                            onChange={(e) => setEditPostType(e.target.value)}
+                            className="mr-2"
+                          />
+                          <span className="text-sm">Video Post</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Image Upload - Only for Image Posts */}
+                    {editPostType === "image" && (
+                      <div className="group">
+                        <label
+                          htmlFor="edit-image"
+                          className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
+                        >
+                          Featured Images (Optional)
+                        </label>
+                        <div className="relative">
+                          <input
+                            id="edit-image"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={handleEditImageUpload}
+                            className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:transition-colors file:duration-200"
+                          />
+                        </div>
+                        {editImagePreviews.length > 0 && (
+                          <div className="mt-4 p-4 bg-white/60 rounded-xl border-2 border-gray-200">
+                            <div className="grid grid-cols-2 gap-3">
+                              {editImagePreviews.map((preview, index) => (
+                                <div key={index} className="relative">
+                                  <img
+                                    src={preview}
+                                    alt={`Preview ${index + 1}`}
+                                    className="w-full h-32 object-cover rounded-lg shadow-md"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setEditImagePreviews((prev) =>
+                                        prev.filter((_, i) => i !== index)
+                                      );
+                                      if (!preview.startsWith("http")) {
+                                        setEditImages((prev) =>
+                                          prev.filter((_, i) => i !== index)
+                                        );
+                                      }
+                                    }}
+                                    className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+                                  >
+                                    ×
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        <p className="text-sm text-gray-500 mt-2 flex items-center gap-1">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          Maximum file size: 5MB per image. Select multiple files
+                          to add more.
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Video Fields - Only for Video Posts */}
+                    {editPostType === "video" && (
+                      <>
+                        <div className="group">
+                          <label
+                            htmlFor="edit-video-link"
+                            className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
+                          >
+                            Video Link *
+                          </label>
+                          <input
+                            id="edit-video-link"
+                            type="url"
+                            required
+                            value={editVideoLink}
+                            onChange={(e) => setEditVideoLink(e.target.value)}
+                            className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 placeholder-gray-400"
+                            placeholder="https://drive.google.com/file/d/..."
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Paste your Google Drive or other video sharing link
+                          </p>
+                        </div>
+
+                        <div className="group">
+                          <label
+                            htmlFor="edit-video-thumbnail"
+                            className="block text-sm font-semibold text-gray-700 mb-3 group-focus-within:text-blue-600 transition-colors duration-200"
+                          >
+                            Video Thumbnail (Optional)
+                          </label>
+                          <div className="relative">
+                            <input
+                              id="edit-video-thumbnail"
+                              type="file"
+                              accept="image/*"
+                              onChange={handleEditVideoThumbnailUpload}
+                              className="block w-full px-4 py-4 border-2 border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:transition-colors file:duration-200"
+                            />
+                          </div>
+                          {editVideoThumbnailPreview && (
+                            <div className="mt-3">
+                              <img
+                                src={editVideoThumbnailPreview}
+                                alt="Thumbnail preview"
+                                className="w-full h-32 object-cover rounded-lg border shadow-md"
+                              />
+                            </div>
+                          )}
+                          <p className="text-xs text-gray-500 mt-1">
+                            Max 5MB. This will be the thumbnail shown for your
+                            video.
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-6 border-t border-gray-200">
+                  <button
+                    type="submit"
+                    disabled={isEditing}
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-600/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-semibold"
+                  >
+                    {isEditing ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        Updating...
+                      </>
+                    ) : (
+                      <>
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                          />
+                        </svg>
+                        Update Post
+                      </>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelEditing}
+                    className="bg-gray-500 text-white px-8 py-4 rounded-xl hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-gray-500/30 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 font-semibold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

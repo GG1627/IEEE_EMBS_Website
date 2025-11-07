@@ -9,15 +9,15 @@ import { supabase } from "../../lib/supabase";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userInitials, setUserInitials] = useState("");
-  const [isScrolled, setIsScrolled] = useState(false);
   const [role, setRole] = useState("member");
   const [isMenuTransitioning, setIsMenuTransitioning] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const isHomePage = location.pathname === "/";
-  const isDarkNavbar = isHomePage && !isScrolled && !isMobileMenuOpen;
+  // Always use light navbar (white background)
+  const isDarkNavbar = false;
 
   // helper function to check active path for link styling
   const linkClass = (path) => {
@@ -40,16 +40,17 @@ export default function Navbar() {
     }
   };
 
-  // scroll detection effect
+  // mobile detection effect
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 20); // Change threshold as needed
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // md breakpoint
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    checkMobile(); // Check on mount
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
 
   // get the users initials
   useEffect(() => {
@@ -69,21 +70,16 @@ export default function Navbar() {
     }
   }, [user]);
 
-  // determine navbar styling based on page, scroll position, and mobile menu state
-  const navbarBgClass =
-    isHomePage && !isScrolled && !isMobileMenuOpen
-      ? "bg-[#1A1A1A]/90 backdrop-blur-lg"
-      : "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.1)] backdrop-blur-sm";
+  // Always use white background
+  const navbarBgClass = "bg-white shadow-[0_2px_10px_rgba(0,0,0,0.4)] backdrop-blur-sm";
 
   // determine transition class - no transition during menu toggle, smooth for scroll
   const transitionClass = isMenuTransitioning
     ? "transition-none"
     : "transition-all duration-300";
 
-  const titleTextColor =
-    isHomePage && !isScrolled && !isMobileMenuOpen
-      ? "text-white"
-      : "text-black";
+  // Always use black text
+  const titleTextColor = "text-black";
 
   // check if the user is a "member" or "admin" from supabase members table
   const fetchRole = async () => {
