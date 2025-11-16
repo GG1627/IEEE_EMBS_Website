@@ -6,8 +6,8 @@ import { gradientPresets } from "../../styles/ieeeColors";
 import {
   executiveBoard,
   techLeads,
-  webTeam,
-  communicationsOutreach,
+  digitalMedia,
+  outreachAndOperations,
   advisors,
 } from "../../data/members";
 
@@ -91,14 +91,14 @@ export default function Team() {
           <section className="mb-16">
             <div className="text-center mb-6">
               <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-2">
-                Web Team
+                Digital Media
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Building the digital experience for our community
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-8">
-              {webTeam.map((member, index) => (
+              {digitalMedia.map((member, index) => (
                 <div key={index} className="w-64">
                   <MemberCard
                     name={member.name}
@@ -115,14 +115,14 @@ export default function Team() {
           <section className="mb-16">
             <div className="text-center mb-6">
               <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-2">
-                Communications & Outreach
+                Outreach and Operations
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
                 Connecting our community and spreading our mission
               </p>
             </div>
             <div className="flex flex-wrap justify-center gap-8">
-              {communicationsOutreach.map((member, index) => (
+              {outreachAndOperations.map((member, index) => (
                 <div key={index} className="w-64">
                   <MemberCard
                     name={member.name}

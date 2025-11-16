@@ -11,6 +11,9 @@ import May from "../assets/members/DrMay.avif";
 import Devin from "../assets/members/Devin.avif";
 import Matthew from "../assets/members/Matthew.avif";
 import Katherine from "../assets/members/Katherine.avif";
+import Dana from "../assets/members/Dana.avif";
+import Clara from "../assets/members/Clara.avif";
+// import Salma from "../assets/members/Salma.jpg";
 
 export const executiveBoard = [
   {
@@ -58,9 +61,21 @@ export const techLeads = [
     linkedin: "https://www.linkedin.com/in/devinwylde/",
     imgURL: Devin,
   },
+  {
+    name: "Dana Sapir",
+    position: "CS Tech Lead",
+    linkedin: "https://www.linkedin.com/in/danasapir/",
+    imgURL: Dana,
+  }
 ];
 
-export const webTeam = [
+export const digitalMedia = [
+  {
+    name: "Gael Garcia",
+    position: "Webmaster",
+    linkedin: "https://www.linkedin.com/in/gael-garcia1627/",
+    imgURL: Gael,
+  },
   {
     name: "Lincy Phipps",
     position: "Webmaster",
@@ -68,14 +83,20 @@ export const webTeam = [
     imgURL: Lincy,
   },
   {
-    name: "Gael Garcia",
-    position: "Webmaster",
-    linkedin: "https://www.linkedin.com/in/gael-garcia1627/",
-    imgURL: Gael,
+    name: "Clara Anderson",
+    position: "Social Media Manager",
+    linkedin: "https://www.linkedin.com/in/clara-andersonn/",
+    imgURL: Clara,
+  },
+  {
+    name: "Clea Judilla",
+    position: "Social Media Manager",
+    linkedin: "https://www.linkedin.com/in/cleajudilla/",
+    imgURL: Clea,
   },
 ];
 
-export const communicationsOutreach = [
+export const outreachAndOperations = [
   {
     name: "Katherine Phy",
     position: "Fundraising Lead",
@@ -89,11 +110,11 @@ export const communicationsOutreach = [
     imgURL: Fabiana,
   },
   {
-    name: "Clea Judilla",
-    position: "Social Media Manager",
-    linkedin: "https://www.linkedin.com/in/cleajudilla/",
-    imgURL: Clea,
-  },
+    name: "Salma Ouaakki",
+    position: "Event Coordinator",
+    linkedin: "https://www.linkedin.com/in/salmaouaakki/",
+    // imgURL: Salma,
+  }
 ];
 
 export const advisors = [
