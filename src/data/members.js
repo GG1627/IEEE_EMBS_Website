@@ -13,7 +13,7 @@ import Matthew from "../assets/members/Matthew.avif";
 import Katherine from "../assets/members/Katherine.avif";
 import Dana from "../assets/members/Dana.avif";
 import Clara from "../assets/members/Clara.avif";
-// import Salma from "../assets/members/Salma.jpg";
+import Salma from "../assets/members/Salma.avif";
 
 export const executiveBoard = [
   {
@@ -113,7 +113,7 @@ export const outreachAndOperations = [
     name: "Salma Ouaakki",
     position: "Event Coordinator",
     linkedin: "https://www.linkedin.com/in/salmaouaakki/",
-    // imgURL: Salma,
+    imgURL: Salma,
   }
 ];
 
