@@ -13,7 +13,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../../lib/supabase";
 
 // Events columns
@@ -126,6 +126,8 @@ export default function StatsTab() {
   const [selectedChart, setSelectedChart] = useState(0);
   const [majorDistributionData, setMajorDistributionData] = useState([]);
   const [showFoodLines, setShowFoodLines] = useState(true);
+  const [chartHeight, setChartHeight] = useState(400);
+  const chartContainerRef = useRef(null);
 
   const handleChange = (event) => {
     setCategory(event.target.value);
@@ -463,6 +465,38 @@ export default function StatsTab() {
     }
   };
 
+  // Update chart height based on container size
+  useEffect(() => {
+    const updateChartHeight = () => {
+      if (chartContainerRef.current && category === "charts") {
+        const height = chartContainerRef.current.clientHeight;
+        if (height > 0) {
+          // Subtract space for tabs (~64px) and padding (~48px)
+          setChartHeight(Math.max(300, height - 120));
+        }
+      }
+    };
+
+    // Initial measurement
+    const timeoutId = setTimeout(updateChartHeight, 100);
+    window.addEventListener('resize', updateChartHeight);
+    
+    // Use ResizeObserver for more accurate measurements if available
+    let resizeObserver;
+    if (chartContainerRef.current && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(updateChartHeight);
+      resizeObserver.observe(chartContainerRef.current);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', updateChartHeight);
+      if (resizeObserver && chartContainerRef.current) {
+        resizeObserver.unobserve(chartContainerRef.current);
+      }
+    };
+  }, [category, selectedChart]);
+
   // Fetch data when component mounts or category changes
   useEffect(() => {
     if (category === "members") {
@@ -514,31 +548,33 @@ export default function StatsTab() {
               {category === "charts" ? (
                 <div className="h-full flex gap-4">
                   {/* Left side - Charts (2/3 width) */}
-                    <div className="flex-[2] bg-gradient-to-br from-gray-900/40 to-gray-800/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col shadow-2xl" style={{ minHeight: '400px', maxHeight: '600px' }}>
+                    <div className="flex-[2] bg-gradient-to-br from-gray-900/50 to-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col min-h-0">
                     {/* Chart Selection Tabs */}
                     <Tabs
                       value={selectedChart}
                       onChange={(e, newValue) => setSelectedChart(newValue)}
                       sx={{
                         mb: 4,
+                        flexShrink: 0,
                         '& .MuiTab-root': {
-                          color: 'rgba(255,255,255,0.6)',
+                          color: 'rgba(255,255,255,0.5)',
                           fontSize: '14px',
                           fontWeight: '500',
                           textTransform: 'none',
                           minHeight: '48px',
+                          transition: 'color 0.2s ease',
                           '&.Mui-selected': {
-                            color: '#a855f7',
+                            color: 'white',
                             fontWeight: '600',
                           },
                           '&:hover': {
-                            color: 'rgba(255,255,255,0.8)',
+                            color: 'rgba(255,255,255,0.75)',
                           },
                         },
                         '& .MuiTabs-indicator': {
-                          backgroundColor: '#a855f7',
-                          height: '3px',
-                          borderRadius: '2px',
+                          backgroundColor: 'white',
+                          height: '2px',
+                          borderRadius: '1px',
                         },
                       }}
                     >
@@ -548,57 +584,58 @@ export default function StatsTab() {
                     </Tabs>
 
                     {/* Chart Container */}
-                    <div className="flex-1 relative bg-gradient-to-br from-white/5 to-white/2 rounded-2xl border border-white/5" style={{ minHeight: '320px', maxHeight: '500px' }}>
+                    <div ref={chartContainerRef} className="flex-1 relative bg-gradient-to-br from-white/[0.03] to-white/[0.01] rounded-2xl border border-white/10 min-h-0 backdrop-blur-sm">
                       {selectedChart === 0 && (
                         <div className="absolute inset-0 flex flex-col">
                           <div className="mb-3 mt-3 flex justify-between gap-3 px-4">
-                            <div className="bg-gradient-to-br from-[#a855f7]/20 to-[#a855f7]/10 backdrop-blur-sm border border-[#a855f7]/30 p-3 rounded-xl flex-1">
-                              <h3 className="text-white/90 text-xs font-medium mb-2">Overall Attendance with Food</h3>
-                              <p className="text-lg font-bold text-[#a855f7]">
-                                {attendanceOverTimeData[0]?.overallAvgWithFood || 0} avg. attendees
+                            <div className="bg-gradient-to-br from-[#c4b5fd]/20 to-[#c4b5fd]/8 backdrop-blur-sm border border-[#c4b5fd]/30 p-3 rounded-xl flex-1 shadow-sm">
+                              <h3 className="text-white/90 text-xs font-medium mb-1.5 uppercase tracking-wide">Avg. with Food</h3>
+                              <p className="text-xl font-semibold text-[#e9d5ff]">
+                                {attendanceOverTimeData[0]?.overallAvgWithFood || 0}
                               </p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#60a5fa]/20 to-[#60a5fa]/10 backdrop-blur-sm border border-[#60a5fa]/30 p-3 rounded-xl flex-1">
-                              <h3 className="text-white/90 text-xs font-medium mb-2">Overall Attendance without Food</h3>
-                              <p className="text-lg font-bold text-[#60a5fa]">
-                                {attendanceOverTimeData[0]?.overallAvgWithoutFood || 0} avg. attendees
+                            <div className="bg-gradient-to-br from-[#06b6d4]/20 to-[#06b6d4]/8 backdrop-blur-sm border border-[#06b6d4]/30 p-3 rounded-xl flex-1 shadow-sm">
+                              <h3 className="text-white/90 text-xs font-medium mb-1.5 uppercase tracking-wide">Avg. without Food</h3>
+                              <p className="text-xl font-semibold text-[#67e8f9]">
+                                {attendanceOverTimeData[0]?.overallAvgWithoutFood || 0}
                               </p>
                             </div>
                             <div className="flex items-center">
                               <button
                                 onClick={() => setShowFoodLines(!showFoodLines)}
-                                className={`px-4 py-2 rounded-xl text-xs font-medium transition-all duration-200 ${
+                                className={`max-w-24 px-4 py-2 rounded-lg text-xs font-medium transition-all duration-200 ${
                                   showFoodLines 
-                                    ? 'bg-gradient-to-br from-[#34d399]/20 to-[#34d399]/10 border border-[#34d399]/30 text-[#34d399]' 
-                                    : 'bg-gradient-to-br from-gray-600/20 to-gray-600/10 border border-gray-600/30 text-gray-400'
+                                    ? 'bg-gradient-to-br from-[#10b981]/20 to-[#10b981]/8 border border-[#10b981]/30 text-white/85 hover:border-[#10b981]/40 hover:cursor-pointer' 
+                                    : 'bg-gradient-to-br from-gray-700/20 to-gray-800/10 border border-gray-600/20 text-gray-500 hover:border-gray-600/30 hover:cursor-pointer'
                                 }`}
                               >
                                 {showFoodLines ? 'Hide Food Lines' : 'Show Food Lines'}
                               </button>
                             </div>
                           </div>
-                          <div className="flex-1 relative">
+                          <div className="flex-1 relative min-h-0">
                             <LineChart
                               xAxis={[{
                                 dataKey: 'date',
                                 scaleType: 'time',
                                 valueFormatter: (value) => value ? new Date(value).toLocaleDateString() : '',
-                                tickLabelStyle: { fill: 'white' },
-                                axisLine: { stroke: 'white', strokeWidth: 1 },
-                                tickLine: { stroke: 'white' },
+                                tickLabelStyle: { fill: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                                axisLine: { stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 },
+                                tickLine: { stroke: 'rgba(255,255,255,0.15)' },
                               }]}
                               yAxis={[{
-                                tickLabelStyle: { fill: 'white' },
-                                axisLine: { stroke: 'white', strokeWidth: 1 },
-                                tickLine: { stroke: 'white' },
+                                tickLabelStyle: { fill: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                                axisLine: { stroke: 'rgba(255,255,255,0.15)', strokeWidth: 1 },
+                                tickLine: { stroke: 'rgba(255,255,255,0.15)' },
                               }]}
                               series={[
                                 {
                                   dataKey: 'attendance',
                                   label: 'Event Attendance',
-                                  color: '#a855f7',
+                                  color: '#c4b5fd',
                                   showMark: true,
                                   curve: 'linear',
+                                  strokeWidth: 2.5,
                                   valueFormatter: (value, ctx) => {
                                     if (!ctx || !attendanceOverTimeData || !attendanceOverTimeData[ctx.index]) return `${value} attendees`;
                                     const point = attendanceOverTimeData[ctx.index];
@@ -609,23 +646,27 @@ export default function StatsTab() {
                                   {
                                     dataKey: 'overallAvgWithFood',
                                     label: 'Avg. with Food',
-                                    color: '#60a5fa',
+                                    color: '#06b6d4',
                                     showMark: false,
                                     curve: 'linear',
+                                    strokeWidth: 2,
+                                    strokeDasharray: '6 4',
                                     valueFormatter: (value) => `${value} avg. attendees (with food)`,
                                   },
                                   {
                                     dataKey: 'overallAvgWithoutFood',
                                     label: 'Avg. without Food',
-                                    color: '#34d399',
+                                    color: '#10b981',
                                     showMark: false,
                                     curve: 'linear',
+                                    strokeWidth: 2,
+                                    strokeDasharray: '6 4',
                                     valueFormatter: (value) => `${value} avg. attendees (no food)`,
                                   }
                                 ] : [])
                               ]}
                               dataset={attendanceOverTimeData}
-                              height={300}
+                              height={chartHeight}
                               margin={{ left: 60, right: 60, top: 40, bottom: 40 }}
                               slotProps={{
                                 legend: {
@@ -635,28 +676,30 @@ export default function StatsTab() {
                                 },
                               }}
                               sx={{
+                                width: '100%',
                                 '& .MuiChartsLegend-root': {
-                                  fill: 'white',
+                                  fill: 'rgba(255,255,255,0.75)',
                                 },
                                 '& .MuiChartsLegend-mark': {
-                                  fill: 'white',
+                                  fill: 'rgba(255,255,255,0.75)',
                                 },
                                 '& .MuiChartsLegend-label': {
-                                  fill: 'white !important',
-                                  color: 'white !important',
+                                  fill: 'rgba(255,255,255,0.75) !important',
+                                  color: 'rgba(255,255,255,0.75) !important',
+                                  fontSize: '12px',
                                 },
                                 '& .MuiChartsAxis-line': {
-                                  stroke: 'white !important',
+                                  stroke: 'rgba(255,255,255,0.75) !important',
                                 },
                                 '& .MuiChartsAxis-tick': {
-                                  stroke: 'white !important',
+                                  stroke: 'rgba(255,255,255,0.75) !important',
                                 },
                                 '& .MuiChartsAxis-root': {
                                   '& .MuiChartsAxis-line': {
-                                    stroke: 'white !important',
+                                    stroke: 'rgba(255,255,255,0.75) !important',
                                   },
                                   '& .MuiChartsAxis-tick': {
-                                    stroke: 'white !important',
+                                    stroke: 'rgba(255,255,255,0.75) !important',
                                   },
                                 },
                               }}
@@ -668,44 +711,44 @@ export default function StatsTab() {
                       {selectedChart === 1 && (
                         <div className="absolute inset-0 flex flex-col">
                           <div className="mb-3 mt-3 flex justify-between gap-3 px-4">
-                            <div className="bg-gradient-to-br from-[#34d399]/20 to-[#34d399]/10 backdrop-blur-sm border border-[#34d399]/30 p-3 rounded-xl flex-1">
-                              <h3 className="text-white/90 text-xs font-medium mb-2">Most Popular Event Type</h3>
-                              <p className="text-lg font-bold text-[#34d399]">
+                            <div className="bg-gradient-to-br from-[#fca5a5]/20 to-[#fca5a5]/8 backdrop-blur-sm border border-[#fca5a5]/30 p-3 rounded-xl flex-1 shadow-sm">
+                              <h3 className="text-white/90 text-xs font-medium mb-1.5 uppercase tracking-wide">Most Popular</h3>
+                              <p className="text-xl font-semibold text-[#fca5a5] truncate">
                                 {eventTypeData.length > 0 ? eventTypeData.reduce((max, type) => 
                                   type.avgAttendance > max.avgAttendance ? type : max
                                 ).type : 'None'}
                               </p>
                             </div>
-                            <div className="bg-gradient-to-br from-[#60a5fa]/20 to-[#60a5fa]/10 backdrop-blur-sm border border-[#60a5fa]/30 p-3 rounded-xl flex-1">
-                              <h3 className="text-white/90 text-xs font-medium mb-2">Total Event Types</h3>
-                              <p className="text-lg font-bold text-[#60a5fa]">
+                            <div className="bg-gradient-to-br from-[#06b6d4]/20 to-[#06b6d4]/8 backdrop-blur-sm border border-[#06b6d4]/30 p-3 rounded-xl flex-1 shadow-sm">
+                              <h3 className="text-white/90 text-xs font-medium mb-1.5 uppercase tracking-wide">Total Types</h3>
+                              <p className="text-xl font-semibold text-[#67e8f9]">
                                 {eventTypeData.length}
                               </p>
                             </div>
                           </div>
-                          <div className="flex-1 relative">
+                          <div className="flex-1 relative min-h-0">
                             {eventTypeData.length > 0 ? (
                               <BarChart
                               xAxis={[{
                                 dataKey: 'type',
                                 scaleType: 'band',
-                                tickLabelStyle: { fill: 'white', fontSize: 12 },
-                                axisLine: { stroke: 'white', strokeWidth: 1 },
-                                tickLine: { stroke: 'white' },
+                                tickLabelStyle: { fill: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                                axisLine: { stroke: 'rgba(255,255,255,0.75)', strokeWidth: 1 },
+                                tickLine: { stroke: 'rgba(255,255,255,0.75)' },
                               }]}
                               yAxis={[{
-                                tickLabelStyle: { fill: 'white' },
-                                axisLine: { stroke: 'white', strokeWidth: 1 },
-                                tickLine: { stroke: 'white' },
+                                tickLabelStyle: { fill: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                                axisLine: { stroke: 'rgba(255,255,255,0.75)', strokeWidth: 1 },
+                                tickLine: { stroke: 'rgba(255,255,255,0.75)' },
                               }]}
                                 series={[{
                                   dataKey: 'avgAttendance',
                                   label: 'Average Attendance',
-                                  color: '#a855f7',
+                                  color: '#c4b5fd',
                                   valueFormatter: (value) => `${value} attendees`,
                                 }]}
                                 dataset={eventTypeData}
-                                height={280}
+                                height={chartHeight}
                                 margin={{ left: 60, right: 60, top: 40, bottom: 40 }}
                                 slotProps={{
                                   legend: {
@@ -715,21 +758,23 @@ export default function StatsTab() {
                                   },
                                 }}
                                 sx={{
+                                  width: '100%',
                                   '& .MuiChartsLegend-root': {
-                                    fill: 'white',
+                                    fill: 'rgba(255,255,255,0.85)',
                                   },
                                   '& .MuiChartsLegend-mark': {
-                                    fill: 'white',
+                                    fill: 'rgba(255,255,255,0.85)',
                                   },
                                   '& .MuiChartsLegend-label': {
-                                    fill: 'white !important',
-                                    color: 'white !important',
+                                    fill: 'rgba(255,255,255,0.85) !important',
+                                    color: 'rgba(255,255,255,0.85) !important',
+                                    fontSize: '12px',
                                   },
                                   '& .MuiChartsAxis-line': {
-                                    stroke: 'white',
+                                    stroke: 'rgba(255,255,255,0.75)',
                                   },
                                   '& .MuiChartsAxis-tick': {
-                                    stroke: 'white',
+                                    stroke: 'rgba(255,255,255,0.75)',
                                   },
                                 }}
                               />
@@ -747,31 +792,32 @@ export default function StatsTab() {
 
                       {selectedChart === 2 && (
                         <div className="absolute inset-0 flex flex-col">
-                          <div className="flex-1 relative">
+                          <div className="flex-1 relative min-h-0">
                             <LineChart
                               xAxis={[{
                                 dataKey: 'date',
                                 scaleType: 'time',
                                 valueFormatter: (value) => value ? new Date(value).toLocaleDateString() : '',
-                                tickLabelStyle: { fill: 'white' },
-                                axisLine: { stroke: 'white', strokeWidth: 1 },
-                                tickLine: { stroke: 'white' },
+                                tickLabelStyle: { fill: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                                axisLine: { stroke: 'rgba(255,255,255,0.75)', strokeWidth: 1 },
+                                tickLine: { stroke: 'rgba(255,255,255,0.75)' },
                               }]}
                               yAxis={[{
-                                tickLabelStyle: { fill: 'white' },
-                                axisLine: { stroke: 'white', strokeWidth: 1 },
-                                tickLine: { stroke: 'white' },
+                                tickLabelStyle: { fill: 'rgba(255,255,255,0.65)', fontSize: 11 },
+                                axisLine: { stroke: 'rgba(255,255,255,0.75)', strokeWidth: 1 },
+                                tickLine: { stroke: 'rgba(255,255,255,0.75)' },
                               }]}
                               series={[{
                                 dataKey: 'memberCount',
                                 label: 'Total Members',
-                                color: '#60a5fa',
+                                color: '#c4b5fd',
                                 showMark: true,
                                 curve: 'linear',
+                                strokeWidth: 2.5,
                                 valueFormatter: (value) => `${value} members`,
                               }]}
                               dataset={memberCountOverTimeData}
-                              height={300}
+                              height={chartHeight}
                               margin={{ left: 60, right: 60, top: 40, bottom: 40 }}
                               slotProps={{
                                 legend: {
@@ -781,28 +827,30 @@ export default function StatsTab() {
                                 },
                               }}
                               sx={{
+                                width: '100%',
                                 '& .MuiChartsLegend-root': {
-                                  fill: 'white',
+                                  fill: 'rgba(255,255,255,0.85)',
                                 },
                                 '& .MuiChartsLegend-mark': {
-                                  fill: 'white',
+                                  fill: 'rgba(255,255,255,0.85)',
                                 },
                                 '& .MuiChartsLegend-label': {
-                                  fill: 'white !important',
-                                  color: 'white !important',
+                                  fill: 'rgba(255,255,255,0.85) !important',
+                                  color: 'rgba(255,255,255,0.85) !important',
+                                  fontSize: '12px',
                                 },
                                 '& .MuiChartsAxis-line': {
-                                  stroke: 'white !important',
+                                  stroke: 'rgba(255,255,255,0.75) !important',
                                 },
                                 '& .MuiChartsAxis-tick': {
-                                  stroke: 'white !important',
+                                  stroke: 'rgba(255,255,255,0.75) !important',
                                 },
                                 '& .MuiChartsAxis-root': {
                                   '& .MuiChartsAxis-line': {
-                                    stroke: 'white !important',
+                                    stroke: 'rgba(255,255,255,0.75) !important',
                                   },
                                   '& .MuiChartsAxis-tick': {
-                                    stroke: 'white !important',
+                                    stroke: 'rgba(255,255,255,0.75) !important',
                                   },
                                 },
                               }}
@@ -814,15 +862,26 @@ export default function StatsTab() {
                   </div>
 
                   {/* Right side - Pie Chart (1/3 width) */}
-                  <div className="flex-[1] bg-gradient-to-br from-gray-900/40 to-gray-800/30 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col shadow-2xl">
-                    <h3 className="text-white text-xl font-bold mb-6 text-center">Major Distribution</h3>
+                  <div className="flex-[1] bg-gradient-to-br from-gray-900/50 to-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col">
+                    <h3 className="text-white text-xl font-semibold mb-6 text-center tracking-tight">Major Distribution</h3>
                     <div className="flex-1 flex items-center justify-center">
                       {majorDistributionData.length > 0 ? (
                         <PieChart
                           series={[
                             {
                               data: majorDistributionData.map((item, index) => {
-                                const colors = ['#a855f7', '#60a5fa', '#34d399', '#fbbf24', '#fb7185'];
+                                // Cohesive palette with increased contrast: wider spacing between colors for better differentiation
+                                const colors = [
+                                  '#E4E4DE', // Soft Ivory
+                                  '#C4C5BA', // Sophisticated Sage Gray
+                                  '#8AA5C4', // Muted Steel Blue
+                                  '#D9B18E', // Muted Champagne
+                                  '#C79AA9', // Dusty Rose
+                                  '#8B7B6A', // Smoky Taupe
+                                  '#2F3A4A', // Deep Slate Accent
+                                  '#A9B3C2', // Muted Cool Silver-Blue (new)
+                                ];                                
+                                         
                                 const colorIndex = index % colors.length;
                                 return {
                                   id: item.id,
@@ -832,7 +891,7 @@ export default function StatsTab() {
                                 };
                               }),
                               highlightScope: { faded: 'global', highlighted: 'item' },
-                              faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
+                              faded: { innerRadius: 30, additionalRadius: -30, color: 'rgba(255,255,255,0.1)' },
                             },
                           ]}
                           width={280}
@@ -850,15 +909,27 @@ export default function StatsTab() {
                           }}
                           sx={{
                             '& .MuiChartsLegend-root': {
-                              fill: 'white',
+                              fill: 'rgba(255,255,255,0.85)',
                             },
                             '& .MuiChartsLegend-mark': {
-                              fill: 'white',
+                              fill: 'rgba(255,255,255,0.85)',
                             },
                             '& .MuiChartsLegend-label': {
-                              fill: 'white !important',
-                              fontSize: '12px',
-                              color: 'white !important',
+                              fill: 'rgba(255,255,255,0.85) !important',
+                              fontSize: '11px',
+                              color: 'rgba(255,255,255,0.85) !important',
+                              '@media (min-width: 1280px)': {
+                                fontSize: '10px',
+                              },
+                              '@media (min-width: 1380px)': {
+                                fontSize: '12px',
+                              },
+                              '@media (min-width: 1480px)': {
+                                fontSize: '14px',
+                              },
+                              '@media (min-width: 1680px)': {
+                                fontSize: '18px',
+                              },
                             },
                           }}
                           tooltip={{
