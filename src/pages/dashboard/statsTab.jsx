@@ -9,12 +9,36 @@ import { BarChart } from "@mui/x-charts/BarChart";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
 import { ChartsYAxis } from "@mui/x-charts";
+import { useDrawingArea } from "@mui/x-charts/hooks";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "../../lib/supabase";
+
+// Center label component for donut chart
+function PieCenterLabel() {
+  const { width, height, left, top } = useDrawingArea();
+  const centerX = left + width / 2;
+  const centerY = top + height / 2;
+  
+  return (
+    <g>
+      {/* Stick figure person icon */}
+      {/* Head */}
+      <circle cx={centerX} cy={centerY - 15} r="8" fill="rgba(255,255,255,0.85)" />
+      {/* Body */}
+      <line x1={centerX} y1={centerY - 7} x2={centerX} y2={centerY + 10} stroke="rgba(255,255,255,0.85)" strokeWidth="2" strokeLinecap="round" />
+      {/* Arms */}
+      <line x1={centerX} y1={centerY - 2} x2={centerX - 10} y2={centerY - 7} stroke="rgba(255,255,255,0.85)" strokeWidth="2" strokeLinecap="round" />
+      <line x1={centerX} y1={centerY - 2} x2={centerX + 10} y2={centerY - 7} stroke="rgba(255,255,255,0.85)" strokeWidth="2" strokeLinecap="round" />
+      {/* Legs */}
+      <line x1={centerX} y1={centerY + 10} x2={centerX - 10} y2={centerY + 20} stroke="rgba(255,255,255,0.85)" strokeWidth="2" strokeLinecap="round" />
+      <line x1={centerX} y1={centerY + 10} x2={centerX + 10} y2={centerY + 20} stroke="rgba(255,255,255,0.85)" strokeWidth="2" strokeLinecap="round" />
+    </g>
+  );
+}
 
 // Events columns
 const eventsColumns = [
@@ -869,6 +893,7 @@ export default function StatsTab() {
                         <PieChart
                           series={[
                             {
+                              innerRadius: 50,
                               data: majorDistributionData.map((item, index) => {
                                 // Cohesive palette with increased contrast: wider spacing between colors for better differentiation
                                 const colors = [
@@ -890,8 +915,15 @@ export default function StatsTab() {
                                   color: colors[colorIndex],
                                 };
                               }),
-                              highlightScope: { faded: 'global', highlighted: 'item' },
-                              faded: { innerRadius: 30, additionalRadius: -30, color: 'rgba(255,255,255,0.1)' },
+                              valueFormatter: ({ value }) => {
+                                const totalMembers = majorDistributionData.reduce((sum, item) => sum + item.value, 0);
+                                const percentage = totalMembers > 0 ? Math.round((value / totalMembers) * 100) : 0;
+                                return `${value} members (${percentage}%)`;
+                              },
+                              highlightScope: { fade: 'global', highlight: 'item' },
+                              highlighted: { additionalRadius: 2 },
+                              cornerRadius: 3,
+                              paddingAngle: 1,
                             },
                           ]}
                           width={280}
@@ -932,13 +964,9 @@ export default function StatsTab() {
                               },
                             },
                           }}
-                          tooltip={{
-                            trigger: 'item',
-                            formatter: (params) => [
-                              `${params.name}: ${params.value} members (${params.percent}%)`,
-                            ],
-                          }}
-                        />
+                        >
+                          <PieCenterLabel />
+                        </PieChart>
                       ) : (
                         <div className="text-center">
                           <p className="text-white text-lg mb-2">No Major Data Available</p>
