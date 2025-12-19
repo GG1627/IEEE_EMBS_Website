@@ -22,7 +22,7 @@ export const careerFields = [
     ],
     uf_research_professors: [
       {
-        name: "Dr. Ruogo Fang (BME)",
+        name: "Dr. Ruogu Fang (BME)",
         linkedin: "https://www.linkedin.com/in/ruogu-fang-a015bb15/",
         lab: "https://lab-smile.github.io/",
       },
