@@ -14,6 +14,7 @@ export default function CreateEventTab() {
   const [showQRCode, setShowQRCode] = useState(false);
   const [eventType, setEventType] = useState("");
   const [foodPresent, setFoodPresent] = useState("");
+  const [isVirtual, setIsVirtual] = useState("");
   const [activeEvents, setActiveEvents] = useState([]);
   const [loadingActiveEvents, setLoadingActiveEvents] = useState(true);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -142,6 +143,7 @@ export default function CreateEventTab() {
       end_time: endDateTime,
       event_type: eventType,
       food_present: foodPresent === "yes",
+      is_virtual: isVirtual === "yes",
     });
 
     if (error) {
@@ -160,6 +162,7 @@ export default function CreateEventTab() {
       setShowQRCode(false);
       setEventType("");
       setFoodPresent("");
+      setIsVirtual("");
       // Refresh active and upcoming events after adding a new event
       fetchActiveEvents();
       fetchUpcomingEvents();
@@ -792,6 +795,26 @@ export default function CreateEventTab() {
                     <option value="">Select option</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="is-virtual"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Virtual or In-Person
+                  </label>
+                  <select
+                    id="is-virtual"
+                    required
+                    value={isVirtual}
+                    onChange={(e) => setIsVirtual(e.target.value)}
+                    className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200"
+                  >
+                    <option value="">Select option</option>
+                    <option value="yes">Virtual</option>
+                    <option value="no">In-Person</option>
                   </select>
                 </div>
 
