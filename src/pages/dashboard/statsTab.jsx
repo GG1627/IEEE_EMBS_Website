@@ -152,6 +152,8 @@ export default function StatsTab() {
   const [showFoodLines, setShowFoodLines] = useState(true);
   const [chartHeight, setChartHeight] = useState(400);
   const chartContainerRef = useRef(null);
+  const [upcomingEventsPredictions, setUpcomingEventsPredictions] = useState([]);
+  const [loadingPredictions, setLoadingPredictions] = useState(false);
 
   const handleChange = (event) => {
     setCategory(event.target.value);
@@ -489,6 +491,33 @@ export default function StatsTab() {
     }
   };
 
+  // Fetch upcoming events with AI predictions
+  const fetchUpcomingEventsPredictions = async () => {
+    try {
+      setLoadingPredictions(true);
+      const currentTime = new Date().toISOString();
+
+      const { data: events, error } = await supabase
+        .from("events")
+        .select("id, name, date, start_time, end_time, points, code, event_type, predicted_attendance")
+        .gt("start_time", currentTime)
+        .order("start_time", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching upcoming events predictions:", error);
+        setUpcomingEventsPredictions([]);
+        return;
+      }
+
+      setUpcomingEventsPredictions(events || []);
+    } catch (error) {
+      console.error("Error fetching upcoming events predictions:", error);
+      setUpcomingEventsPredictions([]);
+    } finally {
+      setLoadingPredictions(false);
+    }
+  };
+
   // Update chart height based on container size
   useEffect(() => {
     const updateChartHeight = () => {
@@ -530,6 +559,8 @@ export default function StatsTab() {
     } else if (category === "charts") {
       fetchChartsData();
       fetchMajorData();
+    } else if (category === "ai-predictions") {
+      fetchUpcomingEventsPredictions();
     }
   }, [category]);
 
@@ -548,6 +579,11 @@ export default function StatsTab() {
         rows: membersData,
         title: "UF EMBS Members",
         loading: loadingMembers,
+      };
+    } else if (category === "ai-predictions") {
+      return {
+        title: "AI Predictions",
+        loading: loadingPredictions,
       };
     } else {
       return {
@@ -569,7 +605,200 @@ export default function StatsTab() {
             </h1>
             <div className="w-full h-px bg-white mb-2"></div>
             <div className="flex-1 min-h-0 w-full overflow-hidden">
-              {category === "charts" ? (
+              {category === "ai-predictions" ? (
+                <div className="h-full flex gap-4">
+                  {/* Left side - Predictions List (2/3 width) */}
+                  <div className="flex-[2] bg-gradient-to-br from-gray-900/50 to-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col min-h-0">
+                    {loadingPredictions ? (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                          <p className="text-white text-lg">Loading predictions...</p>
+                        </div>
+                      </div>
+                    ) : upcomingEventsPredictions.length > 0 ? (
+                      <div className="space-y-4 overflow-y-auto">
+                        <div className="mb-6 flex-shrink-0">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="w-10 h-10 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center border border-white/30">
+                              <svg
+                                className="w-5 h-5 text-white"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                />
+                              </svg>
+                            </div>
+                            <h3 className="text-white text-2xl font-semibold">AI Predictions</h3>
+                          </div>
+                          <p className="text-gray-400 text-sm ml-[52px]">Machine learning predictions for upcoming event attendance</p>
+                        </div>
+                        <div className="space-y-3">
+                        {upcomingEventsPredictions.map((event) => (
+                          <div
+                            key={event.id}
+                            className="bg-gradient-to-br from-gray-800/50 to-gray-900/40 backdrop-blur-sm border border-white/10 rounded-xl p-5 hover:border-white/20 transition-all duration-200 hover:shadow-lg"
+                          >
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <h4 className="text-white text-lg font-semibold mb-3">{event.name}</h4>
+                                <div className="grid grid-cols-2 gap-3 text-sm text-gray-300">
+                                  <div className="flex items-center gap-2">
+                                    <svg
+                                      className="w-4 h-4 text-gray-400"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                    <span>
+                                      {new Date(event.start_time).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <svg
+                                      className="w-4 h-4 text-gray-400"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                      />
+                                    </svg>
+                                    <span>
+                                      {new Date(event.start_time).toLocaleTimeString([], {
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <svg
+                                      className="w-4 h-4 text-yellow-500"
+                                      fill="currentColor"
+                                      viewBox="0 0 20 20"
+                                    >
+                                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                    </svg>
+                                    <span>{event.points} points</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <svg
+                                      className="w-4 h-4 text-gray-400"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                                      />
+                                    </svg>
+                                    <span className="uppercase font-medium">{event.event_type?.replace('_', ' ') || 'UNKNOWN'}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex-shrink-0">
+                                <div className="bg-gradient-to-br from-white/20 to-white/10 backdrop-blur-sm border border-white/30 rounded-xl p-4 min-w-[120px] text-center shadow-lg">
+                                  <p className="text-gray-300 text-xs font-medium mb-1 uppercase tracking-wide">Prediction</p>
+                                  <p className="text-3xl font-bold text-white mb-1">
+                                    {event.predicted_attendance || 0}
+                                  </p>
+                                  <p className="text-gray-400 text-xs">attendees</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <div className="text-gray-300 mb-4">
+                            <svg
+                              className="mx-auto h-16 w-16"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                              />
+                            </svg>
+                          </div>
+                          <p className="text-white text-lg mb-2">No Upcoming Events</p>
+                          <p className="text-gray-400 text-sm">Create events to see AI predictions</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right side - Coming Soon (1/3 width) */}
+                  <div className="flex-[1] bg-gradient-to-br from-gray-900/50 to-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-20 h-20 bg-gradient-to-br from-white/20 to-white/10 rounded-2xl flex items-center justify-center border border-white/30 mx-auto mb-6">
+                        <svg
+                          className="w-10 h-10 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M13 10V3L4 14h7v7l9-11h-7z"
+                          />
+                        </svg>
+                      </div>
+                      <h3 className="text-white text-2xl font-semibold mb-3">More Cool AI Features</h3>
+                      <p className="text-gray-400 text-lg mb-6">Coming Soon</p>
+                      <div className="mt-6 space-y-3 text-left">
+                        <div className="flex items-center gap-2 text-gray-300 text-sm">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>Attendance trend analysis</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-300 text-sm">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>Optimal event timing suggestions</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-gray-300 text-sm">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>Member engagement insights</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : category === "charts" ? (
                 <div className="h-full flex gap-4">
                   {/* Left side - Charts (2/3 width) */}
                     <div className="flex-[2] bg-gradient-to-br from-gray-900/50 to-gray-800/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 flex flex-col min-h-0">
@@ -882,6 +1111,7 @@ export default function StatsTab() {
                           </div>
                         </div>
                       )}
+
                     </div>
                   </div>
 
@@ -1114,6 +1344,7 @@ export default function StatsTab() {
                     <MenuItem value="events">Events</MenuItem>
                     <MenuItem value="members">Members</MenuItem>
                     <MenuItem value="charts">Charts</MenuItem>
+                    <MenuItem value="ai-predictions">AI Predictions</MenuItem>
                   </Select>
                 </FormControl>
               </Box>
@@ -1208,6 +1439,53 @@ export default function StatsTab() {
                         ? Math.round(attendanceOverTimeData.reduce((sum, event) => sum + event.attendance, 0) / attendanceOverTimeData.length)
                         : 0
                       }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* AI Predictions Info Section */}
+            {category === "ai-predictions" && (
+              <div>
+                <h2 className="text-xl font-bold text-white mb-2">
+                  Predictions Overview
+                </h2>
+                <div className="w-full h-px bg-white mb-4"></div>
+                <div className="space-y-4">
+                  <div className="bg-gradient-to-br from-white/20 to-white/10 border border-white/30 rounded-lg p-3">
+                    <div className="text-sm text-gray-300 mb-1">
+                      Upcoming Events
+                    </div>
+                    <div className="text-2xl font-bold text-white">
+                      {upcomingEventsPredictions.length}
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-white/20 to-white/10 border border-white/30 rounded-lg p-3">
+                    <div className="text-sm text-gray-300 mb-1">
+                      Avg. Predicted Attendance
+                    </div>
+                    <div className="text-2xl font-bold text-white">
+                      {upcomingEventsPredictions.length > 0
+                        ? Math.round(
+                            upcomingEventsPredictions.reduce(
+                              (sum, event) => sum + (event.predicted_attendance || 0),
+                              0
+                            ) / upcomingEventsPredictions.length
+                          )
+                        : 0
+                      }
+                    </div>
+                  </div>
+                  <div className="bg-gradient-to-br from-white/20 to-white/10 border border-white/30 rounded-lg p-3">
+                    <div className="text-sm text-gray-300 mb-1">
+                      Total Predicted
+                    </div>
+                    <div className="text-2xl font-bold text-white">
+                      {upcomingEventsPredictions.reduce(
+                        (sum, event) => sum + (event.predicted_attendance || 0),
+                        0
+                      )}
                     </div>
                   </div>
                 </div>
