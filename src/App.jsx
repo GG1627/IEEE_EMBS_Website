@@ -21,6 +21,7 @@ import ConfirmLogin from "./pages/auth/ConfirmLogin";
 import MemberDashboard from "./pages/dashboard/memberDashboard";
 import AdminDashboard from "./pages/dashboard/adminDashboard";
 import CheckInPage from "./pages/dashboard/checkin";
+import DiscordVerify from "./pages/main/Discord-Verify";
 import { SnackbarProvider } from "./components/ui/Snackbar";
 import { AuthProvider } from "./pages/auth/AuthContext";
 
@@ -42,6 +43,7 @@ function App() {
               <Route path="/resources" element={<Resources />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/discord-verify" element={<DiscordVerify />} />
 
               <Route path="/research" element={<Research />} />
               <Route path="/projects" element={<Projects />} />
