@@ -197,7 +197,7 @@ export default function DiscordVerify() {
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-[#96529a] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-8 h-8 text-[#772583]"
+                className="w-8 h-8 text-[#ffffff]"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
