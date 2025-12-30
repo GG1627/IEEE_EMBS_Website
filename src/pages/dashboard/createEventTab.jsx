@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "../../lib/supabase";
 import { useSnackbar } from "../../components/ui/Snackbar";
+import { useAuth } from "../auth/AuthContext";
 
 export default function CreateEventTab() {
   const [eventName, setEventName] = useState("");
@@ -19,8 +20,14 @@ export default function CreateEventTab() {
   const [loadingActiveEvents, setLoadingActiveEvents] = useState(true);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [loadingUpcomingEvents, setLoadingUpcomingEvents] = useState(true);
+  const [description, setDescription] = useState("");
+  const [location, setLocation] = useState("");
+  const [flyerFile, setFlyerFile] = useState(null);
+  const [flyerUrl, setFlyerUrl] = useState("");
+  const [uploadingFlyer, setUploadingFlyer] = useState(false);
 
   const { showSnackbar } = useSnackbar();
+  const { user } = useAuth();
 
   // Event type options with points mapping
   const eventTypeOptions = [
@@ -61,10 +68,34 @@ export default function CreateEventTab() {
     fetchUpcomingEvents();
   }, []);
 
+  // Function to deactivate expired events (events where end_time has passed)
+  const deactivateExpiredEvents = async () => {
+    try {
+      const currentTime = new Date().toISOString();
+      
+      // Update all events where end_time < currentTime and is_active = true
+      const { error } = await supabase
+        .from("events")
+        .update({ is_active: false })
+        .lt("end_time", currentTime)
+        .eq("is_active", true);
+
+      if (error) {
+        console.error("Error deactivating expired events:", error);
+        // Don't show snackbar here as this is a background operation
+      }
+    } catch (error) {
+      console.error("Error deactivating expired events:", error);
+    }
+  };
+
   // Function to fetch active events
   const fetchActiveEvents = async () => {
     try {
       setLoadingActiveEvents(true);
+      // First, deactivate any expired events
+      await deactivateExpiredEvents();
+      
       const currentTime = new Date().toISOString();
 
       const { data, error } = await supabase
@@ -72,6 +103,7 @@ export default function CreateEventTab() {
         .select("*")
         .lte("start_time", currentTime)
         .gte("end_time", currentTime)
+        .eq("is_active", true)
         .order("start_time", { ascending: false });
 
       if (error) {
@@ -95,12 +127,16 @@ export default function CreateEventTab() {
   const fetchUpcomingEvents = async () => {
     try {
       setLoadingUpcomingEvents(true);
+      // First, deactivate any expired events
+      await deactivateExpiredEvents();
+      
       const currentTime = new Date().toISOString();
 
       const { data, error } = await supabase
         .from("events")
         .select("*")
         .gt("start_time", currentTime)
+        .eq("is_active", true)
         .order("start_time", { ascending: true })
         .limit(3);
 
@@ -121,9 +157,52 @@ export default function CreateEventTab() {
     }
   };
 
+  // Function to upload flyer to Supabase storage
+  const uploadFlyer = async (file) => {
+    try {
+      setUploadingFlyer(true);
+      const fileExt = file.name.split(".").pop();
+      const fileName = `event-flyers/${Date.now()}-${Math.random()
+        .toString(36)
+        .substr(2, 9)}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("blog-images")
+        .upload(fileName, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from("blog-images")
+        .getPublicUrl(fileName);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error("Error uploading flyer:", error);
+      throw error;
+    } finally {
+      setUploadingFlyer(false);
+    }
+  };
+
   // Function to add event to database
   const addEvent = async (e) => {
     e.preventDefault();
+
+    // Upload flyer if present
+    let uploadedFlyerUrl = flyerUrl;
+    if (flyerFile) {
+      try {
+        uploadedFlyerUrl = await uploadFlyer(flyerFile);
+      } catch (error) {
+        showSnackbar("Error uploading flyer. Please try again.", {
+          customColor: "#dc2626",
+        });
+        return;
+      }
+    }
 
     // Combine date and time into proper timestamp format with timezone
     // Create local date/time and convert to UTC for storage
@@ -144,11 +223,16 @@ export default function CreateEventTab() {
       event_type: eventType,
       food_present: foodPresent === "yes",
       is_virtual: isVirtual === "yes",
+      description: description || null,
+      location: location || null,
+      flyer_url: uploadedFlyerUrl || null,
+      is_active: true,
+      created_by: user?.id || null,
     });
 
     if (error) {
       console.error("Supabase error:", error);
-      showSnackbar("Error adding event", { customColor: "#007377" });
+      showSnackbar("Error adding event", { customColor: "#dc2626" });
     } else {
       console.log(data);
       showSnackbar("Event added successfully", { customColor: "#007377" });
@@ -163,6 +247,13 @@ export default function CreateEventTab() {
       setEventType("");
       setFoodPresent("");
       setIsVirtual("");
+      setDescription("");
+      setLocation("");
+      setFlyerFile(null);
+      setFlyerUrl("");
+      // Reset file input
+      const fileInput = document.getElementById("event-flyer");
+      if (fileInput) fileInput.value = "";
       // Refresh active and upcoming events after adding a new event
       fetchActiveEvents();
       fetchUpcomingEvents();
@@ -901,6 +992,100 @@ export default function CreateEventTab() {
                     className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200"
                   />
                 </div>
+
+                <div className="md:col-span-2">
+                  <label
+                    htmlFor="event-description"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Description
+                  </label>
+                  <textarea
+                    id="event-description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={4}
+                    className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200 resize-none"
+                    placeholder="Enter event description (optional)"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label
+                    htmlFor="event-location"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Location
+                  </label>
+                  <input
+                    id="event-location"
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200"
+                    placeholder="Enter event location (optional)"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label
+                    htmlFor="event-flyer"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Event Flyer
+                    <span className="text-xs text-gray-500 ml-2">(Optional)</span>
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      id="event-flyer"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setFlyerFile(file);
+                          // Create preview URL
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setFlyerUrl(reader.result);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="block w-full px-4 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-gray-800 transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 file:cursor-pointer"
+                    />
+                    {flyerUrl && (
+                      <div className="mt-3">
+                        <p className="text-xs text-gray-500 mb-2">Preview:</p>
+                        <img
+                          src={flyerUrl}
+                          alt="Flyer preview"
+                          className="max-w-full h-auto rounded-lg border border-gray-200 max-h-48 object-contain"
+                        />
+                        {flyerFile && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFlyerFile(null);
+                              setFlyerUrl("");
+                              const fileInput = document.getElementById("event-flyer");
+                              if (fileInput) fileInput.value = "";
+                            }}
+                            className="mt-2 text-sm text-red-600 hover:text-red-700 font-medium"
+                          >
+                            Remove flyer
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    {uploadingFlyer && (
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                        <span>Uploading flyer...</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <div>
@@ -1005,9 +1190,14 @@ export default function CreateEventTab() {
 
               <button
                 type="submit"
-                className="w-full px-6 py-4 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-all duration-200 hover:cursor-pointer shadow-lg hover:shadow-xl"
+                disabled={uploadingFlyer}
+                className={`w-full px-6 py-4 bg-gray-900 text-white font-semibold rounded-xl hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl ${
+                  uploadingFlyer
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:cursor-pointer"
+                }`}
               >
-                Create Event
+                {uploadingFlyer ? "Uploading..." : "Create Event"}
               </button>
             </form>
           </div>
