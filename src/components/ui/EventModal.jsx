@@ -1,5 +1,5 @@
-import { LuClock, LuMapPin } from "react-icons/lu";
-import { Modal, Box, Typography, Button } from "@mui/material";
+import { LuClock, LuMapPin, LuX } from "react-icons/lu";
+import { Modal } from "@mui/material";
 
 export default function EventModal({
   isOpen,
@@ -20,122 +20,116 @@ export default function EventModal({
         alignItems: "center",
         justifyContent: "center",
         "& .MuiBackdrop-root": {
-          backgroundColor: "rgba(0, 0, 0, 0.6)", // Darker background
-          backdropFilter: "blur(8px)", // More blur
+          backgroundColor: "rgba(0, 0, 0, 0.7)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
         },
       }}
     >
-      <Box
-        sx={{
-          position: "relative",
-          bgcolor: "white",
-          borderRadius: "22px",
-          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-          p: 4,
-          borderLeft: "8px solid #772583",
-          maxWidth: "700px",
-          width: "90%",
-          maxHeight: "90vh",
-          overflow: "auto",
-          outline: "none",
+      <div
+        className="relative rounded-3xl overflow-hidden outline-none max-w-2xl w-[90%] max-h-[90vh] overflow-y-auto"
+        style={{
+          background: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(40px)",
+          WebkitBackdropFilter: "blur(40px)",
+          boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.5), 0 40px 100px rgba(255, 255, 255, 0.5)",
         }}
       >
-        {/* Event Title */}
-        <Typography
-          id="event-modal-title"
-          variant="h4"
-          component="h2"
-          sx={{
-            color: "#772583",
-            fontWeight: "bold",
-            mb: 3,
-            pr: 4,
-          }}
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-6 right-6 z-10 p-2 rounded-xl transition-all duration-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[#772583] focus:ring-offset-2"
+          aria-label="Close modal"
         >
-          {eventName}
-        </Typography>
+          <LuX className="w-5 h-5 text-gray-600 hover:text-gray-900" />
+        </button>
 
-        {/* Event Details */}
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-            <LuMapPin
-              style={{ color: "#9C1E96", flexShrink: 0, marginTop: 2 }}
-              size={20}
-            />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "semibold",
-                color: "gray.800",
-                fontSize: "18px",
+        {/* Content Container */}
+        <div className="p-8">
+          {/* Event Name */}
+          <div className="mb-8 pr-12">
+            <h2
+              id="event-modal-title"
+              className="text-3xl font-semibold text-gray-900 tracking-tight leading-tight mb-3"
+            >
+              {eventName}
+            </h2>
+            <div
+              className="h-0.5 rounded-full transition-all duration-500"
+              style={{
+                background: "linear-gradient(90deg, #772583 0%, #9C1E96 100%)",
+                width: "32px",
               }}
-            >
-              Location:
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ color: "gray.700", fontSize: "18px" }}
-            >
-              {location}
-            </Typography>
-          </Box>
+            />
+          </div>
 
-          <Box sx={{ display: "flex", alignItems: "baseline", gap: 2 }}>
-            <LuClock
-              style={{ color: "#9C1E96", flexShrink: 0, marginTop: 2 }}
-              size={20}
-            />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "semibold",
-                color: "gray.800",
-                fontSize: "18px",
-              }}
-            >
-              Date & Time:
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ color: "gray.700", fontSize: "18px" }}
-            >
-              {date}: {time}
-            </Typography>
-          </Box>
+          {/* Event Details */}
+          <div className="space-y-6 mb-8">
+            {/* Location */}
+            <div className="flex items-start gap-4">
+              <div
+                className="flex-shrink-0 p-2.5 rounded-xl transition-all duration-300"
+                style={{
+                  background: "rgba(119, 37, 131, 0.08)",
+                }}
+              >
+                <LuMapPin className="text-[#772583] text-lg" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Location
+                </p>
+                <p className="text-gray-900 text-base font-medium leading-snug">
+                  {location}
+                </p>
+              </div>
+            </div>
+
+            {/* Date & Time */}
+            <div className="flex items-start gap-4">
+              <div
+                className="flex-shrink-0 p-2.5 rounded-xl transition-all duration-300"
+                style={{
+                  background: "rgba(119, 37, 131, 0.08)",
+                }}
+              >
+                <LuClock className="text-[#772583] text-lg" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
+                  Date & Time
+                </p>
+                <p className="text-gray-900 text-base font-medium leading-snug">
+                  {date}
+                </p>
+                <p className="text-gray-600 text-sm mt-0.5 font-normal">
+                  {time}
+                </p>
+              </div>
+            </div>
+          </div>
 
           {/* Full Description */}
           {description &&
             description.trim() &&
             description !== "No description available" &&
             !description.trim().startsWith("<a") && (
-              <Box
-                sx={{
-                  mt: 2,
-                  pt: 3,
-                  borderTop: "1px solid",
-                  borderColor: "gray.200",
-                }}
-              >
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: "semibold", color: "gray.800", mb: 2 }}
-                >
-                  Event Description
-                </Typography>
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "gray.700",
-                    lineHeight: 1.6,
-                    whiteSpace: "pre-wrap",
+              <div className="pt-6 border-t border-gray-200">
+                <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Description
+                </p>
+                <p
+                  className="text-sm text-gray-700 leading-relaxed font-normal whitespace-pre-wrap"
+                  style={{
+                    lineHeight: "1.6",
                   }}
                 >
                   {description}
-                </Typography>
-              </Box>
+                </p>
+              </div>
             )}
-        </Box>
-      </Box>
+        </div>
+      </div>
     </Modal>
   );
 }

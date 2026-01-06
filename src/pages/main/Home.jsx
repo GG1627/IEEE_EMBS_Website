@@ -2,6 +2,7 @@ import DesktopBackgroundFiller from "../../assets/images/desktop_background_fill
 import DesktopBackgroundDNA from "../../assets/images/desktop_background_dna.png";
 import MobileBackgroundFiller from "../../assets/images/mobile_background_filler.png";
 import MobileBackgroundDNA from "../../assets/images/mobile_background_dna.png";
+import UF_Skyline from "../../assets/images/uf_skyline.png";
 
 import Image0 from "../../assets/grid/img0.avif";
 import Image1 from "../../assets/grid/img1.avif";
@@ -17,6 +18,7 @@ import Image10 from "../../assets/grid/img10.avif";
 import Image11 from "../../assets/grid/img11.avif";
 import Image12 from "../../assets/grid/img12.avif";
 
+
 import { IoIosArrowDown } from "react-icons/io";
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
@@ -25,12 +27,12 @@ import EventModal from "../../components/ui/EventModal";
 import Footer from "../../components/layout/Footer";
 import { Link, useNavigate } from "react-router-dom";
 import FlipCard from "../../components/ui/FlipCard";
-import ResearchIcon from "../../assets/icons/research.png";
-import ProjectsIcon from "../../assets/icons/projects.png";
-import OutreachIcon from "../../assets/icons/outreach.png";
-import WorkshopsIcon from "../../assets/icons/workshops.png";
-import IndustryIcon from "../../assets/icons/industry.png";
-import NetworkingIcon from "../../assets/icons/networking.png";
+import ResearchIcon from "../../assets/icons/research-2.png";
+import ProjectsIcon from "../../assets/icons/projects-2.png";
+import OutreachIcon from "../../assets/icons/outreach-2.png";
+import WorkshopsIcon from "../../assets/icons/workshops-2.png";
+import IndustryIcon from "../../assets/icons/industry-2.png";
+import NetworkingIcon from "../../assets/icons/networking-2.png";
 import { useAuth } from "../../pages/auth/AuthContext";
 import { useSnackbar } from "../../components/ui/Snackbar";
 import { supabase } from "../../lib/supabase";
@@ -38,12 +40,21 @@ import { useState } from "react";
 import { slidingText } from "../../data/slidingText";
 import ParticlesBg from "../../components/ui/ParticlesBG";
 import { LuDna } from "react-icons/lu";
+import { bannerGrid } from "../../data/bannerGrid";
 
 import useGoogleCalendar from "../../lib/useGoogleCalendar";
 
 export default function Home() {
   const iconRefDesktop = useRef(null);
   const iconRefMobile = useRef(null);
+  const heroTitleRef = useRef(null);
+  const heroSubtitleRef = useRef(null);
+  const heroMissionRef = useRef(null);
+  const heroButtonsRef = useRef(null);
+  const eventsTitleRef = useRef(null);
+  const eventsCardsRef = useRef(null);
+  const branchesTitleRef = useRef(null);
+  const branchesCardsRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { showSnackbar } = useSnackbar();
@@ -133,6 +144,169 @@ export default function Home() {
       });
     }
   }, []);
+
+  // Desktop hero section animations
+  useEffect(() => {
+    // Only run on desktop (check window width or use a media query)
+    const isDesktop = window.innerWidth >= 768; // md breakpoint
+    
+    if (!isDesktop) return;
+
+    // Create timeline for smooth sequential animations
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    // Set initial states
+    if (heroTitleRef.current) {
+      gsap.set(heroTitleRef.current, { opacity: 0, y: 30 });
+    }
+    if (heroSubtitleRef.current) {
+      gsap.set(heroSubtitleRef.current, { opacity: 0, y: 30 });
+    }
+    if (heroMissionRef.current) {
+      gsap.set(heroMissionRef.current, { opacity: 0, y: 20 });
+    }
+    if (heroButtonsRef.current) {
+      gsap.set(heroButtonsRef.current, { opacity: 0, y: 20 });
+    }
+
+    // Animate elements in sequence
+    if (heroTitleRef.current) {
+      tl.to(heroTitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+      });
+    }
+    if (heroSubtitleRef.current) {
+      tl.to(heroSubtitleRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+      }, "-=0.5"); // Start slightly before previous ends
+    }
+    if (heroMissionRef.current) {
+      tl.to(heroMissionRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+      }, "-=0.5");
+    }
+    if (heroButtonsRef.current) {
+      tl.to(heroButtonsRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+      }, "-=0.5");
+    }
+  }, []);
+
+  // Upcoming Events section animations
+  useEffect(() => {
+    if (!eventsTitleRef.current || !eventsCardsRef.current) return;
+
+    // Set initial states
+    gsap.set(eventsTitleRef.current, { opacity: 0, y: 30 });
+    gsap.set(eventsCardsRef.current.children, { opacity: 0, y: 40 });
+
+    // Use Intersection Observer to trigger animations when section comes into view
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+            // Animate title first
+            tl.to(eventsTitleRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+            });
+
+            // Then animate event cards with stagger
+            tl.to(eventsCardsRef.current.children, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              stagger: 0.2, // Stagger each card by 0.2 seconds
+            }, "-=0.4"); // Start slightly before title animation ends
+
+            // Unobserve after animation to prevent re-triggering
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of the section is visible
+        rootMargin: "0px 0px -100px 0px", // Start animation slightly before section is fully visible
+      }
+    );
+
+    // Observe the events section container
+    const eventsSection = eventsTitleRef.current.parentElement;
+    if (eventsSection) {
+      observer.observe(eventsSection);
+    }
+
+    return () => {
+      if (eventsSection) {
+        observer.unobserve(eventsSection);
+      }
+    };
+  }, [events]); // Re-run when events change
+
+  // Our Branches section animations
+  useEffect(() => {
+    if (!branchesTitleRef.current || !branchesCardsRef.current) return;
+
+    // Set initial states
+    gsap.set(branchesTitleRef.current, { opacity: 0, y: 30 });
+    gsap.set(branchesCardsRef.current.children, { opacity: 0, y: 40 });
+
+    // Use Intersection Observer to trigger animations when section comes into view
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+            // Animate title first
+            tl.to(branchesTitleRef.current, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+            });
+
+            // Then animate branch cards with stagger
+            tl.to(branchesCardsRef.current.children, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              stagger: 0.15, // Stagger each card by 0.15 seconds
+            }, "-=0.4"); // Start slightly before title animation ends
+
+            // Unobserve after animation to prevent re-triggering
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of the section is visible
+        rootMargin: "0px 0px -100px 0px", // Start animation slightly before section is fully visible
+      }
+    );
+
+    // Observe the branches section container
+    const branchesSection = branchesTitleRef.current.parentElement;
+    if (branchesSection) {
+      observer.observe(branchesSection);
+    }
+
+    return () => {
+      if (branchesSection) {
+        observer.unobserve(branchesSection);
+      }
+    };
+  }, []); // Run once on mount
 
   // Simplified authentication result handling
   useEffect(() => {
@@ -252,6 +426,10 @@ export default function Home() {
       <div className="hidden md:block relative">
         {/* Full-width background extensions - desktop only */}
         <div className="absolute inset-0 h-[100dvh] bg-[#1A1A1A]" />
+        <div className="fixed z-[-10] inset-0 h-[100dvh] w-full">
+          <div className="absolute inset-0 h-[100dvh] w-full bg-gradient-to-b from-[#772583]/80 to-[#00629b]/80" />
+          <img src={UF_Skyline} alt="UF Skyline" className="h-full w-full object-cover opacity-35" />
+        </div>
         <div
           className="absolute top-0 bottom-0 right-0 bg-[#D9D9D9] h-[100dvh]"
           style={{ left: "60%" }}
@@ -294,18 +472,18 @@ export default function Home() {
           {/* Desktop Text Content */}
           <div className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-[48%] lg:w-[44%] xl:w-[40%] 2xl:w-[38%] h-[70vh] p-2 rounded-xl overflow-x-hidden overflow-y-auto">
             <div className="flex flex-col h-full justify-center gap-4 lg:gap-5">
-              <h1 className="font-bold text-left text-[#B17CB3] mb-3 leading-[1.08] tracking-tight text-[clamp(2rem,3.8vw,4rem)]">
+              <h1 ref={heroTitleRef} className="font-bold text-left text-[#B17CB3] mb-3 leading-[1.08] tracking-tight text-[clamp(2rem,3.8vw,4rem)]">
                 Engineering in Medicine &amp; Biology Society
               </h1>
-              <h2 className="font-bold text-left text-[#97BDD7] mb-3 leading-tight text-[clamp(1.25rem,2.2vw,2.5rem)]">
+              <h2 ref={heroSubtitleRef} className="font-bold text-left text-[#97BDD7] mb-3 leading-tight text-[clamp(1.25rem,2.2vw,2.5rem)]">
                 University of Florida Chapter
               </h2>
-              <p className="text-left text-[clamp(1rem,1.4vw,1.5rem)] text-white/95 max-w-[65ch]">
+              <p ref={heroMissionRef} className="text-left text-[clamp(1rem,1.4vw,1.5rem)] text-white/95 max-w-[65ch]">
                 "Bridging innovation, AI, and human health, we empower students
                 to explore the frontiers of biomedical technology through
                 collaboration, research, and real-world impact."
               </p>
-              <div className="flex flex-row flex-wrap items-center justify-start gap-4 mt-6 pl-20">
+              <div ref={heroButtonsRef} className="flex flex-row flex-wrap items-center justify-start gap-4 mt-6 pl-20">
                 <button className="bg-[#ffffff] text-black px-6 py-2.5 rounded-3xl text-[clamp(1rem,1.2vw,1.25rem)] shadow-[0_0_14px_rgba(255,255,255,0.85)] hover:shadow-[0_0_28px_rgba(255,255,255,0.85)] hover:cursor-pointer transition-shadow duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 min-w-[140px] text-center">
                   <Link className="no-underline" to="/about">
                     Learn More
@@ -725,13 +903,13 @@ export default function Home() {
       </div>
 
       {/* Rest of page content */}
-      <div className="bg-[#ffffff]">
+      <div className="bg-none">
         {/* Upcoming Events */}
         <div className="max-w-7xl mx-auto p-4 md:p-0 mt-16">
-          <h1 className="text-4xl font-bold text-center mb-8">
+          <h1 ref={eventsTitleRef} className="text-4xl text-white font-bold text-center mb-8 italic">
             Upcoming Events
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div ref={eventsCardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {/* Event Cards */}
             {events.slice(0, 3).map((event, index) => (
               <EventCard
@@ -747,10 +925,114 @@ export default function Home() {
           </div>
         </div>
 
+      <div className="w-full bg-[#ffffff]/90 mt-16 py-4 h-[624px] overflow-hidden relative flex items-center">
+        
+        <div
+          className="
+          inline-flex items-center gap-2 whitespace-nowrap h-full
+          animate-[move-left_300s_linear_infinite]
+          motion-reduce:animate-none
+        "
+        >
+          {itemsTwice.map((text, i) => (
+            <span key={i} className="inline-flex items-center justify-center h-full">
+              {/* grid of images - 13 squares total */}
+              <div className="flex flex-col gap-3 items-center h-full z-10">
+                {/* Row 1: 6 squares */}
+                <div className="flex flex-row gap-3 h-[290px]">
+                  <div className="relative rounded-lg h-full w-[360px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[0].image} alt={bannerGrid[0].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[0].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[212px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[1].image} alt={bannerGrid[1].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[1].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[300px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[2].image} alt={bannerGrid[2].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[2].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[450px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[3].image} alt={bannerGrid[3].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[3].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[340px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[4].image} alt={bannerGrid[4].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[4].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[300px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[5].image} alt={bannerGrid[5].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[5].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[300px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[8].image} alt={bannerGrid[8].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[8].description}</p>
+                    </div>
+                  </div>
+                </div>
+                {/* Row 2: 6 squares */}
+                <div className="flex flex-row gap-3 h-[290px]">
+                  <div className="relative rounded-lg h-full w-[500px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[6].image} alt={bannerGrid[6].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[6].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[400px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[7].image} alt={bannerGrid[7].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[7].description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="relative rounded-lg h-full w-[380px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[9].image} alt={bannerGrid[9].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[9].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[280px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[10].image} alt={bannerGrid[10].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[10].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[450px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[11].image} alt={bannerGrid[11].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[11].description}</p>
+                    </div>
+                  </div>
+                  <div className="relative rounded-lg h-full w-[260px] overflow-hidden group cursor-pointer">
+                    <img src={bannerGrid[12].image} alt={bannerGrid[12].description} className="h-full w-full object-cover" />
+                    <div className="absolute inset-0 bg-[#232323] opacity-0 group-hover:opacity-80 transition-opacity duration-300 flex items-center justify-center p-2">
+                      <p className="text-white text-sm text-center">{bannerGrid[12].description}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          ))}
+        </div>
+      </div>
+
         {/* Branches Section */}
         <div className="w-full mt-16 px-4 md:px-0">
-          <h1 className="text-4xl font-bold text-center mb-8">Our Branches</h1>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <h1 ref={branchesTitleRef} className="text-4xl font-bold text-center text-white mb-8 italic">Our Branches</h1>
+          <div ref={branchesCardsRef} className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl mx-auto items-stretch">
             {[
               {
                 name: "RESEARCH",
@@ -793,7 +1075,7 @@ export default function Home() {
                   "Building lasting relationships with peers and mentors.",
               },
             ].map(({ name, icon, page, summary }) => (
-              <div key={name} className="flex justify-center">
+              <div key={name} className="flex justify-center h-full">
                 <FlipCard
                   name={name.toUpperCase()} // ✅ force uppercase
                   imageSrc={icon}
