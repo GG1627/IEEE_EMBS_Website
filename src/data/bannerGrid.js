@@ -15,54 +15,54 @@ import BannerGridImage13 from "../assets/banner/img13.avif";
 export const bannerGrid = [
     {
         image: BannerGridImage1,
-        description: "Banner Grid Image 1 Description",
+        description: "EMBS Team Tabling at the UF Student Org Fair",
     },
     {
         image: BannerGridImage2,
-        description: "Banner Grid Image 2 Description",
+        description: "First GBM",
     },
     {
         image: BannerGridImage3,
-        description: "Banner Grid Image 3 Description",
+        description: "Lincy Enjoying a Slice of Pizza at the GBM",
     },
     {
         image: BannerGridImage4,
-        description: "Banner Grid Image 4 Description",
+        description: "Spaghetti Tower Building Competition at the GBM",
     },
     {
         image: BannerGridImage5,
-        description: "Banner Grid Image 5 Description",
+        description: "Heart Rate Monitor Workshop",
     },
     {
         image: BannerGridImage6,
-        description: "Banner Grid Image 6 Description",
+        description: "Designathon Competition",
     },
     {
         image: BannerGridImage7,
-        description: "Banner Grid Image 7 Description",
+        description: "EMBS Designathon Group Photo",
     },
     {
         image: BannerGridImage8,
-        description: "Banner Grid Image 8 Description",
+        description: "Members Enjoying their Sweet Treats at the GBM",
     },
     {
         image: BannerGridImage9,
-        description: "Banner Grid Image 9 Description",
+        description: "Soldering Workshop",
     },
     {
         image: BannerGridImage10,
-        description: "Banner Grid Image 10 Description",
+        description: "GBM 1",
     },
     {
         image: BannerGridImage11,
-        description: "Banner Grid Image 11 Description",
+        description: "Tabling at the UF Student Org Fair",
     },
     {
         image: BannerGridImage12,
-        description: "Banner Grid Image 12 Description",
+        description: "The EMBS Team",
     },
     {
         image: BannerGridImage13,
-        description: "Banner Grid Image 13 Description",
+        description: "Schedule Building/Advice Social",
     },
 ]
