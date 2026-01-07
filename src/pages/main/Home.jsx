@@ -652,6 +652,11 @@ export default function Home() {
 
       {/* Mobile Hero Section */}
       <div className="md:hidden relative min-h-[100dvh] bg-[#1A1A1A] overflow-hidden">
+        {/* UF Skyline Background */}
+        <div className="fixed z-[-10] inset-0 h-[100dvh] w-full">
+          <div className="absolute inset-0 h-[100dvh] w-full bg-gradient-to-b from-[#772583]/80 to-[#00629b]/80" />
+          <img src={UF_Skyline} alt="UF Skyline" className="h-full w-full object-cover opacity-35" />
+        </div>
         <div
           className="absolute left-0 right-0 bg-[#D9D9D9]"
           style={{
@@ -893,7 +898,7 @@ export default function Home() {
         >
           {itemsTwice.map((text, i) => (
             <span key={i} className="inline-flex items-center">
-              <span className="text-[#5a5a5a] font-semibold text-xl md:text-4xl leading-tight">
+              <span className="text-[#5a5a5a] italic uppercase font-semibold text-xl md:text-4xl leading-tight">
                 {text}
               </span>
               <LuDna className="text-[#5a5a5a] text-xl md:text-4xl ml-6" />

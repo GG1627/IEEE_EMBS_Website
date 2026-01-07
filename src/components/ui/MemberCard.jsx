@@ -16,7 +16,7 @@ export default function MemberCard({ name, position, linkedin, imgURL }) {
             />
           </div>
           <div className="text-center">
-            <h3 className="font-semibold text-lg text-gray-800 transition-colors duration-300 group-hover:text-[#772583]">
+            <h3 className="font-semibold text-[18px] text-gray-800 transition-colors duration-300 group-hover:text-[#772583]">
               {name}
             </h3>
             <p className="text-gray-600 mt-1">{position}</p>
