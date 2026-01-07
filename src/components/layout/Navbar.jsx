@@ -25,7 +25,7 @@ export default function Navbar() {
       ? location.pathname === "/"
       : location.pathname.startsWith(path);
     
-    const baseClasses = "text-xl underline-offset-4 decoration-2 font-medium transition-all duration-300";
+    const baseClasses = "text-xl underline-offset-4 decoration-2 font-[700] transition-all duration-300 italic";
     
     if (isDarkNavbar) {
       // Dark navbar state: white links, active link is #5d9cc3
@@ -148,7 +148,7 @@ export default function Navbar() {
                 /> */}
               </Link>
               <h1
-                className={`text-2xl font-bold ml-6 transition-all duration-300 ${titleTextColor} hidden md:block`}
+                className={`text-2xl font-bold ml-6 italic transition-all duration-300 ${titleTextColor} hidden md:block`}
               >
                 EMBS - University of Florida
               </h1>

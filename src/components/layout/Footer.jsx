@@ -1,4 +1,5 @@
 import { FaInstagram, FaDiscord, FaLinkedin } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import PixelBlast from "../ui/PixelBlast";
 
 export default function Footer() {
@@ -67,18 +68,16 @@ export default function Footer() {
               </div>
 
               {/* Separator Line */}
-              <div className="w-full h-px bg-white/20"></div>
+              <div className="w-full h-px bg-white/60"></div>
 
               {/* Bottom Row - Feedback and Copyright */}
               <div className="flex items-center justify-between">
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSdV7s0CikqzsljR81N9-8HPBrFj2ynmKlK5w8_nd3Lr-iYQmw/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/contact"
                   className="text-white/80 hover:text-[#B19EEF] transition-colors duration-300 text-xs font-medium"
                 >
                   Have Feedback?
-                </a>
+                </Link>
 
                 <h2 className="text-white text-xs font-medium">
                   &copy; 2025 UF EMBS
@@ -98,14 +97,12 @@ export default function Footer() {
                 <div className="w-px h-6 bg-white/20"></div>
 
                 {/* Feedback Link */}
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSdV7s0CikqzsljR81N9-8HPBrFj2ynmKlK5w8_nd3Lr-iYQmw/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/contact"
                   className="text-white/80 hover:text-[#B19EEF] transition-colors duration-300 text-sm font-medium"
                 >
                   Have Feedback?
-                </a>
+                </Link>
               </div>
 
               {/* Right side - Social and Copyright */}
